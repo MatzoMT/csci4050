@@ -1,0 +1,46 @@
+.navbar {
+  /* to make navbar stick to browser */
+  margin: -0.5em;
+  padding-top: 1.5em;
+  padding-bottom: 1.5em;
+  background-color: #000000;
+  overflow: hidden;
+  color: white;
+  }
+  
+/* Style the links inside the navigation bar */
+.navbar a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  margin-left: 5em; 
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.navbar a:not(#sign-in) {
+  margin-top: 0.25em;
+}
+
+#searchbar {
+  width: 20em;
+}
+
+
+/* Add a color to the active/current link */
+.navbar a.active {
+  background-color: #04AA6D;
+  color: white;
+}
+
+#sign-in {
+  border: 0.2em solid white;
+  padding-left: 1em;
+  padding-right: 1em;
+  border-radius: 5em;
+}
+
+#logo {
+  margin-left: 5%;
+  margin-right: 10%;
+}
