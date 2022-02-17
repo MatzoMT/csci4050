@@ -1,0 +1,29 @@
+.video-div {
+    width: 100%;
+}
+.movie-title {
+    font-size: 250%;
+}
+.video-iframe {
+    width: 100%;
+    min-height: 25em;
+}
+
+.movie-info {
+    margin-left: 20%; 
+    margin-right: 20%;  
+}
+.movie-description {
+    font-weight: normal;
+}
+
+.book-button {
+    font-family: 'Open Sans', sans-serif;
+    color: white;
+    background-color: #1965d8;
+    border: none;
+    font-size: 150%;
+    padding: 0.5em;
+    border-radius: 0.5em;
+}
+

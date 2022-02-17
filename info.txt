@@ -1,0 +1,4 @@
+* TO RUN APP *
+- cd frontend/nextjs-cinema
+- npm run dev
+- go to http://localhost:3000 in browser
