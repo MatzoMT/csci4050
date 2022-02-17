@@ -1,6 +1,5 @@
 .navbar {
   /* to make navbar stick to browser */
-  margin: -0.5em;
   padding-top: 1.5em;
   padding-bottom: 1.5em;
   background-color: #000000;
@@ -29,9 +28,13 @@
   width: 40%;
 }
 #searchbar input {
+  font-family: 'Open Sans', sans-serif;
   width: 80%;
   height: 100%;
+  font-size: 120%;
   border: none;
+  border-radius: 1em;
+  padding-left: 1em;
 }
 
 
@@ -42,10 +45,11 @@
 }
 
 #sign-in {
-  border: 0.2em solid white;
+  margin-top: 0.2em;
+  border: 0.1em solid white;
   padding-left: 1em;
   padding-right: 1em;
-  border-radius: 5em;
+  border-radius: 1em;
 }
 
 #logo {
