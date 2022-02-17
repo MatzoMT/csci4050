@@ -4,6 +4,7 @@ import Script from 'next/script';
 import Image from 'next/image'
 import CurrentlyShowingMovies from '../static/currently-showing.js';
 import isleOfDogs from '../images/isleofdogs.jpg';
+import whiplash from '../images/whiplash.jpeg';
 
 export default function Home() {
   return (
@@ -19,14 +20,37 @@ export default function Home() {
         <NavBar />
         <main >
 
-
+          <div id="currently-showing-section">
           <h1>Currently Showing</h1>
-          <div class="image-wrapper">
-            <Image src={isleOfDogs} />
-            <h2>Isle of Dogs</h2>
+          <div id="currently-showing-movies">
+            <div className="image-wrapper">
+              <Image src={isleOfDogs} />
+              <h2>Isle of Dogs</h2>
+            </div>
+            <div class="image-wrapper">
+              <Image src={whiplash} />
+              <h2>Whiplash</h2>
+            </div>
+            <div class="image-wrapper">
+              <Image src={whiplash} />
+              <h2>Whiplash</h2>
+            </div>
+
+          </div>
           </div>
 
-          <h1>Coming Soon</h1>
+
+        <div id="coming-soon-section">
+        <h1>Coming Soon</h1>
+          <div id="coming-soon-movies">
+            <div class="image-wrapper">
+              <Image src={whiplash} />
+              <h2>Whiplash</h2>
+            </div>
+          </div>
+        </div>
+
+
 
           <div id="feature-div">
             <div id="feature-section" onLoad={() => alert("this is running")}>
@@ -42,14 +66,7 @@ export default function Home() {
       </body>
 
       <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel" className="logo" />
-        </a>
+
       </footer>
 
       {
