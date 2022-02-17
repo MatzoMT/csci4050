@@ -1,23 +1,45 @@
 import Head from 'next/head';
 import NavBar from '../components/NavBar.js';
+import Script from 'next/script';
+import Image from 'next/image'
+import CurrentlyShowingMovies from '../static/currently-showing.js';
+import isleOfDogs from '../images/isleofdogs.jpg';
 
 export default function Home() {
   return (
     <div className="container">
+
       <Head>
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
+        <Script src="../static/currently-showing.js" />
+
       </Head>
-
-      <main>
+      <body>
         <NavBar />
-        <h1 className="title">
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-      <h1>Currently Showing</h1>
+        <main >
 
 
-      </main>
+          <h1>Currently Showing</h1>
+          <div class="image-wrapper">
+            <Image src={isleOfDogs} />
+            <h2>Isle of Dogs</h2>
+          </div>
+
+          <h1>Coming Soon</h1>
+
+          <div id="feature-div">
+            <div id="feature-section" onLoad={() => alert("this is running")}>
+              <div id="featured">
+                <div id="event-container">
+                  <ul id="event-list"></ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+
+      </body>
 
       <footer>
         <a
