@@ -2,3 +2,6 @@
 - cd frontend/nextjs-cinema
 - npm run dev
 - go to http://localhost:3000 in browser
+
+* IMPORTANT*
+- Next JS - use className instead of class

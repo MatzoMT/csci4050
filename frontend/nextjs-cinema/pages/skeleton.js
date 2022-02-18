@@ -6,6 +6,8 @@ import CurrentlyShowingMovies from '../static/currently-showing.js';
 import isleOfDogs from '../images/isleofdogs.jpg';
 import whiplash from '../images/whiplash.jpeg';
 
+// SKELETON CODE
+
 export default function Home() {
   return (
     <div className="container">
@@ -20,47 +22,9 @@ export default function Home() {
         <NavBar />
         <main >
 
-          <div id="currently-showing-section">
-          <h1>Currently Showing</h1>
-          <div id="currently-showing-movies">
-            <div className="image-wrapper">
-              <Image src={isleOfDogs} />
-              <h2>Isle of Dogs</h2>
-            </div>
-            <div className="image-wrapper">
-              <Image src={whiplash} />
-              <h2>Whiplash</h2>
-            </div>
-            <div className="image-wrapper">
-              <Image src={whiplash} />
-              <h2>Whiplash</h2>
-            </div>
-
-          </div>
-          </div>
-
-
-        <div id="coming-soon-section">
-        <h1>Coming Soon</h1>
-          <div id="coming-soon-movies">
-            <div className="image-wrapper">
-              <Image src={whiplash} />
-              <h2>Whiplash</h2>
-            </div>
-          </div>
-        </div>
 
 
 
-          <div id="feature-div">
-            <div id="feature-section" onLoad={() => alert("this is running")}>
-              <div id="featured">
-                <div id="event-container">
-                  <ul id="event-list"></ul>
-                </div>
-              </div>
-            </div>
-          </div>
         </main>
 
       </body>
