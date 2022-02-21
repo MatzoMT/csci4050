@@ -27,3 +27,13 @@
     border-radius: 0.5em;
 }
 
+.book-tickets-text {
+    text-decoration: none;
+    color: #FFFFFF;
+}
+
+.movie-director, .movie-genre {
+    border-bottom: 0.1em solid #c4c4c4;
+    padding-bottom: 0.75em;
+}
+
