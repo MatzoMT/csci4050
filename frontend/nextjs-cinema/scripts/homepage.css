@@ -11,8 +11,9 @@ main {
 }
 
 .image-wrapper {
-    max-width: 20%;
+    width: 20%;
     text-align: center;
+    background-color: orange;
 }
 
 #currently-showing-movies > div {
