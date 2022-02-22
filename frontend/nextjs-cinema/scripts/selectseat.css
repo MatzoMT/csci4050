@@ -1,0 +1,25 @@
+.seat-row li, .seat-row p {
+    display: inline-block;
+    border-radius: 5em;
+    width: 7%;
+    margin-left: 0.5%;
+    margin-right: 0.5%;
+    border: 0.25em solid #1965d8;
+    color: #1965d8;
+}
+.seat-row {
+    margin-left: 25%;
+    margin-right: 25%;
+    text-align: center;
+}
+#screen {
+    margin-top: 3em;
+    margin-bottom: 1.5em;
+    border-radius: 10px;
+    height: 0.5em;
+    width: 20%;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 1.5em 0 0 #000000;
+    font-family: sans-serif;
+}
