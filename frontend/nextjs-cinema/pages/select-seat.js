@@ -86,6 +86,8 @@ export default function SelectSeat(movieName) {
                 <input type="text" value="1" class="age-select-field" />
                 <span class="plus-child">+</span>
             </div>
+            <button id="return-home-button" type="button"><a href="checkout" id="return-home-text">Proceed to Checkout</a></button>
+
 
 
 

@@ -22,34 +22,39 @@ export default function Home() {
         <NavBar />
         <main >
 
-        <h1 id="title">FilmMax</h1>
-        <h1 id="subtitle">Your destination for the best movie experience.</h1>
+          <h1 id="title">FilmMax</h1>
+          <h1 id="subtitle">Your destination for the best movie experience.</h1>
           <div id="currently-showing-section">
-          <h1>Currently Showing</h1>
-          <div id="currently-showing-movies">
-            <div className="image-wrapper">
-              <Image src={isleOfDogs} layout="responsive" sizes="50vw"/>
-              <h2>Isle of Dogs</h2>
-            </div>
+            <h1>Currently Showing</h1>
+            <div id="currently-showing-movies">
+              <div className="image-wrapper">
+                <a href="movies/isle-of-dogs" style={{textDecoration: 'none', color: '#000000'}}>
+                  <Image src={isleOfDogs} layout="responsive" sizes="50vw" />
+                  <h2>Isle of Dogs</h2>
+                </a>
 
-            <div className="image-wrapper">
-              <Image src={granTorino} />
-              <h2>Gran Torino</h2>
-            </div>
+              </div>
 
-          </div>
-          </div>
+              <div className="image-wrapper">
+              <a href="movies/gran-torino" style={{textDecoration: 'none', color: '#000000'}}>
+                <Image src={granTorino} />
+                <h2>Gran Torino</h2>
+                </a>
+              </div>
 
-
-        <div id="coming-soon-section">
-        <h1>Coming Soon</h1>
-          <div id="coming-soon-movies">
-            <div className="image-wrapper">
-              <Image src={whiplash} />
-              <h2>Whiplash</h2>
             </div>
           </div>
-        </div>
+
+
+          <div id="coming-soon-section">
+            <h1>Coming Soon</h1>
+            <div id="coming-soon-movies">
+              <div className="image-wrapper">
+                <Image src={whiplash} />
+                <h2>Whiplash</h2>
+              </div>
+            </div>
+          </div>
 
 
 
