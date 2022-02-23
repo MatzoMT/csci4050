@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+/* can now reference my font */
+
+#confirmation {
+    margin: auto;
+    width: 50%;  
+    font-size: 100%;
+}
+
+#confirmation div{
+    border-style: solid;
+    border-color: black;
+    margin-left: 4em;
+}
+
+#confirmation p {
+    padding-top: 0.2em;
+    margin-bottom: 0.2em;;
+}
+
+#confirmation button {
+    padding: 0.4em;
+    border-radius: 12px;
+    background-color: black;
+    color: white;
+    width: 30%;
+    
+    margin-top: 1em;
+    display:block;
+
+}
+
+#confirmation input {
+    margin: 0.2em;
+    padding: 0.2em;
+}
+
+#inline {
+    display: inline;
+}
+
+#footer {
+    font-size: 90%;
+    margin: auto;
+    margin-top: 3em;
+    width: 50%;  
+}

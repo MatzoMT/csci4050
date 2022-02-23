@@ -5,6 +5,10 @@ import '../scripts/homepage.css';
 import '../scripts/adminhome.css';
 import '../scripts/booktickets.css';
 import '../scripts/selectseat.css';
+import '../scripts/registration.css';
+import '../scripts/login.css';
+import '../scripts/confirmation.css'
+import '../scripts/editprofile.css'
 
 // This default export is required in a new `pages/_app.js` file.
 export default function MyApp({ Component, pageProps }) {
