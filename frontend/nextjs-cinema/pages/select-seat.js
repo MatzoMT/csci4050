@@ -1,6 +1,7 @@
 import NavBar from '../components/NavBar.js';
 import isleOfDogs from '../images/isleofdogs.jpg';
 import Image from 'next/image';
+import Footer from '../components/Footer.js';
 
 
 
@@ -18,53 +19,59 @@ export default function SelectSeat(movieName) {
             <h2 className="book-movie-available-times">Available Seats</h2>
             <h3 id="screen">SCREEN</h3>
             <div className="seat-row">
-                <p>A1</p>
-                <p>A2</p>
-                <p>A3</p>
-                <p>A4</p>
-                <p>A5</p>
-                <p>A6</p>
-                <p>A7</p>
-                <p>A8</p>
-                <p>A9</p>
+                <p className="vacant-seat">A1</p>
+                <p className="closed-seat">A2</p>
+                <p className="vacant-seat">A3</p>
+                <p className="vacant-seat">A4</p>
+                <p className="vacant-seat">A5</p>
+                <p className="vacant-seat">A6</p>
+                <p className="vacant-seat">A7</p>
+                <p className="vacant-seat">A8</p>
+                <p className="vacant-seat">A9</p>
                 <br></br>
-                <p>B1</p>
-                <p>B2</p>
-                <p>B3</p>
-                <p>B4</p>
-                <p>B5</p>
-                <p>B6</p>
-                <p>B7</p>
-                <p>B8</p>
-                <p>B9</p>
+                <p className="vacant-seat">B1</p>
+                <p className="vacant-seat">B2</p>
+                <p className="vacant-seat">B3</p>
+                <p className="vacant-seat">B4</p>
+                <p className="vacant-seat">B5</p>
+                <p className="vacant-seat">B6</p>
+                <p className="vacant-seat">B7</p>
+                <p className="vacant-seat">B8</p>
+                <p className="vacant-seat">B9</p>
                 <br></br>
-                <p>C1</p>
-                <p>C2</p>
-                <p>C3</p>
-                <p>C4</p>
-                <p>C5</p>
-                <p>C6</p>
-                <p>C7</p>
-                <p>C8</p>
-                <p>C9</p>
+                <p className="vacant-seat">C1</p>
+                <p className="vacant-seat">C2</p>
+                <p className="vacant-seat">C3</p>
+                <p className="vacant-seat">C4</p>
+                <p className="vacant-seat">C5</p>
+                <p className="vacant-seat">C6</p>
+                <p className="vacant-seat">C7</p>
+                <p className="vacant-seat">C8</p>
+                <p className="vacant-seat">C9</p>
                 <br></br>
-                <p>D1</p>
-                <p>D2</p>
-                <p>D3</p>
-                <p>D4</p>
-                <p>D5</p>
-                <p>D6</p>
-                <p>D7</p>
-                <p>D8</p>
-                <p>D9</p>
+                <p className="vacant-seat">D1</p>
+                <p className="vacant-seat">D2</p>
+                <p className="vacant-seat">D3</p>
+                <p className="vacant-seat">D4</p>
+                <p className="closed-seat">D5</p>
+                <p className="closed-seat">D6</p>
+                <p className="closed-seat">D7</p>
+                <p className="vacant-seat">D8</p>
+                <p className="vacant-seat">D9</p>
+                <br></br>
+            </div>
+            <div id="legend">
+                <p className="vacant-seat-legend">VACANT SEAT</p>
+                <p className="closed-seat-legend">CLOSED SEAT</p>
             </div>
 
 
-            
+
 
 
         </div>
 
+        <Footer />
 
     </div>
 }
