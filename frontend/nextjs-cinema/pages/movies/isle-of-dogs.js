@@ -10,7 +10,7 @@ export default function IsleOfDogs(movieName) {
         </div>
         <div className="movie-info">
             <h1 className="movie-title">Isle of Dogs</h1>
-            <button className="book-button" type="button"><a href="http://localhost:3000/book-tickets" className="book-tickets-text">BOOK TICKETS</a></button>
+            <button className="book-button" type="button"><a href="http://localhost:3000/select-time" className="book-tickets-text">BOOK TICKETS</a></button>
             <h2 className="movie-description">Set in Japan, Isle of Dogs follows a boy's odyssey in search of his lost dog.</h2>
             <p className="movie-director">Director: Wes Anderson</p>
             <p className="movie-genre">Genre: Comedy, Adventure</p>

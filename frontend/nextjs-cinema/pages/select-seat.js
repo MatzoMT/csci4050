@@ -16,6 +16,8 @@ export default function SelectSeat(movieName) {
 
         <div className="center">
             <h1 className="book-movie-title">Isle of Dogs</h1>
+            <h3>Wednesday, February 23</h3>
+            <h3>4:30</h3>
             <h2 className="book-movie-available-times">Available Seats</h2>
             <h3 id="screen">SCREEN</h3>
             <div className="seat-row">
@@ -67,19 +69,19 @@ export default function SelectSeat(movieName) {
             </div>
             <h2 className="book-movie-available-times">Ticket Ages</h2>
             <div class="age-select">
-                <h2>Child</h2>
+                <h2>Child ($4)</h2>
                 <span class="minus-child">-</span>
                 <input type="text" value="1" class="age-select-field" />
                 <span class="plus-child">+</span>
             </div>
             <div class="age-select">
-                <h2>Adult</h2>
+                <h2>Adult ($7)</h2>
                 <span class="minus-child">-</span>
                 <input type="text" value="1" class="age-select-field" />
                 <span class="plus-child">+</span>
             </div>
             <div class="age-select">
-                <h2>Senior</h2>
+                <h2>Senior ($4)</h2>
                 <span class="minus-child">-</span>
                 <input type="text" value="1" class="age-select-field" />
                 <span class="plus-child">+</span>

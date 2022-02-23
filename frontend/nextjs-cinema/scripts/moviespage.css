@@ -13,11 +13,14 @@
     padding-left: 2%;
     border-right: 0.1em solid #c4c4c4;
 }
-#movies-column > #currently-showing-movies > .image-wrapper {
+#movies-column > #currently-showing-movies > .image-wrapper, 
+#movies-column > #coming-soon-section > #coming-soon-movies > .image-wrapper  {
     width: 20%;
-    height: 20%;
+    height: 70%;
+    padding-bottom: 0.75%;
 }
-#movies-column > #currently-showing-movies > .image-wrapper > h2 {
+#movies-column > #currently-showing-movies > .image-wrapper > h2, 
+#movies-column > #coming-soon-section > #coming-soon-movies > .image-wrapper > h2 {
     font-size: 125%;
 }
 

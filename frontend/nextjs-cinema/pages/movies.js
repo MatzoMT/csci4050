@@ -82,7 +82,7 @@ export default function Home() {
             </body>
 
             <footer>
-
+          
             </footer>
 
             {
