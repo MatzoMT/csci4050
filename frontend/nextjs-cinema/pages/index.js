@@ -5,6 +5,8 @@ import Image from 'next/image';
 import CurrentlyShowingMovies from '../static/currently-showing.js';
 import isleOfDogs from '../images/isleofdogs.jpg';
 import whiplash from '../images/whiplash.jpeg';
+import granTorino from '../images/grantorino.jpg';
+import granTorinoBanner from '../images/granTorinoBanner.jpg';
 
 export default function Home() {
   return (
@@ -20,20 +22,19 @@ export default function Home() {
         <NavBar />
         <main >
 
+        <h1 id="title">FilmMax</h1>
+        <h1 id="subtitle">Your destination for the best movie experience.</h1>
           <div id="currently-showing-section">
           <h1>Currently Showing</h1>
           <div id="currently-showing-movies">
             <div className="image-wrapper">
-              <Image src={isleOfDogs} />
+              <Image src={isleOfDogs} layout="responsive" sizes="50vw"/>
               <h2>Isle of Dogs</h2>
             </div>
+
             <div className="image-wrapper">
-              <Image src={whiplash} />
-              <h2>Whiplash</h2>
-            </div>
-            <div className="image-wrapper">
-              <Image src={whiplash} />
-              <h2>Whiplash</h2>
+              <Image src={granTorino} />
+              <h2>Gran Torino</h2>
             </div>
 
           </div>

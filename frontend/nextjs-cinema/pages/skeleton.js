@@ -8,26 +8,20 @@ import whiplash from '../images/whiplash.jpeg';
 
 // SKELETON CODE
 
-export default function Home() {
+export default function TicketConfirmation() {
   return (
     <div className="container">
 
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-        <Script src="../static/currently-showing.js" />
-
-      </Head>
-      <body>
         <NavBar />
         <main >
+
+          <h1>Congrats,</h1>
 
 
 
 
         </main>
 
-      </body>
 
       <footer>
 
