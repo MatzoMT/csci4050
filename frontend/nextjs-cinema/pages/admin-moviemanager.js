@@ -7,6 +7,15 @@ import isleOfDogs from '../images/isleofdogs.jpg';
 import whiplash from '../images/whiplash.jpeg';
 import AdminNavBar from '../components/AdminNavBar.js';
 
+
+// ---THE TABLES---
+//movies table (movie_id, movie_name, movie_rating, movie_genre, movie_director, movie_description, movie_trailer, movie_status)
+//showtimes table - IMPORTANT (movie_id, showtime) //id is not displayed to admin, as it is simply backend. used to get the movie name when managing showtimes
+      //(showtimes and movies are linked by movie_id)
+//users table (stuff)
+//promotions table (promotion_id, promotion_code, promotion_discount, promotion_expiry)
+//probably want to make each table "item" its own element for cleanliness?? idk
+
 export default function AdminHome() {
   return (
     <div className="container">
@@ -25,11 +34,70 @@ export default function AdminHome() {
 
             <h1>Hello AdminUser12345.</h1>
             <h2>You are currently logged in as an administrator.</h2>
-            <h1><a href="#">Manage and Schedule Movies</a></h1>
-            <h1><a href="#">Manage Users</a></h1>
-            <h1><a href="#">Manage Promotions</a></h1>
+            <h1>Movies</h1>
+            <button type="button">Add new movie</button> 
+            <table className="table">
+              <tr>
+                <th/>
+                <th>Name</th>
+                <th>Genre</th>
+                <th>Rating</th>
+                <th>Director</th>
+                <th>Description</th>
+                <th>Trailer</th>
+                <th>Status</th>
+              </tr>
+              <tr>
+                <td><button>Manage Movie</button></td>
+                <td>Gran Torino</td>
+                <td>Drama</td>
+                <td>R</td>
+                <td>Clint Eastwood</td>
+                <td>Disgruntled Korean War veteran Walt Kowalski sets out to reform his neighbor, Thao Lor, a Hmong teenager who tried to steal Kowalski's prized possession: a 1972 Gran Torino.</td>
+                <td>https://www.youtube.com/embed/RMhbr2XQblk</td>
+                <td>COMING SOON</td>
+              </tr>
+              <tr>
+              <td><button>Manage Movie</button></td>
+                <td>Isle of Dogs</td>
+                <td>Comedy, Adventure</td>
+                <td>PG-13</td>
+                <td>Wes Anderson</td>
+                <td>Set in Japan, Isle of Dogs follows a boy's odyssey in search of his lost dog.</td>
+                <td>https://www.youtube.com/embed/dt__kig8PVU?&autoplay=1</td>
+                <td>BOOK TICKETS</td>
+              </tr>
+              <tr>
+              <td><button>Manage Movie</button></td>
+                <td>Whiplash</td>
+                <td>Drama</td>
+                <td>R</td>
+                <td>Damien Chazelle</td>
+                <td>A promising young drummer enrolls at a cut-throat music conservatory where his dreams of greatness are mentored by an instructor who will stop at nothing to realize a student's potential.</td>
+                <td>https://www.youtube.com/embed/7d_jQycdQGo?&autoplay=1</td>
+                <td>COMING SOON</td>
+              </tr>
+            </table>
 
 
+
+            <h1>Now Showing</h1>
+            <button type="button">Add new showtime</button> 
+            <table>
+              <tr>
+              <th/>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Showtime</th>
+              </tr>
+              <tr>
+                <td><button>Manage Showtime</button></td>
+                <td>Isle of Dogs</td>
+                <td>2-23-2022</td>
+                <td>18:00</td>
+              </tr>
+            </table>
+            
 
          </div>
         </main>

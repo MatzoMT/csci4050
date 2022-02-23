@@ -7,6 +7,15 @@ import isleOfDogs from '../images/isleofdogs.jpg';
 import whiplash from '../images/whiplash.jpeg';
 import AdminNavBar from '../components/AdminNavBar.js';
 
+
+// ---THE TABLES---
+//movies table (movie_id, movie_name, movie_rating, movie_genre, movie_director, movie_description, movie_trailer, movie_status)
+//showtimes table - IMPORTANT (movie_id, showtime) //id is not displayed to admin, as it is simply backend. used to get the movie name when managing showtimes
+      //(showtimes and movies are linked by movie_id)
+//users table (stuff)
+//promotions table (promotion_id, promotion_code, promotion_discount, promotion_expiry)
+//probably want to make each table "item" its own element for cleanliness?? idk
+
 export default function AdminHome() {
   return (
     <div className="container">
@@ -25,12 +34,22 @@ export default function AdminHome() {
 
             <h1>Hello AdminUser12345.</h1>
             <h2>You are currently logged in as an administrator.</h2>
-            <h1><a href="#">Manage and Schedule Movies</a></h1>
-            <h1><a href="#">Manage Users</a></h1>
-            <h1><a href="#">Manage Promotions</a></h1>
-
-
-
+            <h1>Promotions</h1>
+            <button type="button">Add new promotion</button> 
+            <table className="table">
+              <tr>
+                <th/>
+                <th>Code</th>
+                <th>Discount Amount</th>
+                <th>Expiry Date</th>
+              </tr>
+              <tr>
+                <td><button>Manage Promotion</button></td>
+                <td>XXXXXXXX</td>
+                <td>10%</td>
+                <td>2-23-2022</td>
+              </tr>
+            </table>
          </div>
         </main>
 
