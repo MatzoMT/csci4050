@@ -1,0 +1,26 @@
+#currently-showing-movies > div {
+    float:left;
+    margin-right: 5%;
+}
+
+
+
+table, th, td {
+    border: 1px solid black;
+  }
+
+  table {
+      width: 100%;
+  }
+
+
+  #movie-manager-section button {
+    padding: 0.4em;
+    border-radius: 12px;
+    background-color: black;
+    color: white;
+    
+    margin-top: 1em;
+    display:block;
+
+}
