@@ -26,6 +26,14 @@
     padding: 0.5em;
     border-radius: 0.5em;
 }
+.coming-soon-button {
+    font-family: 'Open Sans', sans-serif;
+    color: white;
+    background-color: #c4c4c4;
+    border: none;
+    font-size: 150%;
+    padding: 0.5em;
+    border-radius: 0.5em;}
 
 .book-tickets-text {
     text-decoration: none;

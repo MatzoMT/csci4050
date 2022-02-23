@@ -10,7 +10,7 @@ export default function Whiplash(movieName) {
         </div>
         <div className="movie-info">
             <h1 className="movie-title">Whiplash</h1>
-            <button className="book-button" type="button">COMING SOON</button>
+            <button className="coming-soon-button" type="button">COMING SOON</button>
             <h2 className="movie-description">A promising young drummer enrolls at a cut-throat music conservatory where his dreams of greatness are mentored by an instructor who will stop at nothing to realize a student's potential.</h2>
             <p className="movie-director">Director: Damien Chazelle</p>
             <p className="movie-genre">Genre: Drama</p>

@@ -11,6 +11,7 @@ import '../scripts/login.css';
 import '../scripts/confirmation.css'
 import '../scripts/editprofile.css'
 import '../scripts/ticketconfirmation.css'
+import '../scripts/moviespage.css';
 
 // This default export is required in a new `pages/_app.js` file.
 export default function MyApp({ Component, pageProps }) {
