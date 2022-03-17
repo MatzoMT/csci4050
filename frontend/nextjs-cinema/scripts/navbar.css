@@ -1,0 +1,63 @@
+.navbar {
+  /* to make navbar stick to browser */
+  padding-top: 1.5em;
+  padding-bottom: 1.5em;
+  background-color: #000000;
+  overflow: hidden;
+  color: white;
+  }
+  
+/* Style the links inside the navigation bar */
+.navbar a {
+  float: left;
+  color: #ffffff;
+  text-align: center;
+  margin-left: 6.5%; 
+  text-decoration: none;
+  font-size: 17px;
+}
+.navbar-button:hover {
+  border-bottom: 0.1em solid white;
+}
+
+.navbar a:not(#sign-in) {
+  margin-top: 0.25em;
+}
+
+#searchbar {
+  width: 40%;
+}
+#searchbar input {
+  font-family: 'Open Sans', sans-serif;
+  width: 80%;
+  height: 100%;
+  font-size: 120%;
+  border: none;
+  border-radius: 1em;
+  padding-left: 1em;
+}
+
+
+/* Add a color to the active/current link */
+.navbar a.active {
+  background-color: #04AA6D;
+  color: white;
+}
+
+#sign-in {
+  margin-top: 0.2em;
+  border: 0.1em solid white;
+  padding-left: 1em;
+  padding-right: 1em;
+  border-radius: 1em;
+}
+
+#logo {
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+#admin-logo {
+  margin-left: 5%;
+  margin-right: 27%;
+}

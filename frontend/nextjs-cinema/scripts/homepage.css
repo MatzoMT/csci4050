@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+/* can now reference my font */
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+main {
+    margin-left: 15%;
+    margin-right: 15%;
+
+}
+#title {
+    font-size: 300%;
+    text-align: center;
+}
+#subtitle {
+    font-weight: normal;
+    text-align: center;
+    border-bottom: 0.025em solid black;
+    padding-bottom: 1em;
+}
+#featured-banner {
+    width: 120%;
+    margin-left: -10em;
+}
+
+.image-wrapper {
+    position: relative;
+    width: 20%;
+    height: 24em;
+    text-align: center;
+    box-shadow: #c4c4c4 0 0.25em 1em 0;
+}
+
+.image-wrapper:hover {
+    box-shadow: #1965d8 0 0.25em 1em 0;
+    transition: 0.2s;
+}
+
+
+#currently-showing-movies > div {
+    float:left;
+    margin-right: 5em;
+}
+
+#coming-soon-section {
+    margin-top: 28em;
+}

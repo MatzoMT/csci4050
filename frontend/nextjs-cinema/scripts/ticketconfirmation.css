@@ -1,0 +1,47 @@
+#movie-confirmation-info {
+    text-align: left;
+    margin-left: 25%;
+    margin-right: 25%;
+}
+
+.left {
+    float: left;
+    width: 15%;
+    margin-left: 30%;
+    margin-right: 5%;
+}
+.row h3 {
+    display: inline-block;
+    margin-right: 5%;
+}
+
+#checkout-left {
+    float: left;
+    width: 25%;
+    margin-left: 25%;
+    margin-right: 5%;
+    text-align: left;
+}
+#checkout-right {
+    margin-right: 25%;
+    text-align: left;
+}
+.right {
+    width: 50%;
+}
+#return-home-button {
+    font-family: 'Open Sans', sans-serif;
+    color: white;
+    background-color: #1965d8;
+    border: none;
+    font-size: 150%;
+    padding: 0.5em;
+    border-radius: 0.5em;
+    margin-left: 36%;
+    margin-right: 36%;
+    margin-top: 1em;
+}
+#return-home-text {
+    color: white;
+    text-decoration: none;
+}

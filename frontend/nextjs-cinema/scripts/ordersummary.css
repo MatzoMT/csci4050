@@ -1,0 +1,14 @@
+#edit-order-button, #proceed-to-checkout-button {
+    font-family: 'Open Sans', sans-serif;
+    color: white;
+    background-color: #1965d8;
+    border: none;
+    font-size: 150%;
+    padding: 0.5em;
+    border-radius: 0.5em;
+    margin-left: 15%;
+}
+#edit-order-button > a, #proceed-to-checkout-button > a {
+    color: white;
+    text-decoration: none;
+}

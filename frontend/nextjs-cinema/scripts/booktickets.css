@@ -1,0 +1,40 @@
+.book-movie-poster {
+    width: 10%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 4em;
+}
+
+.book-movie-info {
+    text-align: center;
+}
+.book-movie-date {
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+.book-movie-date h2 {
+    font-size: 100%;
+}
+
+
+
+.book-movie-date-time {
+    margin-left: 25%;
+    margin-right: 25%;
+    text-align: center;
+}
+.book-movie-date-time h3 {
+    display: inline-block;
+    border-radius: 5em;
+    width: 12%;
+    margin-left: 3%;
+    margin-right: 3%;
+    border: 0.25em solid #1965d8;
+    color: #1965d8;
+}
+
+.book-movie-date-time h3:hover {
+    background-color: #1965d8;
+    color: #FFFFFF;
+    transition: 0.2s;
+}
