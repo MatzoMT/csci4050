@@ -5,3 +5,28 @@
 
 * IMPORTANT*
 - Next JS - use className instead of class
+
+
+* DJANGO *
+To run Django:
+cd demo (dir with manage.py)
+python manage.py runserver
+
+If there is an error saying "You have __ unapplied migration(s)..."
+python manage.py makemigrations
+python manage.py migrate
+
+Create APP
+python manage.py startapp <app_name>
+Then, add to INSTALLED_APPS in settings.py
+
+App dir
+- views.py: main backend
+- models.py: create database models
+- admin.py: register models so it can be seen in admin [portals?]
+- tests.py: test cases 
+- apps.py: no changes in this file for demo purposes?
+
+Adding functions in views.py
+- CREATE urls.py in myapp dir (for adding urls where to return each function)
+- This is DIFFERENT from the urls.py in the Django project!
