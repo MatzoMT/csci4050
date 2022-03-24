@@ -6,3 +6,7 @@ urlpatterns = [
     path('', index, name='index'),
     path('finland', test)
 ]
+
+
+# /v1/api/get-dafdfa
+# /v1/api/get-something-else
