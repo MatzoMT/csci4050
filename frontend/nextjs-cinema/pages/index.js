@@ -7,8 +7,11 @@ import isleOfDogs from '../images/isleofdogs.jpg';
 import whiplash from '../images/whiplash.jpeg';
 import granTorino from '../images/grantorino.jpg';
 import granTorinoBanner from '../images/granTorinoBanner.jpg';
+import React, { useState, useEffect } from 'react';
+
 
 export default function Home() {
+
   return (
     <div className="container">
 
@@ -19,6 +22,7 @@ export default function Home() {
 
       </Head>
       <body>
+        <h1>{window.sessionStorage.getItem("currentloggedin")}</h1>
         <NavBar />
         <main >
 

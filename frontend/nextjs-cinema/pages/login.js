@@ -27,7 +27,7 @@ export default function Home() {
               <p>Password</p>
               <a><input type="text" placeholder="Enter your password"></input></a><br/>
               <a id="forgotpassword" href="something">Forgot your password?</a>
-              <button type="button">Sign-In</button> 
+              <button type="submit">Sign-In</button> 
           </div>
           <div id="footer"> 
             <p id="inline">Don't have an account?</p> <a href="something">Create one here.</a>
