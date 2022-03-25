@@ -38,10 +38,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'editprofile.apps.EditprofileConfig',
-    'rest_framework'
+    'rest_framework',
+    'testapi.apps.TestapiConfig',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -74,7 +77,21 @@ WSGI_APPLICATION = 'moviesystem.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
+"""
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'moviesystem',
+        'HOST': '127.0.0.1',
+        'USER': 'nico',
+        'PASSWORD': 'nicolas',
+        'PORT': '3306',
+    }
+}
+"""
+# CREATE USER 'nico'@'localhost' IDENTIFIED BY 'nicolas';
+# GRANT ALL PRIVILEGES ON *.* TO 'nico'@'localhost' WITH GRANT OPTION;
+# mysql -u nico -p moviesystem < moviesystem.sql
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -128,6 +145,9 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+CORS_ORIGIN_ALLOW_ALL = False
+# Below MAY NEED TO CHANGE
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
+    'http://localhost:8081'
 ]
