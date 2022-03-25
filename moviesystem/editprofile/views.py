@@ -49,7 +49,7 @@ def cards_view(request):
 	context = {
 		'list': card_list,
 	}
-
+	
 	template = loader.get_template('editprofile/cardsview.html')
 	return HttpResponse(template.render(context, request))
 
