@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Payment cards</title>
+  </head>
+  <body>
+    <h3>Payment methods:</h3>
+    <table border="1">
+      <tr>
+        <td>Number</td><td>Type</td><td>Expiration</td><td>Billing address</td>
+      </tr>
+      {% for x in list %} 
+        <tr><td>{{ x.card_type }}</td><td>{{ x }}</td><td>{{ x.expiration_date }}</td><td>{{ x.billing_address }}</td></li>
+      {% endfor %}
+    </table>     
+  </body>
+</html>
