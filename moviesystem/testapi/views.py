@@ -35,6 +35,10 @@ def route_get_finland(request):
 def route_get_movies(request):
     print("hello")
 
+@api_view(['POST'])
+def route_login(request):
+    print("hello")
+
 # Post username and password
 # If there is a query with a matching username and password, return true
 # else, return false
