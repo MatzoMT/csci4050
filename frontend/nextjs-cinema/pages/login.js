@@ -1,12 +1,35 @@
 import Head from 'next/head';
 import NavBar from '../components/NavBar.js';
 import Script from 'next/script';
-import Image from 'next/image'
+import Image from 'next/image';
+import React, { useState } from 'react';
+import axios from 'axios';
+
+
 
 
 // SKELETON CODE
 
 export default function Home() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [incorrectMessage, setIncorrectMessage] = useState("");
+
+  let handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      axios.post("http://localhost:8000/api/v1/login", { email: email, password: password }).then((response) => {
+        if (response.data.loginSuccess == "true") {
+          alert("true");
+        } else {
+          setIncorrectMessage("Username or password is incorrect.");
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="container">
 
@@ -19,17 +42,22 @@ export default function Home() {
       <body>
         <NavBar />
         <main>
-          
-          <div id="login"> 
+
+          <div id="login">
+            <form onSubmit={handleSubmit}>
+
               <h1>Sign-In</h1>
               <p>Email Address</p>
-              <a><input type="text" placeholder="Enter your email address"></input></a><br/>
+              <a><input type="text" placeholder="Enter your email address" onChange={(val) => setEmail(val.target.value)}></input></a><br />
               <p>Password</p>
-              <a><input type="text" placeholder="Enter your password"></input></a><br/>
+              <a><input type="text" placeholder="Enter your password" onChange={(val) => setPassword(val.target.value)}></input></a><br />
               <a id="forgotpassword" href="something">Forgot your password?</a>
-              <button type="button">Sign-In</button> 
+              <button type="submit">Sign-In</button>
+            </form>
+            <h3 id="incorrect-credentials" style={{color: 'red', position: 'absolute'}}>{incorrectMessage}</h3>
+
           </div>
-          <div id="footer"> 
+          <div id="footer">
             <p id="inline">Don't have an account?</p> <a href="something">Create one here.</a>
           </div>
         </main>
