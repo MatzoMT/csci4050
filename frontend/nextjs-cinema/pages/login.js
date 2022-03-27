@@ -4,8 +4,7 @@ import Script from 'next/script';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import axios from 'axios';
-
-
+import { useRouter } from 'next/router';
 
 
 // SKELETON CODE
@@ -14,13 +13,15 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [incorrectMessage, setIncorrectMessage] = useState("");
+  const router = useRouter();
 
   let handleSubmit = async (e) => {
     e.preventDefault();
     try {
       axios.post("http://localhost:8000/api/v1/login", { email: email, password: password }).then((response) => {
         if (response.data.loginSuccess == "true") {
-          alert("true");
+          window.sessionStorage.setItem("email", email);
+          router.push('/');
         } else {
           setIncorrectMessage("Username or password is incorrect.");
         }
