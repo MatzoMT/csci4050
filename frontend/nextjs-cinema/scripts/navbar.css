@@ -44,12 +44,23 @@
   color: white;
 }
 
-#sign-in {
+#sign-in, #profile-button {
   margin-top: 0.2em;
   border: 0.1em solid white;
   padding-left: 1em;
   padding-right: 1em;
   border-radius: 1em;
+}
+#sign-in:hover, #profile-button:hover {
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+}
+#profile-button:hover~.dropdown-content {
+  background-color: orange;
+  display:block;
 }
 
 #logo {
@@ -60,4 +71,23 @@
 #admin-logo {
   margin-left: 5%;
   margin-right: 27%;
+}
+
+.dropdown-content {
+  width: 15%;
+  background-color: #000000;
+  color: white;
+  margin-left: 85%;
+  position: absolute;
+  border-radius: 0 0 0.75em 0.75em;
+}
+.dropdown-content div {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  padding-left: 5%;
+}
+
+.border-top {
+  border-top: 0.1em solid #c4c4c4;
+  font-weight: normal;
 }
