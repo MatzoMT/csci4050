@@ -35,15 +35,30 @@ def route_get_finland(request):
 def route_get_movies(request):
     print("hello")
 
+# End point for email (username), password verification
+# Checks for matches in Django / MySQL database
+# JSON 'email' return values are "true" or "false"
 @api_view(['POST'])
 def route_login(request):
-    print("hello")
+    data = JSONParser().parse(request)
+    login_success = "false"
+    users = User.objects.all().filter(email=data['email'])
+    if len(users) > 0 and users[0].password==data['password']:
+        login_success = "true"
+
+    response = {
+        'loginSuccess': login_success,
+        'email': data['email']
+    }
+    return JsonResponse(response)
 
 # Post username and password
 # If there is a query with a matching username and password, return true
 # else, return false
 @api_view(['POST'])
 def route_create_user(request):
+    # Check request to see if it has all fields
+    # replace below 
     users = User.objects.all()
     user = User(first_name='Spider', last_name='Man', password='password', email='spodermin@gmail.com', phone='987654321', status='Inactive', user_type_id=1, promotion=1)
     user.save()
