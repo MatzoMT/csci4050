@@ -70,7 +70,7 @@ def route_create_user(request):
     # Check request to see if it has all fields
     # replace below 
     users = User.objects.all()
-    user = User(first_name='Man', last_name='Spider', password='password', email='manspider@gmail.com', phone='987654321', status='Inactive', user_type_id=1, promotion=1)
+    user = User(first_name=data['firstName'], last_name=data['lastName'], password=data['password'], email=data['email'], phone=data['phone'], status="Inactive", user_type_id=1, promotion=data['promotion'])
     # user = User(first_name=name, last_name=form_info.get('last_name'), password=form_info.get('password'), email=email, phone=form_info.get('phone'), status='Inactive', user_type_id=1, promotion=form_info.get('promotion'))
     user.save()
     for user in users:
