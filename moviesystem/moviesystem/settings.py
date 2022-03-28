@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,7 +41,8 @@ INSTALLED_APPS = [
     'editprofile.apps.EditprofileConfig',
     'rest_framework',
     'testapi.apps.TestapiConfig',
-    'corsheaders'
+    'corsheaders',
+    'users.apps.UsersConfig'
 ]
 
 MIDDLEWARE = [
@@ -152,6 +154,9 @@ CORS_ORIGIN_WHITELIST = [
     'http://localhost:8081'
 ]
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'filmmaxcustomerservice@gmail.com'
