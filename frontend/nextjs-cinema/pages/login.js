@@ -21,7 +21,12 @@ export default function Home() {
       axios.post("http://localhost:8000/api/v1/login", { email: email, password: password }).then((response) => {
         if (response.data.loginSuccess == "true") {
           window.sessionStorage.setItem("email", email);
-          router.push('/');
+          if (response.data.isAdmin == "true") {
+            window.sessionStorage.setItem("isAdmin", true);
+            router.push('/admin-home');
+          } else {
+            router.push('/');
+          }
         } else {
           setIncorrectMessage("Username or password is incorrect.");
         }
@@ -59,7 +64,7 @@ export default function Home() {
 
           </div>
           <div id="footer">
-            <p id="inline">Don't have an account?</p> <a href="something">Create one here.</a>
+            <p id="inline">Don't have an account?</p> <a href="/registration">Create one here.</a>
           </div>
         </main>
 
