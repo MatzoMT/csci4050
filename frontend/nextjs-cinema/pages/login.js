@@ -56,7 +56,7 @@ export default function Home() {
               <p>Email Address</p>
               <a><input type="text" placeholder="Enter your email address" onChange={(val) => setEmail(val.target.value)}></input></a><br />
               <p>Password</p>
-              <a><input type="text" placeholder="Enter your password" onChange={(val) => setPassword(val.target.value)}></input></a><br />
+              <a><input type="password" placeholder="Enter your password" onChange={(val) => setPassword(val.target.value)}></input></a><br />
               <a id="forgotpassword" href="something">Forgot your password?</a>
               <button type="submit">Sign-In</button>
             </form>
