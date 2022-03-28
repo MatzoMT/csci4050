@@ -92,9 +92,12 @@ def edit_password(request):
 	
 	form = EditPasswordForm(request.POST or None)
 	if form.is_valid():
+		print("old_inp", form.cleaned_data.get('old_password'))
+		print("old_encry", user.password)
 		matches = check_password(form.cleaned_data.get('old_password'), user.password)
+		print(matches)
 		if(matches):
-			user.password = form.cleaned_data.get('new_password')
+			user.password = make_password(form.cleaned_data.get('new_password'))
 			user.save()
 			messages.success(request, 'Your password was successfully updated!')
 			return redirect('/editprofile')
