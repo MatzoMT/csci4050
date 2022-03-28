@@ -59,7 +59,7 @@ export default function Home() {
 
           </div>
           <div id="footer">
-            <p id="inline">Don't have an account?</p> <a href="something">Create one here.</a>
+            <p id="inline">Don't have an account?</p> <a href="/registration">Create one here.</a>
           </div>
         </main>
 

@@ -45,7 +45,6 @@ def route_login(request):
     users = User.objects.all().filter(email=data['email'])
     if len(users) > 0 and users[0].password==data['password']:
         login_success = "true"
-
     response = {
         'loginSuccess': login_success,
         'email': data['email']
@@ -67,7 +66,7 @@ def route_create_user(request):
         print(user.password)
     return HttpResponse(users)
 
-@api_view()
+@api_view(['POST'])
 def route_edit_profile(request):
 	try:
 		user = User.objects.get(pk=1)
