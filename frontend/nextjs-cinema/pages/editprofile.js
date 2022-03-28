@@ -2,11 +2,36 @@ import Head from 'next/head';
 import NavBar from '../components/NavBar.js';
 import Script from 'next/script';
 import Image from 'next/image'
+import { useRouter } from 'next/router';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 
 // SKELETON CODE
 
 export default function Home() {
+  const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const router = useRouter();
+
+
+  useEffect(() => {
+    try {
+      axios.post("http://localhost:8000/api/v1/get-user-information", { email: window.sessionStorage.getItem("email") }).then((response) => {
+      if (response.data.requestSuccess == "true") {
+          setEmail(response.data.email);
+          setFirstName(response.data.firstName);
+          setLastName(response.data.lastName);
+        } else {
+          router.push('/login');
+        }
+      });
+    } catch (err) {
+      router.push('/login');
+    }
+  }, []);
+
   return (
     <div className="container">
 
@@ -19,25 +44,27 @@ export default function Home() {
       <body>
         <NavBar />
         <main>
-          
-          <div id="editprofile"> 
-              <h1>Edit your profile</h1>
-              <p>Full Name</p>
-              <a><input type="text" placeholder="Enter a new name" defaultValue="John Doe"></input></a>
-              <p>Age</p>
-              <a><input type="text" placeholder="Enter your new age" defaultValue="37"></input></a>
-              <p>Email Address</p>
-              <a><input type="text" placeholder="Enter your new email address" defaultValue = "johndoe@gmail.com"></input></a>
-              <p>Password</p>
-              <a><input type="text" placeholder="Enter a new password" defaultValue="********" ></input></a>
-              <p>Confirm Password</p>
-              <a><input type="text" placeholder="Re-enter the new password"></input></a>
-              <p>Credit Card Information</p>
-              <a><input type="text" placeholder="Credit card number"></input></a><br/>
-              <a><input type="text" placeholder="Card holder's name"></input></a><br/>
-              <a><input type="text" placeholder="CVV"></input></a><br/>
-              <a><input type="text" placeholder="Expiration date"></input></a><br/>
-              <button type="button">Update account information</button> 
+
+          <div id="editprofile">
+            <h1>Edit your profile</h1>
+            <p>First Name</p>
+            <a><input type="text" placeholder="Enter new first name" defaultValue={firstName}></input></a>
+            <p>Last Name</p>
+            <a><input type="text" placeholder="Enter new last name" defaultValue={lastName}></input></a>
+            {/*<p>Age</p>
+              <a><input type="text" placeholder="Enter your new age" defaultValue="37"></input></a>*/}
+            <p>Email Address</p>
+            <a><input type="text" placeholder="Enter new email" defaultValue={email}></input></a>
+            <p>Password</p>
+            <a><input type="text" placeholder="Enter a new password" ></input></a>
+            <p>Confirm Password</p>
+            <a><input type="text" placeholder="Re-enter the new password"></input></a>
+            {/*<p>Credit Card Information</p>
+            <a><input type="text" placeholder="Credit card number"></input></a><br />
+            <a><input type="text" placeholder="Card holder's name"></input></a><br />
+            <a><input type="text" placeholder="CVV"></input></a><br />
+            <a><input type="text" placeholder="Expiration date"></input></a><br />*/}
+            <button type="button">Update account information</button>
           </div>
         </main>
 
