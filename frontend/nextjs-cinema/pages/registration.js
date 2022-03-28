@@ -80,6 +80,7 @@ export default function Home() {
               <a><input type="text" placeholder="Enter a password" onChange={(val) => setPassword(val.target.value)}></input></a>
               <p>* Confirm Password</p>
               <a><input type="text" placeholder="Re-enter the password"></input></a>
+
               <p>Subscribe to Promotions</p>
               <input type="checkbox" onChange={handleCheckbox} />
               <button type="submit">Create your account</button>

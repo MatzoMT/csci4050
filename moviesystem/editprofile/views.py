@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
-from editprofile.forms import EditBasicForm, EditCardForm
+from editprofile.forms import EditBasicForm, EditCardForm, EditPasswordForm
 from django.views.generic.edit import UpdateView
 from editprofile.models import *
 from django.template import loader
 from django.contrib import messages
-from django.contrib.auth.forms import PasswordChangeForm
+#from django_cryptography import decrypt
 
 from django.http import HttpResponse, Http404
 
@@ -33,6 +33,7 @@ def edit_profile(request):
 	if form.is_valid():
 		user = form.save(commit=False)
 		user.save()
+		messages.success(request, 'Your information was successfully updated!')
 		return redirect('/editprofile')
 
 	template = loader.get_template('editprofile/edit.html')
@@ -54,20 +55,30 @@ def cards_view(request):
 	return HttpResponse(template.render(context, request))
 
 
-def edit_card(request):
+def edit_card(request, number):
 	try:
-		user = User.objects.get(pk=1)
+		u = User.objects.get(pk=1)
 	except User.DoesNotExist:
 		raise Http404("User does not exist")
-	form = EditCardForm(instance=user, data=request.POST or None)
+	try:
+		card = PaymentCard.objects.get(user=u, card_number=number)
+	except PaymentCard.DoesNotExist:
+		raise Http404("Card does not exist")
+	form = EditCardForm(instance=card, data=request.POST or None)
 	context = {
 		'form': form,
-        'user': user,
+        'user': u,
+        'card': card,
     }
 	if form.is_valid():
-		user = form.save(commit=False)
-		user.save()
-		return redirect('/editprofile')
+		card_new = form.save(commit=False)
+		card_new.save()
+		if(card_new.card_number!=card.card_number):
+			print('Preventing the duplication error')
+			PaymentCard.objects.filter(pk=card.card_number).delete()
+
+		messages.success(request, 'Your card information was successfully updated!')
+		return redirect('/editprofile/cardsview')
 
 	template = loader.get_template('editprofile/editcard.html')
 	return HttpResponse(template.render(context, request))
@@ -77,16 +88,20 @@ def edit_password(request):
 		user = User.objects.get(pk=1)
 	except User.DoesNotExist:
 		raise Http404("User does not exist")
-	if request.method == 'POST':
-		form = PasswordChangeForm(user, request.POST)
-		if form.is_valid():
-			user = form.save()
+	
+	form = EditPasswordForm(request.POST or None)
+	if form.is_valid():
+		if(user.password == form.cleaned_data.get('old_password')):
+			user.password = form.cleaned_data.get('new_password')
+			user.save()
 			messages.success(request, 'Your password was successfully updated!')
 			return redirect('/editprofile')
 		else:
-			messages.error(request, 'Please correct the error below.')
-	else:
-		form = PasswordChangeForm(user)
+			messages.error(request, 'Old password doesn\'t match.')
+	
 	return render(request, "editprofile/editpassword.html", {
 		'form': form
 	})
+
+# def delete_card(request):
+# 	PaymentCard.objects.all().delete()
