@@ -49,6 +49,26 @@ def route_get_finland(request):
 def route_get_movies(request):
     print("hello")
 
+@api_view(['POST'])
+def route_get_user_information(request):
+    data = JSONParser().parse(request)
+    users = User.objects.all().filter(email=data['email'])
+    request_success = "true"
+    try:
+        response = {
+            'requestSuccess': request_success,
+            'email': data['email'],
+            'firstName': users[0].first_name,
+            'lastName': users[0].last_name,
+        }
+    except:
+        request_success = "false"
+        response = {
+            'requestSuccess': request_success
+        }
+        print("hello")
+    return JsonResponse(response)
+
 # End point for email (username), password verification
 # Checks for matches in Django / MySQL database
 # JSON 'email' return values are "true" or "false"
@@ -136,6 +156,7 @@ def route_create_user(request):
 
     return JsonResponse(response)
     #return HttpResponse(users)
+
     
 @api_view(['POST'])
 def route_edit_profile(request):
