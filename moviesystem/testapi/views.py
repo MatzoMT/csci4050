@@ -120,6 +120,7 @@ def route_create_user(request):
     if len(users) > 0:
         creation_success = "false"
         err_msg = "This email is already in the system."
+
     name = data['firstName']
     confirm_password = data['confirm_password']
     password = data['password']
@@ -130,7 +131,11 @@ def route_create_user(request):
         creation_success = "false"
         err_msg = "The passwords do not match."
 
-    if confirm_password == "true":
+
+    print("confirmed:" + creation_success)
+
+    if creation_success == "true":
+        password
         user = User(first_name=name, last_name=data['lastName'], password=password, email=email, phone=data['phone'], status="Inactive", user_type_id=1, promotion=data['promotion'])
         # user = User(first_name=name, last_name=form_info.get('last_name'), password=form_info.get('password'), email=email, phone=form_info.get('phone'), status='Inactive', user_type_id=1, promotion=form_info.get('promotion'))
         user.save()

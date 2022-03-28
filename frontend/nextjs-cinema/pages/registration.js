@@ -38,7 +38,7 @@ export default function Home() {
     e.preventDefault();
     try {
       axios.post("http://localhost:8000/api/v1/create-user", { firstName: firstName, lastName: lastName, password: password, confirm_password: confirm_password, email: email, phone: phone, promotion: promotion }).then((response) => {
-      console.log("response: " + response)  
+      console.log("response: " + response.data.creationSuccess)  
       
       if (response.data.creationSuccess == "true") { 
           router.push('/confirmation');
