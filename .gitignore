@@ -1,2 +1,4 @@
+moviesystem/*/__pycache__/*
+moviesystem/*/*/__pycache__/*
 
 *.pyc
