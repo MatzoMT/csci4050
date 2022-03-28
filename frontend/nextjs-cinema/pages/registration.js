@@ -1,12 +1,56 @@
 import Head from 'next/head';
 import NavBar from '../components/NavBar.js';
 import Script from 'next/script';
-import Image from 'next/image'
+import Image from 'next/image';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useRouter } from 'next/router';
+
+
+
 
 
 // SKELETON CODE
 
 export default function Home() {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [promotion, setPromotion] = useState(0);
+  const router = useRouter();
+
+  /*
+{
+    "firstName": "Eman",
+    "lastName": "saleh",
+    "password": "password123",
+    "email": "emansaleh@gmail.com",
+    "phone": "1234567890",
+    "promotion": 0 
+}
+  */
+
+  let handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      axios.post("http://localhost:8000/api/v1/create-user", { firstName: firstName, lastName: lastName, password: password, email: email, phone: phone, promotion: promotion }).then((response) => {
+        router.push('/confirmation');
+
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  let handleCheckbox = async (e) => {
+    if (promotion == 0) {
+      setPromotion(1);
+    } else {
+      setPromotion(0);
+    }
+  };
   return (
     <div className="container">
 
@@ -19,25 +63,31 @@ export default function Home() {
       <body>
         <NavBar />
         <main>
-          
-          <div id="registration"> 
+
+          <div id="registration">
+            <form onSubmit={handleSubmit}>
               <h1>Create an account</h1>
               <p>* - indicates a required field</p>
               <p>* First Name</p>
-              <a><input type="text" placeholder="Enter your first name"></input></a>
+              <a><input type="text" placeholder="Enter your first name" onChange={(val) => setFirstName(val.target.value)}></input></a>
               <p>* Last Name</p>
-              <a><input type="text" placeholder="Enter your last name"></input></a>
+              <a><input type="text" placeholder="Enter your last name" onChange={(val) => setLastName(val.target.value)}></input></a>
               <p>* Phone number</p>
-              <a><input type="text" placeholder="Enter your phone number"></input></a>
+              <a><input type="text" placeholder="Enter your phone number" onChange={(val) => setPhone(val.target.value)}></input></a>
               <p>* Email Address</p>
-              <a><input type="text" placeholder="Enter your email address"></input></a>
+              <a><input type="text" placeholder="Enter your email address" onChange={(val) => setEmail(val.target.value)}></input></a>
               <p>* Password</p>
-              <a><input type="text" placeholder="Enter a password"></input></a>
+              <a><input type="text" placeholder="Enter a password" onChange={(val) => setPassword(val.target.value)}></input></a>
               <p>* Confirm Password</p>
               <a><input type="text" placeholder="Re-enter the password"></input></a>
-              <button type="button">Create your account</button> 
+
+              <p>Subscribe to Promotions</p>
+              <input type="checkbox" onChange={handleCheckbox} />
+              <button type="submit">Create your account</button>
+            </form>
+
           </div>
-          <div id="footer"> 
+          <div id="footer">
             <p id="inline">Already have an account?</p> <a href="something">Sign in here.</a>
           </div>
         </main>
