@@ -100,30 +100,63 @@ def route_login(request):
 # else, return false
 @api_view(['POST'])
 def route_create_user(request):
+
+    #duplicate first names can exist within the system
+    #duplicate last names can exist within the system
+    #email CANNOT exist within the system
+    #duplicate phone numbers can exist within the system
+    #password must be more than 8 characters and must match
+
+    creation_success = "true"
+    err_msg = ""
     data = JSONParser().parse(request)
+    print(data)
     # Check request to see if it has all fields
     # replace below 
     users = User.objects.all()
     email = data['email']
+
+    users = User.objects.all().filter(email=email)
+    if len(users) > 0:
+        creation_success = "false"
+        err_msg = "This email is already in the system."
     name = data['firstName']
-    user = User(first_name=name, last_name=data['lastName'], password=data['password'], email=email, phone=data['phone'], status="Inactive", user_type_id=1, promotion=data['promotion'])
-    # user = User(first_name=name, last_name=form_info.get('last_name'), password=form_info.get('password'), email=email, phone=form_info.get('phone'), status='Inactive', user_type_id=1, promotion=form_info.get('promotion'))
-    user.save()
+    confirm_password = data['confirm_password']
+    password = data['password']
+    if len(password) < 8:
+        creation_success = "false"
+        err_msg = "The password is not long enough."
+    if password != confirm_password:
+        creation_success = "false"
+        err_msg = "The passwords do not match."
 
-    #send email
-    htmly = loader.get_template('users/Email.html')
-    d = { 'username': name }
-    subject, from_email, to = 'Welcome,', name, email
-    html_content = htmly.render(d)
-    msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
-    msg.attach_alternative(html_content, "text/html")
-    msg.send()
+    if confirm_password == "true":
+        user = User(first_name=name, last_name=data['lastName'], password=password, email=email, phone=data['phone'], status="Inactive", user_type_id=1, promotion=data['promotion'])
+        # user = User(first_name=name, last_name=form_info.get('last_name'), password=form_info.get('password'), email=email, phone=form_info.get('phone'), status='Inactive', user_type_id=1, promotion=form_info.get('promotion'))
+        user.save()
+        #send email
+        htmly = loader.get_template('users/Email.html')
+        d = { 'username': name }
+        subject, from_email, to = 'Welcome,', name, email
+        html_content = htmly.render(d)
+        msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+    
+        
+    #for user in users:
+    #    print(user)
+    #    print(user.password)
+    response = {
+        'creationSuccess': creation_success,
+        'errMsg': err_msg,
+    }
 
+    print(response)
 
-    for user in users:
-        print(user)
-        print(user.password)
-    return HttpResponse(users)
+    return JsonResponse(response)
+    #return HttpResponse(users)
+
     
 @api_view(['POST'])
 def route_edit_profile(request):
