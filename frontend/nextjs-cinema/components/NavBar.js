@@ -37,10 +37,10 @@ function NavBar() {
         <a id="profile-button" onClick={showDropdown}>Profile ⋮</a>
 
       </div>
-      <div class="dropdown-content">
+      <div className="dropdown-content">
           <div><span style={{fontWeight: 'bold'}}>{window.sessionStorage.getItem("email")}</span></div>
           <div><span style={{color: '#eeeeee'}}>Edit Profile</span></div>
-          <div class="border-top"><a href="/" onClick={signOut}><span style={{color: '#eeeeee'}}>Sign Out</span></a></div>
+          <div className="border-top"><a href="/" onClick={signOut}><span style={{color: '#eeeeee'}}>Sign Out</span></a></div>
         </div>
     </div>);
   } else {
@@ -53,9 +53,9 @@ function NavBar() {
         <a id="profile-button" onClick={showDropdown}>Profile ⋮</a>
 
       </div>
-      <div class="dropdown-content">
+      <div className="dropdown-content">
           <div><span style={{color: '#eeeeee'}}>Edit Profile</span></div>
-          <div class="border-top"><a href="/" onClick={signOut}><span style={{color: '#eeeeee'}}>Sign Out</span></a></div>
+          <div className="border-top"><a href="/" onClick={signOut}><span style={{color: '#eeeeee'}}>Sign Out</span></a></div>
         </div>
     </div>
     );

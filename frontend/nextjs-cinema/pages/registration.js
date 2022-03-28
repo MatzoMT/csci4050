@@ -23,21 +23,18 @@ export default function Home() {
           <div id="registration"> 
               <h1>Create an account</h1>
               <p>* - indicates a required field</p>
-              <p>* Full Name</p>
-              <a><input type="text" placeholder="Enter your name"></input></a>
-              <p>* Age</p>
-              <a><input type="text" placeholder="Enter your age"></input></a>
+              <p>* First Name</p>
+              <a><input type="text" placeholder="Enter your first name"></input></a>
+              <p>* Last Name</p>
+              <a><input type="text" placeholder="Enter your last name"></input></a>
+              <p>* Phone number</p>
+              <a><input type="text" placeholder="Enter your phone number"></input></a>
               <p>* Email Address</p>
               <a><input type="text" placeholder="Enter your email address"></input></a>
               <p>* Password</p>
               <a><input type="text" placeholder="Enter a password"></input></a>
               <p>* Confirm Password</p>
               <a><input type="text" placeholder="Re-enter the password"></input></a>
-              <p>Credit Card Information</p>
-              <a><input type="text" placeholder="Credit card number"></input></a><br/>
-              <a><input type="text" placeholder="Card holder's name"></input></a><br/>
-              <a><input type="text" placeholder="CVV"></input></a><br/>
-              <a><input type="text" placeholder="Expiration date"></input></a><br/>
               <button type="button">Create your account</button> 
           </div>
           <div id="footer"> 
