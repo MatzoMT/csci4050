@@ -17,9 +17,11 @@ export default function Home() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirm_password, setConfirmPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [promotion, setPromotion] = useState(0);
   const router = useRouter();
+  const [incorrectMessage, setIncorrectMessage] = useState("");
 
   /*
 {
@@ -35,8 +37,16 @@ export default function Home() {
   let handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      axios.post("http://localhost:8000/api/v1/create-user", { firstName: firstName, lastName: lastName, password: password, email: email, phone: phone, promotion: promotion }).then((response) => {
-        router.push('/confirmation');
+      axios.post("http://localhost:8000/api/v1/create-user", { firstName: firstName, lastName: lastName, password: password, confirm_password: confirm_password, email: email, phone: phone, promotion: promotion }).then((response) => {
+      console.log("response: " + response)  
+      
+      if (response.data.creationSuccess == "true") { 
+          router.push('/confirmation');
+        } else {
+          setIncorrectMessage(response.data.errMsg);
+        }
+      
+
 
       });
     } catch (err) {
@@ -79,13 +89,13 @@ export default function Home() {
               <p>* Password</p>
               <a><input type="text" placeholder="Enter a password" onChange={(val) => setPassword(val.target.value)}></input></a>
               <p>* Confirm Password</p>
-              <a><input type="text" placeholder="Re-enter the password"></input></a>
+              <a><input type="text" placeholder="Re-enter the password" onChange={(val) => setConfirmPassword(val.target.value)}></input></a>
 
               <p>Subscribe to Promotions</p>
               <input type="checkbox" onChange={handleCheckbox} />
               <button type="submit">Create your account</button>
             </form>
-
+            <h3 id="incorrect-credentials" style={{color: 'red', position: 'absolute'}}>{incorrectMessage}</h3>
           </div>
           <div id="footer">
             <p id="inline">Already have an account?</p> <a href="something">Sign in here.</a>
