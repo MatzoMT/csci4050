@@ -35,7 +35,15 @@ export default function Home() {
               <a><input type="text" placeholder="Enter a password"></input></a>
               <p>* Confirm Password</p>
               <a><input type="text" placeholder="Re-enter the password"></input></a>
+<<<<<<< HEAD
               <button type="button">Create your account</button> 
+=======
+              <p>Subscribe to Promotions</p>
+              <input type="checkbox" onChange={handleCheckbox} />
+              <button type="submit">Create your account</button>
+            </form>
+
+>>>>>>> parent of 7c024df (resolved: merge conflict)
           </div>
           <div id="footer"> 
             <p id="inline">Already have an account?</p> <a href="something">Sign in here.</a>

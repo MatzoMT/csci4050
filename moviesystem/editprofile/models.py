@@ -1,5 +1,4 @@
 from django.db import models
-#from django_cryptography_fields import encrypt
 from django.core.validators import EmailValidator
 
 # Create your models here.

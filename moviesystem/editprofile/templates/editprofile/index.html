@@ -3,95 +3,33 @@
   <head>
     <meta charset="utf-8">
     <title>Profile</title>
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'editprofile/style.css' %}">
-    <style>
-      .bg
-      {
-        background-image:url("{% static 'editprofile/background.jpg' %}");
-        background-repeat:no-repeat;
-        background-size:100%;
-        margin-top: 20px;
-      }
-    </style>
   </head>
-  <body class="bg">
-    <ul class="nav">
-      <div class="logo">
-        <a href="a">MOVIE SYSTEM</a>
-      </div>
-      <li><a href="a">Home</a></li>
-      <li><a href="a">Movies</a></li>
-      <li><a href="/editprofile/">Profile</a></li>
-      <li><a href="a">About</a></li>
-    </ul>
-    <br><br>
+  <body>
     {% if user %}
-      <h2>{{user.first_name}} {{user.last_name}}'s profile!</h3>
-      <table>
-        <tr>
-          <td>
-            First Name: 
-          </td>
-          <td>
-            {{ user.first_name }}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            Last Name: 
-          </td>
-          <td>
-            {{user.last_name}}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            Email: 
-          </td>
-          <td>
-            {{user.email}}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            Phone number:
-          </td>
-          <td>
-            {{user.phone}}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            Promotions:
-          </td>
-          <td>
-            {%if user.promotion%}
-              Subscribed
-            {%else%}
-              Not subscribed
-            {%endif%}
-          </td>
-        </tr>
-      </table>
-      <br>
-      <h3>Actions:</h4>
-        <p>
-          <input type="button" class="acts" name="editprofile" value="Edit profile" onclick="location.href = '/editprofile/editbasic'">
-        
-          <input type="button" class="acts" name="editpaymentinfo" value="Edit payment information" onclick="location.href = '/editprofile/cardsview'">
-        
-          <input type="button" class="acts" name="changepassword" value="Change password" onclick="location.href = '/editprofile/editpassword'">    
-        </p>
+      <h3>{{user.first_name}} {{user.last_name}}'s profile!</h3>
+      <ul>
+      <li>
+        First Name: {{user.first_name}}
+      </li>
+      <li>
+        Last Name: {{user.last_name}}
+      </li>
+      <li>
+        Email: {{user.email}}
+      </li>
+      <li>
+        Phone number: {{user.phone}}
+      </li>
+
+      <li>
+        Promotions: {{user.promotion}}
+      </li>
+    </ul>
+      <input type="button" name="editprofile" value="Edit profile" onclick="location.href = '/editprofile/editbasic'">
+      <input type="button" name="editpaymentinfo" value="Edit payment information" onclick="location.href = '/editprofile/cardsview'">
+      <input type="button" name="changepassword" value="Change password" onclick="location.href = '/editprofile/editpassword'">
     {%else%}
       <p>Error</p>
     {%endif%} 
-    {%if messages%}
-      <ul class="messages">
-          {% for message in messages %}
-          <li>{{ message }}</li>
-          {% endfor %}
-      </ul>
-    {%endif%}
   </body>
 </html>

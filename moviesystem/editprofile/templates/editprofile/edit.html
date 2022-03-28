@@ -3,25 +3,13 @@
   <head>
     <meta charset="utf-8">
     <title>Edit profile</title>
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'editprofile/style.css' %}">
-    <style>
-      .bg
-      {
-        background-image:url("{% static 'editprofile/background.jpg' %}");
-        background-repeat:no-repeat;
-        background-size:100%;
-        margin-top: 20px;
-      }
-    </style>
   </head>
-  <body class="bg">
-    <a class="btn btn-primary" href="/editprofile/"> << Back</a><br>
-    <h2>Update information:</h2>
+  <body>
+    <h3>Update information:</h3>
     <form action="." method="post">
       {% csrf_token %}
       {{ form.as_p }}
-      <p><input type="submit" class="acts" value="Update"></p>
+      <input type="submit" value="Update">
     </form>
   </body>
 </html>

@@ -3,46 +3,16 @@
   <head>
     <meta charset="utf-8">
     <title>Payment cards</title>
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'editprofile/style.css' %}">
-    <style>
-      .bg
-      {
-        background-image:url("{% static 'editprofile/background.jpg' %}");
-        background-repeat:no-repeat;
-        background-size:100%;
-        margin-top: 20px;
-      }
-    </style>
   </head>
-  <body class="bg">
-    <a class="btn btn-primary" href="/editprofile/"> << Back</a><br>
-    <h2>Payment methods:</h2>
-    <table>
+  <body>
+    <h3>Payment methods:</h3>
+    <table border="1">
       <tr>
         <td>Number</td><td>Type</td><td>Expiration</td><td>Billing address</td>
       </tr>
       {% for x in list %} 
-        <tr>
-          <td><a href="/editprofile/editcard/{{ x }}/">{{ x }}</a></td>
-          <td>
-            {%if x.card_type == 'C'%}
-              Credit
-            {%elif x.card_type == 'D'%}
-              Debit
-            {%endif%}
-          </td>
-          <td>{{ x.expiration_date }}</td>
-          <td>{{ x.billing_address }}</td>
-        </tr>
+        <tr><td>{{ x.card_type }}</td><td>{{ x }}</td><td>{{ x.expiration_date }}</td><td>{{ x.billing_address }}</td></li>
       {% endfor %}
     </table>     
-    {%if messages%}
-      <ul class="messages">
-          {% for message in messages %}
-          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-          {% endfor %}
-      </ul>
-    {%endif%}
   </body>
 </html>
