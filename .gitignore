@@ -1,4 +1,7 @@
 moviesystem/*/__pycache__/*
 moviesystem/*/*/__pycache__/*
+moviesystem/*/__pycache__/*.pyc
+moviesystem/*/*/__pycache__/*.pyc
+
 
 *.pyc
