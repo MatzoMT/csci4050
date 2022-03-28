@@ -4,7 +4,8 @@ from django.views.generic.edit import UpdateView
 from editprofile.models import *
 from django.template import loader
 from django.contrib import messages
-#from django_cryptography import decrypt
+
+from django.contrib.auth.hashers import make_password, check_password
 
 from django.http import HttpResponse, Http404
 
@@ -91,7 +92,8 @@ def edit_password(request):
 	
 	form = EditPasswordForm(request.POST or None)
 	if form.is_valid():
-		if(user.password == form.cleaned_data.get('old_password')):
+		matches = check_password(form.cleaned_data.get('old_password'), user.password)
+		if(matches):
 			user.password = form.cleaned_data.get('new_password')
 			user.save()
 			messages.success(request, 'Your password was successfully updated!')

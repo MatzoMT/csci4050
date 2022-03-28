@@ -1,5 +1,4 @@
 from django.db import models
-#from django_cryptography_fields import encrypt
 from django.core.validators import EmailValidator
 
 # Create your models here.
@@ -12,7 +11,7 @@ class UserType(models.Model):
 class User(models.Model):
 	first_name = models.CharField(max_length=20)
 	last_name = models.CharField(max_length=20)
-	password = models.CharField(default='password',max_length=20)
+	password = models.CharField(default='password',max_length=100)
 	email = models.CharField(
 		unique=True, 
 		max_length=20,
