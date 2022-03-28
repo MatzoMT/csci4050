@@ -38,7 +38,7 @@ function NavBar() {
         </div>
         <div className="dropdown-content">
           <div><span style={{ fontWeight: 'bold' }}>{window.sessionStorage.getItem("email")}</span></div>
-          <div><span style={{ color: '#eeeeee' }}>Edit Profile</span></div>
+          <div><a href="/editprofile"><span style={{ color: '#eeeeee' }}>Edit Profile</span></a></div>
           <div className="border-top"><a href="/" onClick={signOut}><span style={{ color: '#eeeeee' }}>Sign Out</span></a></div>
         </div>
       </div>);
@@ -63,66 +63,9 @@ function NavBar() {
   </div>);
   }
 
-
-
-  /*
-   if (typeof window == 'undefined') {
-     return (<div className="navbar">
-       <a id="logo" href="..">FilmMax</a>
-       <a id="searchbar"><input type="text" placeholder="Search for movies.."></input></a>
-       <a className="navbar-button">MOVIES</a>
-       <a className="navbar-button">ABOUT US</a>
-       <a id="sign-in" href="/login">Sign In</a>
- 
-     </div>);
-   } else if (typeof window !== 'undefined' && window.sessionStorage.getItem("email") !== 'null') {
-     return (<div>
-       <div className="navbar">
-         <a id="logo" href="..">FilmMax</a>
-         <a id="searchbar"><input type="text" placeholder="Search for movies.."></input></a>
-         <a className="navbar-button">MOVIES</a>
-         <a className="navbar-button">ABOUT US</a>
-         <a id="profile-button" onClick={showDropdown}>Profile ⋮</a>
- 
-       </div>
-       <div class="dropdown-content">
-           <div><span style={{fontWeight: 'bold'}}>{window.sessionStorage.getItem("email")}</span></div>
-           <div><span style={{color: '#eeeeee'}}>Edit Profile</span></div>
-           <div class="border-top"><a href="/" onClick={signOut}><span style={{color: '#eeeeee'}}>Sign Out</span></a></div>
-         </div>
-     </div>);
-   } else {
-     return (<div className="navbar">
-     <a id="logo" href="..">FilmMax</a>
-     <a id="searchbar"><input type="text" placeholder="Search for movies.."></input></a>
-     <a className="navbar-button">MOVIES</a>
-     <a className="navbar-button">ABOUT US</a>
-     <a id="sign-in" href="/login">Sign In</a>
- 
-   </div>
-     );
-   }*/
 }
 
 function NavBarRender(props) {
-
-  /*
-function Greeting(props) {
-  const isLoggedIn = props.isLoggedIn;
-  if (isLoggedIn) {
-    return <UserGreeting />;
-  }
-  return <GuestGreeting />;
-}
-
-ReactDOM.render(
-  // Try changing to isLoggedIn={true}:
-  <Greeting isLoggedIn={false} />,
-  document.getElementById('root')
-);
-  */
-
-
   return (
     <NavBar />
   );
