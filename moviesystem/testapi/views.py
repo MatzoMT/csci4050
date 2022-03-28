@@ -64,7 +64,7 @@ def route_login(request):
 # Post username and password
 # If there is a query with a matching username and password, return true
 # else, return false
-@api_view(['GET'])
+@api_view(['POST'])
 def route_create_user(request):
     data = JSONParser().parse(request)
     # Check request to see if it has all fields
