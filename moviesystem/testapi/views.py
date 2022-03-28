@@ -16,6 +16,20 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User as AuthUser
 from django.http import HttpResponse, Http404
 
+from django.template import loader
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm
+from .forms import UserRegisterForm
+from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import get_template
+from django.template import Context
+
+
+
+
 @api_view(['GET', 'POST', 'DELETE'])
 def tutorial_list(request):
     # GET list of tutorials, POST a new tutorial, DELETE all tutorials
@@ -70,9 +84,24 @@ def route_create_user(request):
     # Check request to see if it has all fields
     # replace below 
     users = User.objects.all()
-    user = User(first_name=data['firstName'], last_name=data['lastName'], password=data['password'], email=data['email'], phone=data['phone'], status="Inactive", user_type_id=1, promotion=data['promotion'])
+    email = data['email']
+    name = data['firstName']
+    user = User(first_name=name, last_name=data['lastName'], password=data['password'], email=email, phone=data['phone'], status="Inactive", user_type_id=1, promotion=data['promotion'])
     # user = User(first_name=name, last_name=form_info.get('last_name'), password=form_info.get('password'), email=email, phone=form_info.get('phone'), status='Inactive', user_type_id=1, promotion=form_info.get('promotion'))
     user.save()
+
+    #send email
+    htmly = loader.get_template('users/Email.html')
+    d = { 'username': name }
+    subject, from_email, to = 'Welcome,', name, email
+    html_content = htmly.render(d)
+    msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
+
+
+
+
     for user in users:
         print(user)
         print(user.password)
