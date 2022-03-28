@@ -13,7 +13,7 @@ from editprofile.models import *
 from django.template import loader
 from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm
-
+from django.contrib.auth.models import User as AuthUser
 from django.http import HttpResponse, Http404
 
 @api_view(['GET', 'POST', 'DELETE'])
@@ -42,24 +42,36 @@ def route_get_movies(request):
 def route_login(request):
     data = JSONParser().parse(request)
     login_success = "false"
-    users = User.objects.all().filter(email=data['email'])
+    is_admin = "false"
+    users = User.objects.all().filter(email=data['email'], user_type=1)
     if len(users) > 0 and users[0].password==data['password']:
         login_success = "true"
+    # Below loop runs if login as normal user fails
+    # Begins searching for admin credentials
+    if login_success == "false":
+        print("ATTEMPT ADMIN")
+        admin_users = User.objects.all().filter(email=data['email'], user_type=2)
+        if len(admin_users) > 0 and admin_users[0].password == data['password']:
+            login_success = "true"
+            is_admin = "true"
     response = {
         'loginSuccess': login_success,
-        'email': data['email']
+        'email': data['email'],
+        'isAdmin': is_admin
     }
     return JsonResponse(response)
 
 # Post username and password
 # If there is a query with a matching username and password, return true
 # else, return false
-@api_view(['POST'])
+@api_view(['GET'])
 def route_create_user(request):
+    data = JSONParser().parse(request)
     # Check request to see if it has all fields
     # replace below 
     users = User.objects.all()
-    user = User(first_name='Spider', last_name='Man', password='password', email='spodermin@gmail.com', phone='987654321', status='Inactive', user_type_id=1, promotion=1)
+    user = User(first_name='Man', last_name='Spider', password='password', email='manspider@gmail.com', phone='987654321', status='Inactive', user_type_id=1, promotion=1)
+    # user = User(first_name=name, last_name=form_info.get('last_name'), password=form_info.get('password'), email=email, phone=form_info.get('phone'), status='Inactive', user_type_id=1, promotion=form_info.get('promotion'))
     user.save()
     for user in users:
         print(user)

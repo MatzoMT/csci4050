@@ -151,3 +151,9 @@ CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
     'http://localhost:8081'
 ]
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'filmmaxcustomerservice@gmail.com'
+EMAIL_HOST_PASSWORD = 'Csci4050!'
+EMAIL_PORT = 587

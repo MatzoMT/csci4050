@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import AdminNavBar from './AdminNavBar';
 
 
 function NavBar() {
@@ -21,7 +22,11 @@ function NavBar() {
 
   if (typeof window !== "undefined") {
     // Client-side-only code
-    if (typeof window !== undefined && window.sessionStorage.getItem("email") !== null) {
+    if (typeof window !== undefined && window.sessionStorage.getItem("isAdmin") == "true") {
+      return (
+        <AdminNavBar />
+      );
+    } else if (typeof window !== undefined && window.sessionStorage.getItem("email") !== null) {
       return (<div>
         <div className="navbar">
           <a id="logo" href="..">FilmMax</a>
