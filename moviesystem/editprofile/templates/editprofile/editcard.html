@@ -2,14 +2,26 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Edit card:</title>
+    <title>Edit card</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'editprofile/style.css' %}">
+    <style>
+      .bg
+      {
+        background-image:url("{% static 'editprofile/background.jpg' %}");
+        background-repeat:no-repeat;
+        background-size:100%;
+        margin-top: 20px;
+      }
+    </style>
   </head>
-  <body>
-    
+  <body class="bg">
+    <a class="btn btn-primary" href="/editprofile/cardsview"> << Back</a><br>
+    <h2> Edit card information:</h2>
     <form action="." method="post">
       {% csrf_token %}
       {{ form.as_p }}
-      <input type="submit" value="Update">
+      <p><input type="submit" class="acts" value="Update"></p>
     </form>
   </body>
 </html>

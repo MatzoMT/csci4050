@@ -14,7 +14,7 @@ class User(models.Model):
 	password = models.CharField(default='password',max_length=100)
 	email = models.CharField(
 		unique=True, 
-		max_length=32,
+		max_length=20,
 		validators=[EmailValidator]
 	)
 	phone = models.CharField(default='12345678',max_length=20)
