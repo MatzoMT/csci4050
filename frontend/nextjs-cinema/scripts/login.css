@@ -7,10 +7,8 @@
     font-size: 100%;
 }
 
-#login div{
-    border-style: solid;
-    border-color: black;
-    margin-left: 4em;
+#remember-me-div {
+    margin-top: 1em;
 }
 
 #login p {
@@ -48,5 +46,6 @@
 
 
 #forgotpassword {
-    font-size: 90%;
+    font-size: 100%;
+    margin-bottom: -1em;
 }

@@ -13,6 +13,7 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [incorrectMessage, setIncorrectMessage] = useState("");
+  const [rememberMe, setRememberMe] = useState(0);
   const router = useRouter();
 
   let handleSubmit = async (e) => {
@@ -36,6 +37,14 @@ export default function Home() {
     }
   };
 
+
+  let handleCheckbox = async (e) => {
+    if (rememberMe == 0) {
+      setRememberMe(1);
+    } else {
+      setRememberMe(0);
+    }
+  };
   return (
     <div className="container">
 
@@ -57,12 +66,18 @@ export default function Home() {
               <a><input type="text" placeholder="Enter your email address" onChange={(val) => setEmail(val.target.value)}></input></a><br />
               <p>Password</p>
               <a><input type="password" placeholder="Enter your password" onChange={(val) => setPassword(val.target.value)}></input></a><br />
-              <a id="forgotpassword" href="something">Forgot your password?</a>
+              <div id="remember-me-div">
+                <input name="remember-me" type="checkbox" onChange={handleCheckbox} />
+                <label htmlFor="remember-me">Remember Me</label>
+              </div>
               <button type="submit">Sign-In</button>
+
             </form>
-            <h3 id="incorrect-credentials" style={{color: 'red', position: 'absolute'}}>{incorrectMessage}</h3>
+            <h3 id="incorrect-credentials" style={{ color: 'red', position: 'absolute' }}>{incorrectMessage}</h3>
+            <p id="forgotpassword"><a href="something">Forgot your password?</a></p>
 
           </div>
+
           <div id="footer">
             <p id="inline">Don't have an account?</p> <a href="/registration">Create one here.</a>
           </div>
