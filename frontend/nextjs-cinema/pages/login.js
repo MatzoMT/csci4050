@@ -2,9 +2,9 @@ import Head from 'next/head';
 import NavBar from '../components/NavBar.js';
 import Script from 'next/script';
 import Image from 'next/image';
-import React, { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import React, { useState, useEffect } from 'react';
 
 
 // SKELETON CODE
@@ -16,6 +16,13 @@ export default function Home() {
   const [rememberMe, setRememberMe] = useState(0);
   const router = useRouter();
 
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && localStorage.getItem("rememberMe") == "true") {
+      setEmail(localStorage.getItem("email"));
+      setRememberMe(1);
+    }
+  }, []);
   let handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -28,6 +35,13 @@ export default function Home() {
           } else {
             router.push('/');
           }
+          if (rememberMe == 1) {
+            localStorage.setItem("rememberMe", "true");
+            localStorage.setItem("email", email);
+          } else {
+            localStorage.removeItem("rememberMe");
+            localStorage.removeItem("email");
+          }
         } else {
           setIncorrectMessage("Username or password is incorrect.");
         }
@@ -35,8 +49,25 @@ export default function Home() {
     } catch (err) {
       console.log(err);
     }
-  };
 
+  };/*
+  function RememberCheckbox(props) {
+    if (typeof window !== "undefined" && localStorage.getItem("rememberMe") == "true") {
+      return (
+        <div>
+          <input name="remember-me" type="checkbox" onChange={handleCheckbox} checked={rem/>
+          <label htmlFor="remember-me">Remember Me</label>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <input name="remember-me" type="checkbox" onChange={handleCheckbox}/>
+          <label htmlFor="remember-me">Remember Me</label>
+        </div>
+      );
+    }
+  };*/
 
   let handleCheckbox = async (e) => {
     if (rememberMe == 0) {
@@ -63,11 +94,11 @@ export default function Home() {
 
               <h1>Sign-In</h1>
               <p>Email Address</p>
-              <a><input type="text" placeholder="Enter your email address" onChange={(val) => setEmail(val.target.value)}></input></a><br />
+              <a><input type="text" placeholder="Enter your email address" onChange={(val) => setEmail(val.target.value)} defaultValue={email}></input></a><br />
               <p>Password</p>
               <a><input type="password" placeholder="Enter your password" onChange={(val) => setPassword(val.target.value)}></input></a><br />
               <div id="remember-me-div">
-                <input name="remember-me" type="checkbox" onChange={handleCheckbox} />
+                <input name="remember-me" type="checkbox" onChange={handleCheckbox} checked={rememberMe}/>
                 <label htmlFor="remember-me">Remember Me</label>
               </div>
               <button type="submit">Sign-In</button>

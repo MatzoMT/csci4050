@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from editprofile.forms import EditBasicForm, EditCardForm, EditPasswordForm
+from editprofile.forms import EditBasicForm, EditCardForm
 from django.views.generic.edit import UpdateView
 from editprofile.models import *
 
