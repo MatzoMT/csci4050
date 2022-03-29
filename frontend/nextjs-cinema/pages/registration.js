@@ -87,9 +87,9 @@ export default function Home() {
               <p>* Email Address</p>
               <a><input type="text" placeholder="Enter your email address" onChange={(val) => setEmail(val.target.value)}></input></a>
               <p>* Password</p>
-              <a><input type="text" placeholder="Enter a password" onChange={(val) => setPassword(val.target.value)}></input></a>
+              <a><input type="password" placeholder="Enter a password" onChange={(val) => setPassword(val.target.value)}></input></a>
               <p>* Confirm Password</p>
-              <a><input type="text" placeholder="Re-enter the password" onChange={(val) => setConfirmPassword(val.target.value)}></input></a>
+              <a><input type="password" placeholder="Re-enter the password" onChange={(val) => setConfirmPassword(val.target.value)}></input></a>
 
               <p>Subscribe to Promotions</p>
               <input type="checkbox" onChange={handleCheckbox} />
@@ -98,7 +98,7 @@ export default function Home() {
             <h3 id="incorrect-credentials" style={{color: 'red', position: 'absolute'}}>{incorrectMessage}</h3>
           </div>
           <div id="footer">
-            <p id="inline">Already have an account?</p> <a href="something">Sign in here.</a>
+            <p id="inline">Already have an account?</p> <a href="/login">Sign in here.</a>
           </div>
         </main>
 
