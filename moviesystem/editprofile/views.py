@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from editprofile.forms import EditBasicForm, EditCardForm, EditPasswordForm
 from django.views.generic.edit import UpdateView
 from editprofile.models import *
+
 from django.template import loader
 from django.contrib import messages
 

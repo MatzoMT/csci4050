@@ -5,6 +5,7 @@
   background-color: #000000;
   overflow: hidden;
   color: white;
+  /* offset-x | offset-y | blur-radius | spread-radius | color */
   }
   
 /* Style the links inside the navigation bar */

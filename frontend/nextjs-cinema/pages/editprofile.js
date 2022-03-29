@@ -18,7 +18,8 @@ export default function Home() {
 
   useEffect(() => {
     try {
-      axios.post("http://localhost:8000/api/v1/get-user-information", { email: window.sessionStorage.getItem("email") }).then((response) => {
+      axios.post("http://localhost:8000/api/v1/get-user-information", 
+      { email: window.sessionStorage.getItem("email") }).then((response) => {
       if (response.data.requestSuccess == "true") {
           setEmail(response.data.email);
           setFirstName(response.data.firstName);
