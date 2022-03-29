@@ -3,49 +3,62 @@
 
 #login {
     margin: auto;
-    width: 50%;  
     font-size: 100%;
+    width: 50%;
+    text-align: center;
+    padding-top: 5%;
+}
+
+.field-label {
+    text-align: left;
+}
+.fields {
+    width: 100%;
+    font-size: 150%;
+    border: 0.1em solid #c4c4c4;
+    border-radius: 0.25em;
+    padding-left: 0.5em;
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+}
+.fields:focus {
+    outline: none;
+    border: 0.1em solid black;
+    transition: 0.3s;
+}
+
+.fields::placeholder {
+    color: #c4c4c4;
+}
+
+#sign-in-button {
+    background-color: #1965d8;
+    border: 0;
+    width: 100%;
+    border-radius: 0.25em;
+    color: white;
+    font-size: 150%;
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+}
+#create-account-button {
+    text-decoration: none;
+}
+#create-account-button p {
+    border: 0.25em solid #1965d8;
+    border-radius: 0.25em;
+    color: #1965d8;
+    font-size: 150%;
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+    text-decoration: none;
+    text-align: center;
 }
 
 #remember-me-div {
+    text-align: left;
     margin-top: 1em;
-}
-
-#login p {
-    padding-top: 0.2em;
-    margin-bottom: 0.2em;;
-}
-
-#login button {
-    padding: 0.4em;
-    border-radius: 12px;
-    background-color: black;
-    color: white;
-    width: 30%;
-    
-    margin-top: 1em;
-    display:block;
-
-}
-
-#login input {
-    margin: 0.2em;
-    padding: 0.2em;
-}
-
-#inline {
-    display: inline;
-}
-
-#footer {
-    font-size: 90%;
-    margin: auto;
-    margin-top: 3em;
-    width: 50%;  
+    margin-bottom: 1em;
 }
 
 
-#forgotpassword {
-    font-size: 100%;
-    margin-bottom: -1em;
-}

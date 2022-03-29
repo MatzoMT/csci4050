@@ -95,25 +95,28 @@ export default function Home() {
           <div id="login">
             <form onSubmit={handleSubmit}>
 
-              <h1>Sign-In</h1>
-              <p>Email Address</p>
-              <a><input type="text" placeholder="Enter your email address" onChange={(val) => setEmail(val.target.value)} defaultValue={email}></input></a><br />
-              <p>Password</p>
-              <a><input type="password" placeholder="Enter your password" onChange={(val) => setPassword(val.target.value)} defaultValue={password}></input></a><br />
+              <h1>Sign in to FilmMax</h1>
+              <h3 id="incorrect-credentials" style={{ color: 'red' }}>{incorrectMessage}</h3>
+
+              <label for="email" className="field-label"><h3>Email</h3></label>
+              <a><input type="text" className="fields" name="email" placeholder="johndoe@email.com" onChange={(val) => setEmail(val.target.value)} defaultValue={email}></input></a><br />
+              <label for="password" className="field-label"><h3>Password</h3></label>
+              <a><input type="password" className="fields" name="password" placeholder="Enter your password" onChange={(val) => setPassword(val.target.value)} defaultValue={password}></input></a><br />
               <div id="remember-me-div">
-                <input name="remember-me" type="checkbox" onChange={handleCheckbox} checked={rememberMe}/>
+                <input name="remember-me" type="checkbox" onChange={handleCheckbox} checked={rememberMe} />
                 <label htmlFor="remember-me">Remember Me</label>
+                <p id="forgotpassword"><a href="something">Forgot your password?</a></p>
               </div>
-              <button type="submit">Sign-In</button>
-
+              <button type="submit" id="sign-in-button">Sign-In</button>
             </form>
-            <h3 id="incorrect-credentials" style={{ color: 'red' }}>{incorrectMessage}</h3>
-            <p id="forgotpassword"><a href="something">Forgot your password?</a></p>
+              <p id="or">OR</p>
 
+
+          
           </div>
 
           <div id="footer">
-            <p id="inline">Don't have an account?</p> <a href="/registration">Create one here.</a>
+         <a href="/registration" id="create-account-button"><p id="create-account-button">Create an Account</p></a>
           </div>
         </main>
 
