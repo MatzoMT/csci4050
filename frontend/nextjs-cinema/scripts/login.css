@@ -7,6 +7,7 @@
     width: 50%;
     text-align: center;
     padding-top: 5%;
+    margin-bottom: -2em;
 }
 
 .field-label {
@@ -53,6 +54,19 @@
     padding-bottom: 0.25em;
     text-decoration: none;
     text-align: center;
+}
+#back-to-login-button {
+    text-decoration: none;
+}
+#back-to-login-button p {
+    background-color: #1965d8;
+    border-radius: 0.25em;
+    font-size: 150%;
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+    text-decoration: none;
+    text-align: center;
+    color: white;
 }
 
 #remember-me-div {

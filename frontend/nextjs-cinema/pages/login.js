@@ -111,12 +111,10 @@ export default function Home() {
             </form>
               <p id="or">OR</p>
 
-
-          
           </div>
 
           <div id="footer">
-         <a href="/registration" id="create-account-button"><p id="create-account-button">Create an Account</p></a>
+         <a href="/registration" id="create-account-button"><p>Create an Account</p></a>
           </div>
         </main>
 

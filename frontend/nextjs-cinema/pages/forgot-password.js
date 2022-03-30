@@ -20,7 +20,17 @@ export default function Home() {
         try {
             axios.post("http://localhost:8000/api/v1/get-user-information", { email: email}).then((response) => {
                 if (response.data.requestSuccess == "true") {
-                    alert("FOUND")
+                    router.push('/confirm-forgot-password');
+                    axios.post("http://localhost:8000/api/v1/send-password-reset-email", { email: email, name: response.data.firstName});
+                    /*
+            htmly = loader.get_template('users/Email.html')
+            d = { 'username': 'ur mom' }
+            subject, from_email, to = 'welcome', 'nerd', email
+            html_content = htmly.render(d)
+            msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
+                    */
                 } else {
                     setIncorrectMessage("No account associated with that email was found.")
                 }
