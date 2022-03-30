@@ -315,46 +315,52 @@ def route_get_cards(request):
     except User.DoesNotExist:
         raise Http404("User does not exist")
     """
-    data = JSONParser().parse(request)
-    user = User.objects.all().get(email=data["email"])
-    card_list = PaymentCard.objects.filter(user=user)
-    people = User.objects.filter(user_type=1)
-    print(people)
-    for person in people:
-        print(person)
-    """
-    	first_name = models.CharField(max_length=20)
-	last_name = models.CharField(max_length=20)
-	password = models.CharField(default='password',max_length=20)
-	email = models.CharField(
-		unique=True, 
-		max_length=20,
-		validators=[EmailValidator]
-	)
-	phone = models.CharField(default='12345678',max_length=20)
-	promotion = models.BooleanField(default=False, blank=True)
-	status = models.CharField(default='Inactive',max_length=20)
-	user_type = models.ForeignKey(
-    """
-    print(card_list)
-    card_array = []
-    for card in card_list:
-        card_dict = {}
-        print(card)
-        #<tr><td>{{ x.card_type }}</td><td>{{ x }}</td><td>{{ x.expiration_date }}</td><td>{{ x.billing_address }}</td></li>
-        print(card.card_type)
-        print(card.expiration_date)
-        print(card.billing_address)
-        card_dict["cardNumber"] = card.card_number
-        card_dict["lastDigits"] = card.last_digits
-        card_dict["cardType"] = card.card_type
-        card_dict["expirationDate"] = card.expiration_date
-        card_dict["billingAddress"] = card.billing_address
-        card_array.append(card_dict)
+    try:
+        data = JSONParser().parse(request)
+        user = User.objects.all().get(email=data["email"])
+        card_list = PaymentCard.objects.filter(user=user)
+        people = User.objects.filter(user_type=1)
+        print(people)
+        for person in people:
+            print(person)
+        """
+            first_name = models.CharField(max_length=20)
+        last_name = models.CharField(max_length=20)
+        password = models.CharField(default='password',max_length=20)
+        email = models.CharField(
+            unique=True, 
+            max_length=20,
+            validators=[EmailValidator]
+        )
+        phone = models.CharField(default='12345678',max_length=20)
+        promotion = models.BooleanField(default=False, blank=True)
+        status = models.CharField(default='Inactive',max_length=20)
+        user_type = models.ForeignKey(
+        """
+        print(card_list)
+        card_array = []
+        for card in card_list:
+            card_dict = {}
+            print(card)
+            #<tr><td>{{ x.card_type }}</td><td>{{ x }}</td><td>{{ x.expiration_date }}</td><td>{{ x.billing_address }}</td></li>
+            print(card.card_type)
+            print(card.expiration_date)
+            print(card.billing_address)
+            card_dict["cardNumber"] = card.card_number
+            card_dict["lastDigits"] = card.last_digits
+            card_dict["cardType"] = card.card_type
+            card_dict["expirationDate"] = card.expiration_date
+            card_dict["billingAddress"] = card.billing_address
+            card_array.append(card_dict)
 
-    context = {
-        'list': card_array
-    }
+        context = {
+            'isSuccessful': 'true',
+            'list': card_array
+        }
+    except Exception as err:
+        context = {
+            'isSuccessful': 'false'
+        }
     #return JsonResponse(context)
     return JsonResponse(context)
     template = loader.get_template('editprofile/cardsview.html')

@@ -49,22 +49,27 @@ export default function Home() {
     await axios.post("http://localhost:8000/api/v1/get-cards",
       { email: window.sessionStorage.getItem("email") }).then((response) => {
         console.log(response.data.list)
-
-        // setApples(response.data.list.);
-        for (const element of response.data.list) {
-          cardArray.push(<PaymentInfoCard lastDigits={element.lastDigits} number={element.cardNumber} address={element.billingAddress} type={element.cardType} expiry={element.expirationDate} />);
+        if (response.data.isSuccessful == "true") {
+          // setApples(response.data.list.);
+          for (const element of response.data.list) {
+            cardArray.push(<PaymentInfoCard lastDigits={element.lastDigits} number={element.cardNumber} address={element.billingAddress} type={element.cardType} expiry={element.expirationDate} />);
+          }
         }
+
       });
     setCards(cardArray);
 
   }, []);
+
+
+
 
   let handleSubmit = async (e) => {
     axios.post("http://localhost:8000/api/v1/create-payment", { cardType: cardType, cardNumber: cardNumber, email: email, billingAddress: billingAddress, expirationDate: expirationDate })
   };
 
   let handleUpdateUser = async (e) => {
-    axios.post("http://localhost:8000/api/v1/edit-profile", {email: email, firstName: firstName, lastName: lastName, currentPassword: currentPassword, newPassword: newPassword, confirmNewPassword: confirmNewPassword})
+    axios.post("http://localhost:8000/api/v1/edit-profile", { email: email, firstName: firstName, lastName: lastName, currentPassword: currentPassword, newPassword: newPassword, confirmNewPassword: confirmNewPassword })
   }
 
   function addRow(e) {
