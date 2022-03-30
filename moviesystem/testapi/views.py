@@ -355,3 +355,10 @@ def tutorial_detail(request, pk):
 def tutorial_list_published(request):
     # GET all published tutorials
     print("hello")
+
+@api_view(['POST'])
+def route_delete_payment(request):
+    data = JSONParser().parse(request)
+    card = PaymentCard.objects.get(card_number=data['cardNumber'])
+    card.delete()
+    return HttpResponse(200)
