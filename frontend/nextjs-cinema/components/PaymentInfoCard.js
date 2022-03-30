@@ -13,12 +13,13 @@ function PaymentInfoCard(props) {
     const router = useRouter();
 
     return <tr>
-        <td contentEditable='true'> {props.number}</td>
+        <td contentEditable='true'> {props.lastDigits} </td>
+        {/*<td contentEditable='true'> {props.number}</td>*/}
         <td contentEditable='true'> {props.type}</td>
         <td contentEditable='true'> {props.expiry}</td>
         <td contentEditable='true'> {props.address}</td>
         <td><button type="submit" onClick={() => {
-            axios.post("http://localhost:8000/api/v1/delete-payment", { cardNumber: props.number }).then((response) => {
+            axios.post("http://localhost:8000/api/v1/delete-payment", { cardNumber: props.number, lastDigits: props.lastDigits}).then((response) => {
                 alert("Payment method has been deleted.");
                 router.reload()
             });

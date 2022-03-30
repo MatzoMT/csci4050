@@ -71,7 +71,7 @@ export default function Home() {
 
         // setApples(response.data.list.);
         for (const element of response.data.list) {
-          cardArray.push(<PaymentInfoCard number={element.cardNumber} address={element.billingAddress} type={element.cardType} expiry={element.expirationDate} />);
+          cardArray.push(<PaymentInfoCard lastDigits={element.lastDigits} number={element.cardNumber} address={element.billingAddress} type={element.cardType} expiry={element.expirationDate} />);
         }
       });
     setCards(cardArray);
@@ -130,7 +130,7 @@ export default function Home() {
             <a><input type="text" placeholder="CVV"></input></a><br />
             <a><input type="text" placeholder="Expiration date"></input></a><br />*/}
             <table id="cardtable">
-              <th>Card Number</th>
+              <th>Last 4 Digits of Card</th>
               <th>Type</th>
               <th>Expiration Date</th>
               <th>Address</th>

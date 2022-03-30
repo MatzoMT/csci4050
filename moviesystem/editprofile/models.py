@@ -32,13 +32,15 @@ class PaymentCard(models.Model):
 		('C', 'CREDIT'),
 		('D', 'DEBIT'),
 	]
-	card_number = models.CharField(max_length=20, primary_key=True)
+	card_number = models.CharField(max_length=255, primary_key=True)
 	user = models.ForeignKey(
 		User, 
 		on_delete=models.CASCADE
 	)
 	card_type = models.CharField(max_length=1, choices=TYPE_CHOICES)
 	billing_address = models.CharField(max_length=20)
+	last_digits = models.CharField(default='0000', max_length=4)
+
 	expiration_date = models.DateField()
 	def __str__(self):
 		return self.card_number

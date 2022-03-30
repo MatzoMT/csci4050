@@ -274,7 +274,7 @@ def route_create_payment(request):
     try:
         data = JSONParser().parse(request)
         user = User.objects.all().get(email=data["email"])
-        card = PaymentCard(card_type=data['cardType'], card_number=data['cardNumber'], user=user, billing_address=data["billingAddress"], expiration_date=data["expirationDate"])
+        card = PaymentCard(card_type=data['cardType'], last_digits=str(data['cardNumber'][-4:]), card_number=make_password(data['cardNumber']), user=user, billing_address=data["billingAddress"], expiration_date=data["expirationDate"])
         card.save()
         response = {
             'success': 'true'
@@ -325,6 +325,7 @@ def route_get_cards(request):
         print(card.expiration_date)
         print(card.billing_address)
         card_dict["cardNumber"] = card.card_number
+        card_dict["lastDigits"] = card.last_digits
         card_dict["cardType"] = card.card_type
         card_dict["expirationDate"] = card.expiration_date
         card_dict["billingAddress"] = card.billing_address
@@ -359,6 +360,8 @@ def tutorial_list_published(request):
 @api_view(['POST'])
 def route_delete_payment(request):
     data = JSONParser().parse(request)
-    card = PaymentCard.objects.get(card_number=data['cardNumber'])
+    print("HASH")
+    print(make_password(data['cardNumber']))
+    card = PaymentCard.objects.get(last_digits=data['lastDigits'])
     card.delete()
     return HttpResponse(200)
