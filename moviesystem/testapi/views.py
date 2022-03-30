@@ -231,7 +231,27 @@ def route_create_user(request):
     
 @api_view(['POST'])
 def route_edit_profile(request):
+    data = JSONParser().parse(request)
     
+    try:
+        new_query = User.objects.all().get(email=data["email"])
+        new_query.first_name = data["firstName"]
+        new_query.last_name = data["lastName"]
+        new_query.password = make_password(data['newPassword'])
+        new_query.save()
+        print(make_password(data['newPassword']))
+        print(data['newPassword'])
+        response = {
+            'changeSuccess': 'true'
+        }
+        return JsonResponse(response)
+    except Exception as err:
+        print(err)
+        response = {
+            'changeSuccess': "false"
+        }
+        return HttpResponse(400)
+    """
 	try:
 		user = User.objects.get(pk=1)
 	except User.DoesNotExist:
@@ -248,6 +268,7 @@ def route_edit_profile(request):
 
 	template = loader.get_template('editprofile/edit.html')
 	return HttpResponse(template.render(context, request))
+    """
 
 @api_view(['POST'])
 def route_edit_password(request):

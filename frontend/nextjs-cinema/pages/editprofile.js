@@ -16,6 +16,9 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const router = useRouter();
   const [cards, setCards] = useState([]);
   const [apples, setApples] = useState("");
@@ -23,28 +26,6 @@ export default function Home() {
   const [cardNumber, setCardNumber] = useState("");
   const [billingAddress, setBillingAddress] = useState("")
   const [expirationDate, setExpirationDate] = useState("")
-
-  /*
-
-      "cardNumber": "3141321434",
-    "email": "spiderman@email.com",
-    "billingAddress": "citadel",
-    "expirationDate": "2020-09-12"
-    */
-
-
-
-  // let cardTable;
-  // if (typeof window !== "undefined") {
-  //   cardTable = document.getElementById("cardtable");
-  //   console.log(cardTable.children.length);
-  //   let userCardCount = 3; //replace later
-  //   //
-  //   for (let i = 0; i < userCardCount; i++) {
-  //     //cardTable.push();
-  //   }
-  // }
-
 
 
 
@@ -79,9 +60,12 @@ export default function Home() {
   }, []);
 
   let handleSubmit = async (e) => {
-    axios.post("http://localhost:8000/api/v1/create-payment", {cardType: cardType, cardNumber: cardNumber, email: email, billingAddress: billingAddress, expirationDate: expirationDate})
+    axios.post("http://localhost:8000/api/v1/create-payment", { cardType: cardType, cardNumber: cardNumber, email: email, billingAddress: billingAddress, expirationDate: expirationDate })
   };
 
+  let handleUpdateUser = async (e) => {
+    axios.post("http://localhost:8000/api/v1/edit-profile", {email: email, firstName: firstName, lastName: lastName, currentPassword: currentPassword, newPassword: newPassword, confirmNewPassword: confirmNewPassword})
+  }
 
   function addRow(e) {
     axios.post("http://localhost:8000/api/v1/get-cards",
@@ -112,18 +96,25 @@ export default function Home() {
         <main>
 
           <div id="editprofile">
-            <h1>Edit your profile</h1>
-            <p>First Name</p>
-            <a><input type="text" placeholder="Enter new first name" defaultValue={firstName}></input></a>
-            <p>Last Name</p>
-            <a><input type="text" placeholder="Enter new last name" defaultValue={lastName}></input></a>
-            {/*<p>Age</p>
-              <a><input type="text" placeholder="Enter your new age" defaultValue="37"></input></a>*/}
+            <form onSubmit={handleUpdateUser}>
 
-            <p>Password</p>
-            <a><input type="text" placeholder="Enter a new password" ></input></a>
-            <p>Confirm Password</p>
-            <a><input type="text" placeholder="Re-enter the new password"></input></a>
+              <h1>Edit your profile</h1>
+              <p>First Name</p>
+              <a><input type="text" placeholder="Enter new first name" defaultValue={firstName} onChange={(val) => setFirstName(val.target.value)}></input></a>
+              <p>Last Name</p>
+              <a><input type="text" placeholder="Enter new last name" defaultValue={lastName} onChange={(val) => setLastName(val.target.value)}></input></a>
+              {/*<p>Age</p>
+              <a><input type="text" placeholder="Enter your new age" defaultValue="37"></input></a>*/}
+              <p>Current Password</p>
+              <a><input type="password" placeholder="Current Password" onChange={(val) => setCurrentPassword(val.target.value)}></input></a>
+              <p>New Password</p>
+              <a><input type="password" placeholder="Enter a new password" onChange={(val) => setNewPassword(val.target.value)}></input></a>
+              <p>Confirm New Password</p>
+              <a><input type="password" placeholder="Re-enter the new password" onChange={(val) => setConfirmNewPassword(val.target.value)}></input></a>
+              <button type="submit">Update account information</button>
+
+            </form>
+
             {/*<p>Credit Card Information</p>
             <a><input type="text" placeholder="Credit card number"></input></a><br />
             <a><input type="text" placeholder="Card holder's name"></input></a><br />
@@ -146,7 +137,6 @@ export default function Home() {
               <a><input type="text" name="expiration-date" placeholder="Expiration Date YYYY-MM-DD" onChange={(val) => setExpirationDate(val.target.value)}></input></a><br></br>
               <button type="submit">Add Payment Method</button>
             </form>
-            <button type="button">Update account information</button>
           </div>
         </main>
 
