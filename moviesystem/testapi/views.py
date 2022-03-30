@@ -114,6 +114,24 @@ def route_login(request):
     return JsonResponse(response)
 
 @api_view(['POST'])
+def route_create_payment(request):
+    try:
+        data = JSONParser().parse(request)
+        user = User.objects.all().get(email=data["email"])
+        card = PaymentCard(card_type=data['cardType'], card_number=data['cardNumber'], user=user, billing_address=data["billingAddress"], expiration_date=data["expirationDate"])
+        card.save()
+        response = {
+            'success': 'true'
+        }
+    except Exception as err:
+        print(err)
+        response = {
+            'success': 'false'
+        }
+    return JsonResponse(response)
+
+
+@api_view(['POST'])
 def route_send_password_reset_email(request):
     try:
         data = JSONParser().parse(request)

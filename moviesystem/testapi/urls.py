@@ -10,5 +10,6 @@ urlpatterns = [
     path('v1/get-user-information', views.route_get_user_information),
     #path('v1/get-user-by-email', views.route_get_user_by_email)
     path('v1/send-password-reset-email', views.route_send_password_reset_email),
-    path('v1/edit-password', views.route_edit_password)
+    path('v1/edit-password', views.route_edit_password),
+    path('v1/create-payment', views.route_create_payment)
 ]
