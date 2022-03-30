@@ -23,7 +23,7 @@ export default function Home() {
           <div id="confirmation"> 
               <h1>Thank you for registering with us!</h1>
               <p>Please check your email and verify your account.</p>
-              <button type="button" href="/">Return to Home Page</button> 
+              <a href="/"><button type="button">Return to Home Page</button> </a>
           </div>
         </main>
 
