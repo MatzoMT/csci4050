@@ -49,6 +49,22 @@ def route_get_finland(request):
 def route_get_movies(request):
     print("hello")
 
+# This route is for forgot password option
+# Searches database to see if email is registered in system
+# If email is found in DB, isSuccessful: "true" returned in JSON response + email
+# Else, return isSuccessful: "false" in JSON respnose
+"""
+@api_view(['POST'])
+def route_get_user_by_email(request):
+    if 'year' not in request.json:
+        response = {
+            'isSuccessful': 'false'
+        }
+        return JsonResponse(response)
+    data = JSONParser().parse(request)
+    users = User.objects.all().filter(email=data['email'])
+"""
+
 @api_view(['POST'])
 def route_get_user_information(request):
     data = JSONParser().parse(request)
