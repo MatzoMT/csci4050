@@ -15,6 +15,7 @@ from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User as AuthUser
 from django.http import HttpResponse, Http404
+from django.contrib.auth.hashers import make_password, check_password
 
 from django.template import loader
 from django.contrib import messages
@@ -94,14 +95,15 @@ def route_login(request):
     login_success = "false"
     is_admin = "false"
     users = User.objects.all().filter(email=data['email'], user_type=1)
-    if len(users) > 0 and users[0].password==data['password']:
+    # check_password(original_password, make_password result)
+    if len(users) > 0 and check_password(data['password'], users[0].password)==True:
         login_success = "true"
     # Below loop runs if login as normal user fails
     # Begins searching for admin credentials
     if login_success == "false":
         print("ATTEMPT ADMIN")
         admin_users = User.objects.all().filter(email=data['email'], user_type=2)
-        if len(admin_users) > 0 and admin_users[0].password == data['password']:
+        if len(admin_users) > 0 and check_password(data['password'], admin_users[0].password)==True:
             login_success = "true"
             is_admin = "true"
     response = {
@@ -177,7 +179,13 @@ def route_create_user(request):
 
     if creation_success == "true":
         password
-        user = User(first_name=name, last_name=data['lastName'], password=password, email=email, phone=data['phone'], status="Inactive", user_type_id=1, promotion=data['promotion'])
+        print(make_password(password))
+        testattu = make_password(password)
+        print("LENGTH IS " + str(len(testattu)))
+        # check_password(original_password, make_password result)
+        matches = check_password(password, testattu)
+        print(matches)
+        user = User(first_name=name, last_name=data['lastName'], password=make_password(password), email=email, phone=data['phone'], status="Inactive", user_type_id=1, promotion=data['promotion'])
         # user = User(first_name=name, last_name=form_info.get('last_name'), password=form_info.get('password'), email=email, phone=form_info.get('phone'), status='Inactive', user_type_id=1, promotion=form_info.get('promotion'))
         user.save()
         #send email
