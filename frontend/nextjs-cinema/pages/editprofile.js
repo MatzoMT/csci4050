@@ -17,8 +17,20 @@ export default function Home() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const router = useRouter();
-  const [stuff, setStuff] = useState([]);
+  const [cards, setCards] = useState([]);
   const [apples, setApples] = useState("");
+  const [cardType, setCardType] = useState("");
+  const [cardNumber, setCardNumber] = useState("");
+  const [billingAddress, setBillingAddress] = useState("")
+  const [expirationDate, setExpirationDate] = useState("")
+
+  /*
+
+      "cardNumber": "3141321434",
+    "email": "spiderman@email.com",
+    "billingAddress": "citadel",
+    "expirationDate": "2020-09-12"
+    */
 
 
 
@@ -56,24 +68,34 @@ export default function Home() {
     await axios.post("http://localhost:8000/api/v1/get-cards",
       { email: window.sessionStorage.getItem("email") }).then((response) => {
         console.log(response.data.list)
-        
+
         // setApples(response.data.list.);
         for (const element of response.data.list) {
           cardArray.push(<PaymentInfoCard number={element.cardNumber} address={element.billingAddress} type={element.cardType} expiry={element.expirationDate} />);
         }
       });
-      setStuff(cardArray);
+    setCards(cardArray);
 
   }, []);
 
-
+  let handleSubmit = async (e) => {
+    axios.post("http://localhost:8000/api/v1/create-payment", {cardType: cardType, cardNumber: cardNumber, email: email, billingAddress: billingAddress, expirationDate: expirationDate})
+  };
 
 
   function addRow(e) {
+    axios.post("http://localhost:8000/api/v1/get-cards",
+      { email: window.sessionStorage.getItem("email") }).then((response) => {
+        /*
 
-    console.log(stuff.length)
-    stuff.push(<PaymentInfoCard number="" email="" type="" address="" expiry="" />);
-    stuff.push(<h1>dsfasdfas</h1>);
+            "cardType": "D",
+    "cardNumber": "3141321434",
+    "email": "spiderman@email.com",
+    "billingAddress": "citadel",
+    "expirationDate": "2020-09-12"
+    */
+      });
+
   }
 
   return (
@@ -90,9 +112,6 @@ export default function Home() {
         <main>
 
           <div id="editprofile">
-
-
-
             <h1>Edit your profile</h1>
             <p>First Name</p>
             <a><input type="text" placeholder="Enter new first name" defaultValue={firstName}></input></a>
@@ -100,8 +119,7 @@ export default function Home() {
             <a><input type="text" placeholder="Enter new last name" defaultValue={lastName}></input></a>
             {/*<p>Age</p>
               <a><input type="text" placeholder="Enter your new age" defaultValue="37"></input></a>*/}
-            <p>Email Address</p>
-            <a><input type="text" placeholder="Enter new email" defaultValue={email}></input></a>
+
             <p>Password</p>
             <a><input type="text" placeholder="Enter a new password" ></input></a>
             <p>Confirm Password</p>
@@ -117,12 +135,17 @@ export default function Home() {
               <th>Expiration Date</th>
               <th>Address</th>
               <th></th>
-              {stuff}
-              {apples}
+              {cards}
             </table>
-            <h1>
-            </h1>
-            <button type="button" onClick={addRow}>Add Row</button>
+
+            <p>Add Payment Method</p>
+            <form onSubmit={handleSubmit}>
+              <a><input type="text" name="card-type" placeholder="D or C" onChange={(val) => setCardType(val.target.value)}></input></a><br></br>
+              <a><input type="text" name="card-number" placeholder="Card Number" onChange={(val) => setCardNumber(val.target.value)}></input></a><br></br>
+              <a><input type="text" name="billing-address" placeholder="Billing Address" onChange={(val) => setBillingAddress(val.target.value)}></input></a><br></br>
+              <a><input type="text" name="expiration-date" placeholder="Expiration Date YYYY-MM-DD" onChange={(val) => setExpirationDate(val.target.value)}></input></a><br></br>
+              <button type="submit">Add Payment Method</button>
+            </form>
             <button type="button">Update account information</button>
           </div>
         </main>
