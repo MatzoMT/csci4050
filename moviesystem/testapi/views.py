@@ -236,14 +236,17 @@ def route_edit_profile(request):
 def route_edit_password(request):
     data = JSONParser().parse(request)
     try:
-        new_query = User.objects.all().filter(password=make_password(data['oldPassword'])).update(password=data['newPassword'])
+        new_query = User.objects.all().get(email=data["email"])
+        new_query.password = make_password(data['newPassword'])
+        new_query.save()
         print(make_password(data['newPassword']))
         print(data['newPassword'])
         response = {
             'changeSuccess': 'true'
         }
         return JsonResponse(response)
-    except:
+    except Exception as err:
+        print(err)
         response = {
             'changeSuccess': "false"
         }
