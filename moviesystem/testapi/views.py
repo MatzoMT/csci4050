@@ -94,10 +94,14 @@ def route_login(request):
     data = JSONParser().parse(request)
     login_success = "false"
     is_admin = "false"
+    is_inactive = "false"
     users = User.objects.all().filter(email=data['email'], user_type=1)
     # check_password(original_password, make_password result)
     if len(users) > 0 and check_password(data['password'], users[0].password)==True:
-        login_success = "true"
+        if users[0].status != 'Inactive':
+            login_success = "true"
+        else:
+            is_inactive = "true"
     # Below loop runs if login as normal user fails
     # Begins searching for admin credentials
     if login_success == "false":
@@ -109,7 +113,8 @@ def route_login(request):
     response = {
         'loginSuccess': login_success,
         'email': data['email'],
-        'isAdmin': is_admin
+        'isAdmin': is_admin,
+        'isInactive': is_inactive
     }
     return JsonResponse(response)
 

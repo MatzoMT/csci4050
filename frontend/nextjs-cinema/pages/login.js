@@ -45,6 +45,8 @@ export default function Home() {
             localStorage.removeItem("email");
             localStorage.removeItem("password");
           }
+        } else if (response.data.isInactive == "true") {
+          setIncorrectMessage("Your account is inactive. Please activate it using the link sent to your email.");
         } else {
           setIncorrectMessage("Username or password is incorrect.");
         }
