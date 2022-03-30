@@ -49,6 +49,22 @@ def route_get_finland(request):
 def route_get_movies(request):
     print("hello")
 
+# This route is for forgot password option
+# Searches database to see if email is registered in system
+# If email is found in DB, isSuccessful: "true" returned in JSON response + email
+# Else, return isSuccessful: "false" in JSON respnose
+"""
+@api_view(['POST'])
+def route_get_user_by_email(request):
+    if 'year' not in request.json:
+        response = {
+            'isSuccessful': 'false'
+        }
+        return JsonResponse(response)
+    data = JSONParser().parse(request)
+    users = User.objects.all().filter(email=data['email'])
+"""
+
 @api_view(['POST'])
 def route_get_user_information(request):
     data = JSONParser().parse(request)
@@ -94,6 +110,31 @@ def route_login(request):
         'isAdmin': is_admin
     }
     return JsonResponse(response)
+
+@api_view(['POST'])
+def route_send_password_reset_email(request):
+    try:
+        data = JSONParser().parse(request)
+        name = data["name"]
+        email = data["email"]
+        #send email
+        htmly = loader.get_template('users/ResetPasswordEmail.html')
+        d = { 'username': name }
+        subject, from_email, to = 'Welcome,', name, email
+        html_content = htmly.render(d)
+        msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+        response = {
+        'loginSuccess': "true"
+        }
+    except:
+        response = {
+            'loginSuccess': "false"
+        }
+    return JsonResponse(response)
+
+
 
 # Post username and password
 # If there is a query with a matching username and password, return true

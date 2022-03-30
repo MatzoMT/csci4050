@@ -105,18 +105,16 @@ export default function Home() {
               <div id="remember-me-div">
                 <input name="remember-me" type="checkbox" onChange={handleCheckbox} checked={rememberMe} />
                 <label htmlFor="remember-me">Remember Me</label>
-                <p id="forgotpassword"><a href="something">Forgot your password?</a></p>
+                <p id="forgotpassword"><a href="/forgot-password">Forgot your password?</a></p>
               </div>
               <button type="submit" id="sign-in-button">Sign-In</button>
             </form>
               <p id="or">OR</p>
 
-
-          
           </div>
 
           <div id="footer">
-         <a href="/registration" id="create-account-button"><p id="create-account-button">Create an Account</p></a>
+         <a href="/registration" id="create-account-button"><p>Create an Account</p></a>
           </div>
         </main>
 
