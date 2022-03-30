@@ -113,22 +113,21 @@ def route_login(request):
     }
     return JsonResponse(response)
 
+"""
 @api_view(['POST'])
-def route_create_payment(request):
+def route_get_payments(request):
     try:
         data = JSONParser().parse(request)
-        user = User.objects.all().get(email=data["email"])
-        card = PaymentCard(card_type=data['cardType'], card_number=data['cardNumber'], user=user, billing_address=data["billingAddress"], expiration_date=data["expirationDate"])
-        card.save()
-        response = {
-            'success': 'true'
-        }
+        user = User.objects.all.get(email=data["email"])
+        cards = PaymentCards.objects.all
     except Exception as err:
-        print(err)
         response = {
             'success': 'false'
         }
     return JsonResponse(response)
+"""
+
+
 
 
 @api_view(['POST'])
@@ -270,13 +269,33 @@ def route_edit_password(request):
         }
         return JsonResponse(response)
 
-@api_view(['GET'])
+@api_view(['POST'])
+def route_create_payment(request):
+    try:
+        data = JSONParser().parse(request)
+        user = User.objects.all().get(email=data["email"])
+        card = PaymentCard(card_type=data['cardType'], card_number=data['cardNumber'], user=user, billing_address=data["billingAddress"], expiration_date=data["expirationDate"])
+        card.save()
+        response = {
+            'success': 'true'
+        }
+    except Exception as err:
+        print(err)
+        response = {
+            'success': 'false'
+        }
+    return JsonResponse(response)
+
+@api_view(['POST'])
 def route_get_cards(request):
+    """
     try:
         user = User.objects.get(pk=1)
     except User.DoesNotExist:
         raise Http404("User does not exist")
-
+    """
+    data = JSONParser().parse(request)
+    user = User.objects.all().get(email=data["email"])
     card_list = PaymentCard.objects.filter(user=user)
     people = User.objects.filter(user_type=1)
     print(people)
@@ -305,12 +324,16 @@ def route_get_cards(request):
         print(card.card_type)
         print(card.expiration_date)
         print(card.billing_address)
+        card_dict["cardType"] = card.card_type
+        card_dict["expirationDate"] = card.expiration_date
+        card_dict["billingAddress"] = card.billing_address
+        card_array.append(card_dict)
 
     context = {
-        'list': card_list,
+        'list': card_array
     }
     #return JsonResponse(context)
-
+    return JsonResponse(context)
     template = loader.get_template('editprofile/cardsview.html')
     return HttpResponse(template.render(context, request))
 
