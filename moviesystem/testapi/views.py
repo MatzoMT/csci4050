@@ -214,6 +214,7 @@ def route_create_user(request):
     
 @api_view(['POST'])
 def route_edit_profile(request):
+    
 	try:
 		user = User.objects.get(pk=1)
 	except User.DoesNotExist:
@@ -230,6 +231,23 @@ def route_edit_profile(request):
 
 	template = loader.get_template('editprofile/edit.html')
 	return HttpResponse(template.render(context, request))
+
+@api_view(['POST'])
+def route_edit_password(request):
+    data = JSONParser().parse(request)
+    try:
+        new_query = User.objects.all().filter(password=make_password(data['oldPassword'])).update(password=data['newPassword'])
+        print(make_password(data['newPassword']))
+        print(data['newPassword'])
+        response = {
+            'changeSuccess': 'true'
+        }
+        return JsonResponse(response)
+    except:
+        response = {
+            'changeSuccess': "false"
+        }
+        return JsonResponse(response)
 
 @api_view(['GET'])
 def route_get_cards(request):
