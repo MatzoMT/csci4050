@@ -3,20 +3,40 @@ import NavBar from '../components/NavBar.js';
 import Script from 'next/script';
 import Image from 'next/image'
 import { useRouter } from 'next/router';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import PaymentInfoCard from '../components/PaymentInfoCard.js'
+
 
 
 // SKELETON CODE
 
 export default function Home() {
+
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const router = useRouter();
+  const [stuff, setStuff] = useState([]);
 
 
-  useEffect(() => {
+
+  // let cardTable;
+  // if (typeof window !== "undefined") {
+  //   cardTable = document.getElementById("cardtable");
+  //   console.log(cardTable.children.length);
+  //   let userCardCount = 3; //replace later
+  //   //
+  //   for (let i = 0; i < userCardCount; i++) {
+  //     //cardTable.push();
+  //   }
+  // }
+
+
+  
+
+
+  useEffect(async () => {
     try {
       axios.post("http://localhost:8000/api/v1/get-user-information", 
       { email: window.sessionStorage.getItem("email") }).then((response) => {
@@ -31,7 +51,37 @@ export default function Home() {
     } catch (err) {
       router.push('/login');
     }
+
+    await axios.post("http://localhost:8000/api/v1/get-cards", 
+    { email: window.sessionStorage.getItem("email") }).then((response) => {
+      console.log(response.data.list.length)
+
+      for (let i = 0; i < response.data.list.length; i++) {
+        stuff.push(<PaymentInfoCard number="1234123412341234" email="test@hi.com" type="CREDIT" address="123 boulevard" expiry="December 31, 1999"/>);
+      }
+    });
+
+
+    console.log(stuff)
   }, []);
+
+
+
+
+
+
+  
+
+
+  function addRow(e) {
+
+
+
+
+
+    console.log(stuff.length)
+    stuff.push(<PaymentInfoCard number="" email="" type="" address="" expiry=""/>);
+  }
 
   return (
     <div className="container">
@@ -47,6 +97,9 @@ export default function Home() {
         <main>
 
           <div id="editprofile">
+
+            
+
             <h1>Edit your profile</h1>
             <p>First Name</p>
             <a><input type="text" placeholder="Enter new first name" defaultValue={firstName}></input></a>
@@ -65,6 +118,15 @@ export default function Home() {
             <a><input type="text" placeholder="Card holder's name"></input></a><br />
             <a><input type="text" placeholder="CVV"></input></a><br />
             <a><input type="text" placeholder="Expiration date"></input></a><br />*/}
+            <table id="cardtable">
+              <th>Card Number</th>
+              <th>Type</th>
+              <th>Expiration Date</th>
+              <th>Address</th>
+              <th></th>              
+              {stuff}
+            </table>
+            <button type="button" onClick={addRow}>Add Row</button>
             <button type="button">Update account information</button>
           </div>
         </main>
