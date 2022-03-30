@@ -38,6 +38,7 @@ export default function Home() {
             setEmail(response.data.email);
             setFirstName(response.data.firstName);
             setLastName(response.data.lastName);
+
           } else {
             router.push('/login');
           }
@@ -46,7 +47,7 @@ export default function Home() {
       router.push('/login');
     }
     const cardArray = [];
-    await axios.post("http://localhost:8000/api/v1/get-cards",
+    axios.post("http://localhost:8000/api/v1/get-cards",
       { email: window.sessionStorage.getItem("email") }).then((response) => {
         console.log(response.data.list)
 
@@ -57,6 +58,7 @@ export default function Home() {
       });
     setCards(cardArray);
 
+
   }, []);
 
   let handleSubmit = async (e) => {
@@ -64,7 +66,7 @@ export default function Home() {
   };
 
   let handleUpdateUser = async (e) => {
-    axios.post("http://localhost:8000/api/v1/edit-profile", {email: email, firstName: firstName, lastName: lastName, currentPassword: currentPassword, newPassword: newPassword, confirmNewPassword: confirmNewPassword})
+    axios.post("http://localhost:8000/api/v1/edit-profile", { email: email, firstName: firstName, lastName: lastName, currentPassword: currentPassword, newPassword: newPassword, confirmNewPassword: confirmNewPassword })
   }
 
   function addRow(e) {
