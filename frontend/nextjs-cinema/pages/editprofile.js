@@ -18,6 +18,7 @@ export default function Home() {
   const [lastName, setLastName] = useState("");
   const router = useRouter();
   const [stuff, setStuff] = useState([]);
+  const [apples, setApples] = useState("");
 
 
 
@@ -33,54 +34,46 @@ export default function Home() {
   // }
 
 
-  
+
 
 
   useEffect(async () => {
     try {
-      axios.post("http://localhost:8000/api/v1/get-user-information", 
-      { email: window.sessionStorage.getItem("email") }).then((response) => {
-      if (response.data.requestSuccess == "true") {
-          setEmail(response.data.email);
-          setFirstName(response.data.firstName);
-          setLastName(response.data.lastName);
-        } else {
-          router.push('/login');
-        }
-      });
+      axios.post("http://localhost:8000/api/v1/get-user-information",
+        { email: window.sessionStorage.getItem("email") }).then((response) => {
+          if (response.data.requestSuccess == "true") {
+            setEmail(response.data.email);
+            setFirstName(response.data.firstName);
+            setLastName(response.data.lastName);
+          } else {
+            router.push('/login');
+          }
+        });
     } catch (err) {
       router.push('/login');
     }
+    const cardArray = [];
+    await axios.post("http://localhost:8000/api/v1/get-cards",
+      { email: window.sessionStorage.getItem("email") }).then((response) => {
+        console.log(response.data.list)
+        
+        // setApples(response.data.list.);
+        for (const element of response.data.list) {
+          cardArray.push(<PaymentInfoCard number={element.cardNumber} address={element.billingAddress} type={element.cardType} expiry={element.expirationDate} />);
+        }
+      });
+      setStuff(cardArray);
 
-    await axios.post("http://localhost:8000/api/v1/get-cards", 
-    { email: window.sessionStorage.getItem("email") }).then((response) => {
-      console.log(response.data.list.length)
-
-      for (let i = 0; i < response.data.list.length; i++) {
-        stuff.push(<PaymentInfoCard number="1234123412341234" email="test@hi.com" type="CREDIT" address="123 boulevard" expiry="December 31, 1999"/>);
-      }
-    });
-
-
-    console.log(stuff)
   }, []);
 
 
 
 
-
-
-  
-
-
   function addRow(e) {
 
-
-
-
-
     console.log(stuff.length)
-    stuff.push(<PaymentInfoCard number="" email="" type="" address="" expiry=""/>);
+    stuff.push(<PaymentInfoCard number="" email="" type="" address="" expiry="" />);
+    stuff.push(<h1>dsfasdfas</h1>);
   }
 
   return (
@@ -98,7 +91,7 @@ export default function Home() {
 
           <div id="editprofile">
 
-            
+
 
             <h1>Edit your profile</h1>
             <p>First Name</p>
@@ -123,9 +116,12 @@ export default function Home() {
               <th>Type</th>
               <th>Expiration Date</th>
               <th>Address</th>
-              <th></th>              
+              <th></th>
               {stuff}
+              {apples}
             </table>
+            <h1>
+            </h1>
             <button type="button" onClick={addRow}>Add Row</button>
             <button type="button">Update account information</button>
           </div>

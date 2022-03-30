@@ -324,6 +324,7 @@ def route_get_cards(request):
         print(card.card_type)
         print(card.expiration_date)
         print(card.billing_address)
+        card_dict["cardNumber"] = card.card_number
         card_dict["cardType"] = card.card_type
         card_dict["expirationDate"] = card.expiration_date
         card_dict["billingAddress"] = card.billing_address
