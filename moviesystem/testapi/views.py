@@ -82,6 +82,8 @@ def route_get_user_information(request):
             'email': data['email'],
             'firstName': users[0].first_name,
             'lastName': users[0].last_name,
+            'phone': users[0].phone,
+            'promotion': users[0].promotion,
         }
     except:
         request_success = "false"
@@ -255,46 +257,6 @@ def route_create_user(request):
     #return HttpResponse(users)
 
     
-@api_view(['POST'])
-def route_edit_profile(request):
-    data = JSONParser().parse(request)
-    
-    try:
-        new_query = User.objects.all().get(email=data["email"])
-        new_query.first_name = data["firstName"]
-        new_query.last_name = data["lastName"]
-        new_query.password = make_password(data['newPassword'])
-        new_query.save()
-        print(make_password(data['newPassword']))
-        print(data['newPassword'])
-        response = {
-            'changeSuccess': 'true'
-        }
-        return JsonResponse(response)
-    except Exception as err:
-        print(err)
-        response = {
-            'changeSuccess': "false"
-        }
-        return HttpResponse(400)
-    """
-	try:
-		user = User.objects.get(pk=1)
-	except User.DoesNotExist:
-		raise Http404("User does not exist")
-	form = EditBasicForm(instance=user, data=request.POST or None)
-	context = {
-		'form': form,
-        'user': user,
-    }
-	if form.is_valid():
-		user = form.save(commit=False)
-		user.save()
-		return redirect('/editprofile')
-
-	template = loader.get_template('editprofile/edit.html')
-	return HttpResponse(template.render(context, request))
-    """
 
 @api_view(['POST'])
 def route_edit_password(request):
@@ -314,7 +276,48 @@ def route_edit_password(request):
         response = {
             'changeSuccess': "false"
         }
+        return HttpResponse(400)
+
+
+@api_view(['POST'])
+def route_edit_profile(request):
+    data = JSONParser().parse(request)
+    try:
+        new_query = User.objects.all().get(email=data["email"])
+        new_query.first_name = data["firstName"]
+        new_query.last_name = data["lastName"]
+        new_query.save()
+        response = {
+            'changeSuccess': 'true'
+        }
         return JsonResponse(response)
+    except Exception as err:
+        print(err)
+        response = {
+            'changeSuccess': "false"
+        }
+        return HttpResponse(400)
+'''
+@api_view(['POST'])
+def route_edit_password(request):
+    data = JSONParser().parse(request)
+    try:
+        new_query = User.objects.all().get(email=data["email"])
+        new_query.password = make_password(data['newPassword'])
+        new_query.save()
+        print(make_password(data['newPassword']))
+        print(data['newPassword'])
+        response = {
+            'changeSuccess': 'true'
+        }
+        return JsonResponse(response)
+    except Exception as err:
+        print(err)
+        response = {
+            'changeSuccess': "false"
+        }
+        return JsonResponse(response)
+'''
 
 @api_view(['POST'])
 def route_create_payment(request):
