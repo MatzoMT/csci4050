@@ -2,6 +2,11 @@ from django.shortcuts import render
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser 
 from rest_framework import status
+
+import jwt
+from datetime import datetime
+from django.utils import timezone
+import time
  
 from testapi.models import Tutorial
 from testapi.serializers import TutorialSerializer
@@ -94,10 +99,14 @@ def route_login(request):
     data = JSONParser().parse(request)
     login_success = "false"
     is_admin = "false"
+    is_inactive = "false"
     users = User.objects.all().filter(email=data['email'], user_type=1)
     # check_password(original_password, make_password result)
     if len(users) > 0 and check_password(data['password'], users[0].password)==True:
-        login_success = "true"
+        if users[0].status != 'Inactive':
+            login_success = "true"
+        else:
+            is_inactive = "true"
     # Below loop runs if login as normal user fails
     # Begins searching for admin credentials
     if login_success == "false":
@@ -109,7 +118,8 @@ def route_login(request):
     response = {
         'loginSuccess': login_success,
         'email': data['email'],
-        'isAdmin': is_admin
+        'isAdmin': is_admin,
+        'isInactive': is_inactive
     }
     return JsonResponse(response)
 
@@ -132,20 +142,36 @@ def route_get_payments(request):
 
 @api_view(['POST'])
 def route_send_password_reset_email(request):
+    
+
+    
     try:
         data = JSONParser().parse(request)
+
+        key = "secret"
+        # 3600 seconds = 1 hr expiration after time token was generated
+        encoded = jwt.encode({"exp": int(time.time()) + 3600, "email": data['email']}, key, algorithm="HS256")
+        print(encoded)
+        decoded = jwt.decode(encoded, key, algorithms="HS256")
+        print(decoded)
+
+        resetUrl = 'http://localhost:3000/reset-password-form?jwt=' + encoded
+        
+
         name = data["name"]
         email = data["email"]
         #send email
         htmly = loader.get_template('users/ResetPasswordEmail.html')
-        d = { 'username': name }
+        
+        d = { 'username': name, "resetLink": resetUrl}
         subject, from_email, to = 'Welcome,', name, email
         html_content = htmly.render(d)
         msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
         msg.attach_alternative(html_content, "text/html")
         msg.send()
         response = {
-        'loginSuccess': "true"
+            'loginSuccess': "true",
+            'resetUrl': reset_url
         }
     except:
         response = {
@@ -315,46 +341,52 @@ def route_get_cards(request):
     except User.DoesNotExist:
         raise Http404("User does not exist")
     """
-    data = JSONParser().parse(request)
-    user = User.objects.all().get(email=data["email"])
-    card_list = PaymentCard.objects.filter(user=user)
-    people = User.objects.filter(user_type=1)
-    print(people)
-    for person in people:
-        print(person)
-    """
-    	first_name = models.CharField(max_length=20)
-	last_name = models.CharField(max_length=20)
-	password = models.CharField(default='password',max_length=20)
-	email = models.CharField(
-		unique=True, 
-		max_length=20,
-		validators=[EmailValidator]
-	)
-	phone = models.CharField(default='12345678',max_length=20)
-	promotion = models.BooleanField(default=False, blank=True)
-	status = models.CharField(default='Inactive',max_length=20)
-	user_type = models.ForeignKey(
-    """
-    print(card_list)
-    card_array = []
-    for card in card_list:
-        card_dict = {}
-        print(card)
-        #<tr><td>{{ x.card_type }}</td><td>{{ x }}</td><td>{{ x.expiration_date }}</td><td>{{ x.billing_address }}</td></li>
-        print(card.card_type)
-        print(card.expiration_date)
-        print(card.billing_address)
-        card_dict["cardNumber"] = card.card_number
-        card_dict["lastDigits"] = card.last_digits
-        card_dict["cardType"] = card.card_type
-        card_dict["expirationDate"] = card.expiration_date
-        card_dict["billingAddress"] = card.billing_address
-        card_array.append(card_dict)
+    try:
+        data = JSONParser().parse(request)
+        user = User.objects.all().get(email=data["email"])
+        card_list = PaymentCard.objects.filter(user=user)
+        people = User.objects.filter(user_type=1)
+        print(people)
+        for person in people:
+            print(person)
+        """
+            first_name = models.CharField(max_length=20)
+        last_name = models.CharField(max_length=20)
+        password = models.CharField(default='password',max_length=20)
+        email = models.CharField(
+            unique=True, 
+            max_length=20,
+            validators=[EmailValidator]
+        )
+        phone = models.CharField(default='12345678',max_length=20)
+        promotion = models.BooleanField(default=False, blank=True)
+        status = models.CharField(default='Inactive',max_length=20)
+        user_type = models.ForeignKey(
+        """
+        print(card_list)
+        card_array = []
+        for card in card_list:
+            card_dict = {}
+            print(card)
+            #<tr><td>{{ x.card_type }}</td><td>{{ x }}</td><td>{{ x.expiration_date }}</td><td>{{ x.billing_address }}</td></li>
+            print(card.card_type)
+            print(card.expiration_date)
+            print(card.billing_address)
+            card_dict["cardNumber"] = card.card_number
+            card_dict["lastDigits"] = card.last_digits
+            card_dict["cardType"] = card.card_type
+            card_dict["expirationDate"] = card.expiration_date
+            card_dict["billingAddress"] = card.billing_address
+            card_array.append(card_dict)
 
-    context = {
-        'list': card_array
-    }
+        context = {
+            'isSuccessful': 'true',
+            'list': card_array
+        }
+    except Exception as err:
+        context = {
+            'isSuccessful': 'false'
+        }
     #return JsonResponse(context)
     return JsonResponse(context)
     template = loader.get_template('editprofile/cardsview.html')
@@ -386,3 +418,40 @@ def route_delete_payment(request):
     card = PaymentCard.objects.get(last_digits=data['lastDigits'])
     card.delete()
     return HttpResponse(200)
+
+# v1/generate-password-reset-link
+@api_view(['POST'])
+def route_generate_password_reset_link(request):
+    data = JSONParser().parse(request)
+    key = "secret"
+    # 3600 seconds = 1 hr expiration after time token was generated
+    encoded = jwt.encode({"exp": int(time.time()) + 3600, "email": data['email']}, key, algorithm="HS256")
+    print(encoded)
+    decoded = jwt.decode(encoded, key, algorithms="HS256")
+    print(decoded)
+    response = {
+        'jwt': encoded,
+        'email': data['email'],
+        'resetUrl': 'http://localhost:3000/reset-password-form?jwt=' + encoded
+    }
+    return JsonResponse(response)
+
+@api_view(['POST'])
+def route_decode_jwt(request):
+    data = JSONParser().parse(request)
+    key = "secret"
+    expired = "false"
+    try:
+        decoded = jwt.decode(data['jwt'], key, algorithms="HS256")
+        if time.time() > decoded['exp']:
+            expired = "true"
+        email = decoded['email']
+        response = {
+            'expired': expired,
+            'email': email
+        }
+    except Exception as err:
+        response = {
+            'expired': "true"
+        }
+    return JsonResponse(response)

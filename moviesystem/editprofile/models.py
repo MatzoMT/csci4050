@@ -38,7 +38,7 @@ class PaymentCard(models.Model):
 		on_delete=models.CASCADE
 	)
 	card_type = models.CharField(max_length=1, choices=TYPE_CHOICES)
-	billing_address = models.CharField(max_length=20)
+	billing_address = models.CharField(max_length=255)
 	last_digits = models.CharField(default='0000', max_length=4)
 
 	expiration_date = models.DateField()
