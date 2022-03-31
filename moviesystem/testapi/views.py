@@ -2,6 +2,11 @@ from django.shortcuts import render
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser 
 from rest_framework import status
+
+import jwt
+from datetime import datetime
+from django.utils import timezone
+import time
  
 from testapi.models import Tutorial
 from testapi.serializers import TutorialSerializer
@@ -137,20 +142,36 @@ def route_get_payments(request):
 
 @api_view(['POST'])
 def route_send_password_reset_email(request):
+    
+
+    
     try:
         data = JSONParser().parse(request)
+
+        key = "secret"
+        # 3600 seconds = 1 hr expiration after time token was generated
+        encoded = jwt.encode({"exp": int(time.time()) + 3600, "email": data['email']}, key, algorithm="HS256")
+        print(encoded)
+        decoded = jwt.decode(encoded, key, algorithms="HS256")
+        print(decoded)
+
+        resetUrl = 'http://localhost:3000/reset-password-form?jwt=' + encoded
+        
+
         name = data["name"]
         email = data["email"]
         #send email
         htmly = loader.get_template('users/ResetPasswordEmail.html')
-        d = { 'username': name }
+        
+        d = { 'username': name, "resetLink": resetUrl}
         subject, from_email, to = 'Welcome,', name, email
         html_content = htmly.render(d)
         msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
         msg.attach_alternative(html_content, "text/html")
         msg.send()
         response = {
-        'loginSuccess': "true"
+            'loginSuccess': "true",
+            'resetUrl': reset_url
         }
     except:
         response = {
@@ -397,3 +418,40 @@ def route_delete_payment(request):
     card = PaymentCard.objects.get(last_digits=data['lastDigits'])
     card.delete()
     return HttpResponse(200)
+
+# v1/generate-password-reset-link
+@api_view(['POST'])
+def route_generate_password_reset_link(request):
+    data = JSONParser().parse(request)
+    key = "secret"
+    # 3600 seconds = 1 hr expiration after time token was generated
+    encoded = jwt.encode({"exp": int(time.time()) + 3600, "email": data['email']}, key, algorithm="HS256")
+    print(encoded)
+    decoded = jwt.decode(encoded, key, algorithms="HS256")
+    print(decoded)
+    response = {
+        'jwt': encoded,
+        'email': data['email'],
+        'resetUrl': 'http://localhost:3000/reset-password-form?jwt=' + encoded
+    }
+    return JsonResponse(response)
+
+@api_view(['POST'])
+def route_decode_jwt(request):
+    data = JSONParser().parse(request)
+    key = "secret"
+    expired = "false"
+    try:
+        decoded = jwt.decode(data['jwt'], key, algorithms="HS256")
+        if time.time() > decoded['exp']:
+            expired = "true"
+        email = decoded['email']
+        response = {
+            'expired': expired,
+            'email': email
+        }
+    except Exception as err:
+        response = {
+            'expired': "true"
+        }
+    return JsonResponse(response)
