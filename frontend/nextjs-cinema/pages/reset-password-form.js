@@ -14,6 +14,7 @@ import React, { useState, useEffect } from 'react';
 
 
 export default function Home(props) {
+    // router and query for reading URL params
     const router = useRouter();
     const query = router.query;
     const [tokenExpired, setTokenExpired] = useState("");
