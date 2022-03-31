@@ -9,17 +9,17 @@ class UserType(models.Model):
 		return self.description
 
 class User(models.Model):
-	first_name = models.CharField(max_length=20)
-	last_name = models.CharField(max_length=20)
+	first_name = models.CharField(max_length=255)
+	last_name = models.CharField(max_length=255)
 	password = models.CharField(default='password',max_length=100)
 	email = models.CharField(
 		unique=True, 
-		max_length=20,
+		max_length=255,
 		validators=[EmailValidator]
 	)
-	phone = models.CharField(default='12345678',max_length=20)
+	phone = models.CharField(default='12345678',max_length=255)
 	promotion = models.BooleanField(default=False, blank=True)
-	status = models.CharField(default='Inactive',max_length=20)
+	status = models.CharField(default='Inactive',max_length=255)
 	user_type = models.ForeignKey(
 		UserType, 
 		on_delete=models.RESTRICT
