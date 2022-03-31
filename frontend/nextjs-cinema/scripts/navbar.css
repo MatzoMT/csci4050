@@ -52,6 +52,12 @@
   padding-right: 1em;
   border-radius: 1em;
 }
+#admin-sign-out {
+  margin-top: 0.2em;
+  border: 0.1em solid white;
+  padding-left: 1em;
+  padding-right: 1em;
+  border-radius: 1em;}
 #sign-in:hover, #profile-button:hover {
   cursor: pointer;
 }

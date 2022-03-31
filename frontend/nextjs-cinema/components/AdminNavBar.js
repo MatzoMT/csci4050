@@ -17,7 +17,7 @@ export default function AdminNavBar() {
     <a className="navbar-button">MOVIE MANAGER</a>
     <a className="navbar-button">USERS</a>
     <a className="navbar-button">PROMOTIONS</a>
-    <div><a href="/" onClick={signOut}><span style={{ color: '#eeeeee' }}>Sign Out</span></a></div>
+    <div><a href="/"  id="admin-sign-out" onClick={signOut}>Sign Out</a></div>
 
   </div>
   }
