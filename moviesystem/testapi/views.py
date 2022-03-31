@@ -76,7 +76,11 @@ def route_get_user_information(request):
     data = JSONParser().parse(request)
     users = User.objects.all().filter(email=data['email'])
     request_success = "true"
+    is_admin = "false"
+    # user_type_id: 1 = customer, 2 = admin
     try:
+        if users[0].user_type_id == 2:
+            is_admin = "true"
         response = {
             'requestSuccess': request_success,
             'email': data['email'],
@@ -84,6 +88,7 @@ def route_get_user_information(request):
             'lastName': users[0].last_name,
             'phone': users[0].phone,
             'promotion': users[0].promotion,
+            'isAdmin': is_admin
         }
     except:
         request_success = "false"
@@ -422,6 +427,8 @@ def route_delete_payment(request):
     card.delete()
     return HttpResponse(200)
 
+# This one is NOT used by Next JS
+# Moved to email route
 # v1/generate-password-reset-link
 @api_view(['POST'])
 def route_generate_password_reset_link(request):

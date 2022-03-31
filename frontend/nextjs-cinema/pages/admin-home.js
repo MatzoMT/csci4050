@@ -6,8 +6,33 @@ import CurrentlyShowingMovies from '../static/currently-showing.js';
 import isleOfDogs from '../images/isleofdogs.jpg';
 import whiplash from '../images/whiplash.jpeg';
 import AdminNavBar from '../components/AdminNavBar.js';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import axios from 'axios';
+
+
 
 export default function AdminHome() {
+  const router = useRouter();
+
+
+  useEffect(async () => {
+    axios.post("http://localhost:8000/api/v1/get-user-information",
+      { email: window.sessionStorage.getItem("email") }).then((response) => {
+        if (response.data.requestSuccess == "true" && response.data.isAdmin == "true") {
+
+          //handleCheckbox();
+        } else if (response.data.requestSuccess == "true" && response.data.isAdmin == "false") {
+          router.push('/');
+        } else {
+          router.push('/login');
+        }
+      });
+
+
+
+  }, []);
+
   return (
     <div className="container">
 
@@ -31,7 +56,7 @@ export default function AdminHome() {
 
 
 
-         </div>
+          </div>
         </main>
 
       </body>
