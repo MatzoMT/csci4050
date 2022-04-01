@@ -385,17 +385,28 @@ def route_edit_password(request):
 @api_view(['POST'])
 def route_create_payment(request):
     try:
+        err_msg = ""
         data = JSONParser().parse(request)
+        successful = "true"
         user = User.objects.all().get(email=data["email"])
         card = PaymentCard(card_type=data['cardType'], last_digits=str(data['cardNumber'][-4:]), card_number=make_password(data['cardNumber']), user=user, billing_address=data["billingAddress"], expiration_date=data["expirationDate"])
-        card.save()
+        if data['cardType'] == "" or data['cardNumber'] == "" or data['billingAddress'] == "" or data['expirationDate'] == "":
+            successful = "false"
+            err_msg = "You cannot leave any of these fields blank."
+        print(successful)
+
+
+        if successful == "true":
+            card.save()
         response = {
-            'success': 'true'
+            'success': successful,
+            'errMsg': err_msg
         }
     except Exception as err:
         print(err)
         response = {
-            'success': 'false'
+            'success': 'false',
+            'errMsg': err_msg
         }
     return JsonResponse(response)
 

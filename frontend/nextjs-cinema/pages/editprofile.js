@@ -33,6 +33,8 @@ export default function Home() {
   
   const [incorrectInfoMessage, setIncorrectInfoMessage] = useState("");
 
+  const [incorrectPaymentMessage, setIncorrectPaymentMessage] = useState("");
+
   let defaultCheckVal = "on"
 
 
@@ -88,9 +90,18 @@ export default function Home() {
   let handleSubmit = async (e) => {
     e.preventDefault();
     await axios.post("http://localhost:8000/api/v1/create-payment", { cardType: cardType, cardNumber: cardNumber, email: email, billingAddress: billingAddress, expirationDate: expirationDate }).then((response) => {
-      alert("nice and cool you have changed ur card")
+      //alert("You have successfully added a payment type to your account.")
+      if (response.data.success == "false") {
+        setIncorrectPaymentMessage(response.data.errMsg);
+        
+      } else {
+        setIncorrectPaymentMessage("Successfully added payment method.");
+        router.reload()
+      }
+    
     })
-    router.reload()
+
+    
   };
 
 
@@ -215,6 +226,7 @@ export default function Home() {
               <a><input type="text" name="card-number" placeholder="Card Number" onChange={(val) => setCardNumber(val.target.value)}></input></a><br></br>
               <a><input type="text" name="billing-address" placeholder="Billing Address" onChange={(val) => setBillingAddress(val.target.value)}></input></a><br></br>
               <a><input type="text" name="expiration-date" placeholder="Expiration Date YYYY-MM-DD" onChange={(val) => setExpirationDate(val.target.value)}></input></a><br></br>
+              <h3 id="incorrect-credentials" style={{color: 'red'}}>{incorrectPaymentMessage}</h3>
               <button type="submit">Add Payment Method</button>
             </form>
           </div>
