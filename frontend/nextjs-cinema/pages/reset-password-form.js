@@ -27,6 +27,8 @@ export default function Home(props) {
         e.preventDefault();
         if (newPassword !== confirmPassword) {
             setIncorrectMessage("The passwords do not match.");
+        } else if (newPassword == "" || confirmPassword == "") {
+            setIncorrectMessage("The password fields cannot be empty.")
         } else {
             axios.post("http://localhost:8000/api/v1/edit-password", { email: email, newPassword: newPassword }).then((response) => {
                 if (response.data.changeSuccess == "true") {
