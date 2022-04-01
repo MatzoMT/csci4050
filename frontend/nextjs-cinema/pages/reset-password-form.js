@@ -29,6 +29,8 @@ export default function Home(props) {
             setIncorrectMessage("The passwords do not match.");
         } else if (newPassword == "" || confirmPassword == "") {
             setIncorrectMessage("The password fields cannot be empty.")
+        } else if (newPassword.length < 8) {
+            setIncorrectMessage("The passwords must be at least 8 characters long.")
         } else {
             axios.post("http://localhost:8000/api/v1/edit-password", { email: email, newPassword: newPassword }).then((response) => {
                 if (response.data.changeSuccess == "true") {
