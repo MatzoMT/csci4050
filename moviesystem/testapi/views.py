@@ -211,6 +211,11 @@ def route_create_user(request):
         creation_success = "false"
         err_msg = "This email is already in the system."
 
+
+    if data['phone'] == "" or data['firstName'] == "" or data['lastName'] == "":
+        creation_success = "false"
+        err_msg = "You cannot leave fields blank."
+
     name = data['firstName']
     confirm_password = data['confirm_password']
     password = data['password']
