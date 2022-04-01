@@ -310,6 +310,9 @@ def route_change_password(request):
             new_query.save()
         #print(make_password(data['newPassword']))
         #print(data['newPassword'])
+
+
+
         response = {
             'changeSuccess': change_success,
             'errMsg': err_msg
@@ -348,6 +351,15 @@ def route_edit_profile(request):
         
         if change_success == "true":
             new_query.save()
+        #send email
+        htmly = loader.get_template('users/EditProfileEmail.html')
+        
+        d = { 'username': data["firstName"]}
+        subject, from_email, to = 'FilmMax Edited Profile', data["firstName"], data["email"]
+        html_content = htmly.render(d)
+        msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
         response = {
             'changeSuccess': change_success,
             'errMsg': err_msg
