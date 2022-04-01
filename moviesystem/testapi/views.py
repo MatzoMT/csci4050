@@ -149,9 +149,6 @@ def route_get_payments(request):
 
 @api_view(['POST'])
 def route_send_password_reset_email(request):
-    
-
-    
     try:
         data = JSONParser().parse(request)
 
@@ -224,9 +221,6 @@ def route_create_user(request):
         creation_success = "false"
         err_msg = "The passwords do not match."
 
-
-    print("confirmed:" + creation_success)
-
     if creation_success == "true":
         password
         print(make_password(password))
@@ -239,14 +233,15 @@ def route_create_user(request):
         # user = User(first_name=name, last_name=form_info.get('last_name'), password=form_info.get('password'), email=email, phone=form_info.get('phone'), status='Inactive', user_type_id=1, promotion=form_info.get('promotion'))
         user.save()
         #send email
+        '''
         htmly = loader.get_template('users/Email.html')
         d = { 'username': name }
-        subject, from_email, to = 'Welcome,', name, email
+        subject, from_email, to = 'Welcome!', name, email
         html_content = htmly.render(d)
         msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
         msg.attach_alternative(html_content, "text/html")
         msg.send()
-    
+        '''
         
     #for user in users:
     #    print(user)
@@ -284,22 +279,80 @@ def route_edit_password(request):
         return HttpResponse(400)
 
 
+
+@api_view(['POST'])
+def route_change_password(request):
+    data = JSONParser().parse(request)
+    change_success = "true"
+    err_msg = ""
+    try:
+        new_query = User.objects.all().get(email=data["email"])
+        old_password = data['currentPassword']
+        confirm_password = data['confirmNewPassword']
+        password = data['newPassword']
+        #check if old password is valid
+        if len(password) < 8:
+            change_success = "false"
+            err_msg = "The password is not long enough."
+        if password != confirm_password:
+            change_success = "false"
+            err_msg = "The passwords do not match."
+        if check_password(old_password, new_query.password)==False:
+            change_success = "false"
+            err_msg = "Your current password is incorrect."
+        if change_success == "true":
+            new_query.password = make_password(password)
+            new_query.save()
+        #print(make_password(data['newPassword']))
+        #print(data['newPassword'])
+        response = {
+            'changeSuccess': change_success,
+            'errMsg': err_msg
+        }
+        return JsonResponse(response)
+    except Exception as err:
+        print("ERROR")
+        print(err)
+        response = {
+            'changeSuccess': "false",
+            'errMsg': err_msg
+        }
+        return JsonResponse(response)
+
+
+
+
 @api_view(['POST'])
 def route_edit_profile(request):
     data = JSONParser().parse(request)
+    change_success = "true"
+    err_msg = ""
     try:
         new_query = User.objects.all().get(email=data["email"])
+
         new_query.first_name = data["firstName"]
+
+        new_query.phone = data["phone"]
+
+        new_query.promotion = data["promotion"]
+
         new_query.last_name = data["lastName"]
-        new_query.save()
+        if data["firstName"] == "" or data["lastName"] == "" or data["phone"] == "":
+            err_msg = "You cannot leave this field empty."
+            change_success = "false"
+        
+        if change_success == "true":
+            new_query.save()
         response = {
-            'changeSuccess': 'true'
+            'changeSuccess': change_success,
+            'errMsg': err_msg
         }
         return JsonResponse(response)
     except Exception as err:
         print(err)
         response = {
-            'changeSuccess': "false"
+            'changeSuccess': "false",
+            'errMsg': err_msg
         }
         return HttpResponse(400)
 '''
@@ -427,8 +480,6 @@ def route_delete_payment(request):
     card.delete()
     return HttpResponse(200)
 
-# This one is NOT used by Next JS
-# Moved to email route
 # v1/generate-password-reset-link
 @api_view(['POST'])
 def route_generate_password_reset_link(request):
@@ -446,13 +497,72 @@ def route_generate_password_reset_link(request):
     }
     return JsonResponse(response)
 
+# v1/generate-password-reset-link
+@api_view(['POST'])
+def route_generate_activation_link(request):
+    try:
+        data = JSONParser().parse(request)
+
+        key = "secret"
+        # 86400 seconds = 24 hr expiration after time token was generated
+        encoded = jwt.encode({"exp": int(time.time()) + 86400, "email": data['email']}, key, algorithm="HS256")
+        print(encoded)
+        decoded = jwt.decode(encoded, key, algorithms="HS256")
+        print(decoded)
+
+        activationUrl = 'http://localhost:3000/confirm-activation?jwt=' + encoded
+        
+        print(activationUrl)
+
+        name = data["name"]
+        email = data["email"]
+        #send email
+        htmly = loader.get_template('users/Email.html')
+        
+        d = { 'username': name, "activationLink": activationUrl}
+        subject, from_email, to = 'Welcome', name, email
+        html_content = htmly.render(d)
+        msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+        response = {
+            'loginSuccess': "true",
+            'activationUrl': activationUrl
+        }
+    except:
+        response = {
+            'loginSuccess': "false"
+        }
+    return JsonResponse(response)
+
+
+@api_view(['POST'])
+def route_activate_account(request):
+    data = JSONParser().parse(request)
+    print("data print")
+    print(data)
+    user = User.objects.all().get(email=data["email"])
+    #print(user)
+    user.status = "Active"
+    user.save()
+    creation_success = "true"
+    response = {
+        'changeSuccess': creation_success
+    }
+    return JsonResponse(response)
+
+
+
 @api_view(['POST'])
 def route_decode_jwt(request):
     data = JSONParser().parse(request)
     key = "secret"
     expired = "false"
     try:
+        print(data)
+        print("before")
         decoded = jwt.decode(data['jwt'], key, algorithms="HS256")
+        print("after")
         if time.time() > decoded['exp']:
             expired = "true"
         email = decoded['email']
@@ -462,6 +572,7 @@ def route_decode_jwt(request):
         }
     except Exception as err:
         response = {
-            'expired': "true"
+            'expired': "true",
         }
+        print(err)
     return JsonResponse(response)

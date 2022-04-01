@@ -41,6 +41,9 @@ export default function Home() {
       console.log("response: " + response.data.creationSuccess)  
       
       if (response.data.creationSuccess == "true") { 
+
+          axios.post("http://localhost:8000/api/v1/generate-activation-link", { email: email, name: firstName});
+
           router.push('/confirmation');
         } else {
           setIncorrectMessage(response.data.errMsg);

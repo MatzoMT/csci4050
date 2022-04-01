@@ -28,6 +28,11 @@ export default function Home() {
   const [billingAddress, setBillingAddress] = useState("")
   const [expirationDate, setExpirationDate] = useState("")
   const [promotion, setPromotion] = useState(0);
+
+  const [incorrectPasswordMessage, setIncorrectPasswordMessage] = useState("");
+  
+  const [incorrectInfoMessage, setIncorrectInfoMessage] = useState("");
+
   let defaultCheckVal = "on"
 
 
@@ -42,7 +47,17 @@ export default function Home() {
             setLastName(response.data.lastName);
             //console.log(response.data.phone);
             setPhone(response.data.phone);
-            console.log(response.data.promotion);
+            console.log("checking: " + response.data.promotion);
+            
+            if (response.data.promotion == true) {
+              console.log("setting to true")
+              setPromotion(1);
+            } else {
+              console.log("setting to false")
+              setPromotion(0);
+            }
+
+            
             //handleCheckbox();
           } else {
             router.push('/login');
@@ -71,17 +86,41 @@ export default function Home() {
 
 
   let handleSubmit = async (e) => {
-    axios.post("http://localhost:8000/api/v1/create-payment", { cardType: cardType, cardNumber: cardNumber, email: email, billingAddress: billingAddress, expirationDate: expirationDate })
+    e.preventDefault();
+    await axios.post("http://localhost:8000/api/v1/create-payment", { cardType: cardType, cardNumber: cardNumber, email: email, billingAddress: billingAddress, expirationDate: expirationDate }).then((response) => {
+      alert("nice and cool you have changed ur card")
+    })
+    router.reload()
   };
 
+
+
+  //NOT THE SAME AS RESET PASSWORD - CHANGE THIS
   let handleUpdatePassword = async (e) => {
-    axios.post("http://localhost:8000/api/v1/edit-password",{email: email,currentPassword: currentPassword, newPassword: newPassword, confirmNewPassword: confirmNewPassword})
+    e.preventDefault();
+    axios.post("http://localhost:8000/api/v1/change-password",{ email: email,currentPassword: currentPassword, newPassword: newPassword, confirmNewPassword: confirmNewPassword}).then((response) => {
+    console.log(response.data.changeSuccess)  
+    if (response.data.changeSuccess == "false") { 
+        setIncorrectPasswordMessage(response.data.errMsg);
+      } else {
+        setIncorrectPasswordMessage("Successfully changed your password.");
+        console.log(response.data.errMsg)
+
+      }
+    })
   };
 
   let handleUpdateUser = async (e) => {
-    console.log("handling")
-    alert("hello")
-    axios.post("http://localhost:8000/api/v1/edit-profile", { email: email, firstName: firstName, lastName: lastName, currentPassword: currentPassword, newPassword: newPassword, confirmNewPassword: confirmNewPassword })
+    //console.log("handling")
+    //alert("hello")
+    e.preventDefault();
+    axios.post("http://localhost:8000/api/v1/edit-profile", { email: email, firstName: firstName, lastName: lastName, phone: phone, promotion: promotion }).then((response) => {
+      if (response.data.changeSuccess == "false") { 
+        setIncorrectInfoMessage(response.data.errMsg);
+      } else {
+        setIncorrectInfoMessage("Successfully updated your info.");
+      }
+    })
   }
 
   let handleCheckbox = async (e) => {
@@ -133,10 +172,14 @@ export default function Home() {
               {/*<p>Age</p>
               <a><input type="text" placeholder="Enter your new age" defaultValue="37"></input></a>*/}
               <p>Phone Number</p>
-              <a><input type="text" placeholder="Enter new phone number" defaultValue={phone} onChange={(val) => setPhoneNumber(val.target.value)}></input></a>
+              <a><input type="text" placeholder="Enter new phone number" defaultValue={phone} onChange={(val) => setPhone(val.target.value)}></input></a>
               <p>Subscribe to Promotions</p>
-              <input type="checkbox"  onChange={handleCheckbox} />
+              <input type="checkbox"  checked={promotion} onChange={handleCheckbox} />
 
+
+
+
+              <h3 id="incorrect-credentials" style={{color: 'red'}}>{incorrectInfoMessage}</h3>
               <button type="submit">Update account information</button>
             </form>
             <form onSubmit={handleUpdatePassword}>
@@ -147,6 +190,7 @@ export default function Home() {
                 <a><input type="password" placeholder="Enter a new password" onChange={(val) => setNewPassword(val.target.value)}></input></a>
                 <p>Confirm New Password</p>
                 <a><input type="password" placeholder="Re-enter the new password" onChange={(val) => setConfirmNewPassword(val.target.value)}></input></a>
+                <h3 id="incorrect-credentials" style={{color: 'red'}}>{incorrectPasswordMessage}</h3>
                 <button type="submit">Change password</button>
             </form>
 
