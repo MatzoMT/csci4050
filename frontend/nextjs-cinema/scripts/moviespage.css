@@ -1,8 +1,7 @@
 #movies-view {
     float: left;
     margin-left: -10%;
-    margin-right: -10%;
-    width: 120%;
+    width: 135%;
     margin-top: 2.5%;
 }
 #filters-column, #movies-column {
@@ -13,6 +12,7 @@
     padding-left: 2%;
     border-right: 0.1em solid #c4c4c4;
 }
+
 #movies-column > #currently-showing-movies > .image-wrapper, 
 #movies-column > #coming-soon-section > #coming-soon-movies > .image-wrapper  {
     width: 20%;
@@ -23,10 +23,16 @@
 #movies-column > #coming-soon-section > #coming-soon-movies > .image-wrapper > h2 {
     font-size: 125%;
 }
+.image-wrapper {
+    margin-bottom: 2em;
+}
+#coming-soon-section {
+    margin-top: 100em;
+}
 
 #movies-column {
-    width: 70%;
-    margin-left: 5%;
+    width: 75%;
+    margin-left: 2%;
 }
 #filter-searchbar {
     border: 0;
