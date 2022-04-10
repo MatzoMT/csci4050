@@ -11,7 +11,12 @@ import Footer from '../components/Footer.js';
 import React, { useState, useEffect, useCallback } from 'react';
 import theTerminal from '../images/theterminal.jpg';
 import killBillVol1 from '../images/killBill.png';
-import napoleonDynamite from '../images/napoleondynamite.jpeg'
+import napoleonDynamite from '../images/napoleondynamite.jpeg';
+import MovieView from '../components/MovieView.js';
+import { Redirect } from 'react-router-dom';
+import dynamic from "next/dynamic";
+import { useRouter } from 'next/router';
+
 
 // USE RATINGS AS CLASS NAMES
 // CHANGE DIV DISPLAY DEPENDING ON WHICH CLASSES ARE SELECTED
@@ -28,18 +33,12 @@ export default function Home() {
     new Array(ratings.length)
     // ratings
   );
+  const router = useRouter();
 
-  const handleRatingChange = (event, position) => {
-    alert(event.target.checked);
-    alert(position)
 
-    const updatedRatingsState = ratingsState.map((item, index) =>
-      alert(item)
-      // index === position ? !item : item
-    );
-
-    setRatingsState(updatedRatingsState);
-  };
+  const renderMovie = (movie) => {
+    return <MovieView />
+  }
 
   const handleGRating = (event) => {
     let gMovies = document.getElementsByClassName('G');
@@ -93,20 +92,32 @@ export default function Home() {
     }
   }
 
+  const showMovie = (movie) => {
+    //router.query.movie = movie["title"].toLowerCase().replaceAll(' ', '-');
+    //router.push('/view-movie');
+    router.push({
+      pathname: '/view-movie',
+      query: { "movieID": movie["movieID"] },
+    })
+
+  }
+
   // HARD CODE
+  // IMPORTANT! React does not like dynamic url for Image component
+  // Solution: change each image to require('source') after getting movies
   const currentlyShowingMovies = [
-    { "title": "Gran Torino", "imageSource": granTorino, "rating": "R" },
-    { "title": "Isle of Dogs", "imageSource": isleOfDogs, "rating": "PG-13" },
-    { "title": "Whiplash", "imageSource": whiplash, "rating": "R" },
-    { "title": "The Terminal", "imageSource": theTerminal, "rating": "PG-13" },
-    { "title": "Kill Bill Vol. 1", "imageSource": killBillVol1, "rating": "R" },
-    { "title": "Napoleon Dynamite", "imageSource": napoleonDynamite, "rating": "PG"}
+    { "movieID": 1, "title": "Gran Torino", "imageSource": require("../images/grantorino.jpg"), "rating": "R", "videoLink": "https://www.youtube.com/embed/RMhbr2XQblk?&autoplay=1" },
+    { "movieID": 2, "title": "Isle of Dogs", "imageSource": require("../images/isleofdogs.jpg"), "rating": "PG-13", "videoLink": "https://www.youtube.com/embed/dt__kig8PVU?&autoplay=1" },
+    { "movieID": 3, "title": "Whiplash", "imageSource": require("../images/whiplash.jpeg"), "rating": "R", "videoLink": "https://www.youtube.com/embed/7d_jQycdQGo?&autoplay=1" },
+    { "movieID": 4, "title": "The Terminal", "imageSource": require("../images/theterminal.jpg"), "rating": "PG-13" },
+    { "movieID": 5, "title": "Kill Bill Vol. 1", "imageSource": require("../images/killBill.png"), "rating": "R" },
+    { "movieID": 6, "title": "Napoleon Dynamite", "imageSource": require("../images/napoleondynamite.jpeg"), "rating": "PG" }
     // {"title": "TITLE", }
   ];
 
   const currentlyShowingMoviesFilter = currentlyShowingMovies.filter(movie =>
     movie["title"].toLowerCase().includes(titleFilter) && ((GRating == false && PGRating == false && PG13Rating == false && RRating == false) ||
-    (movie["rating"] == "G" && GRating == true) || (movie["rating"] == "PG" && PGRating == true) || (movie["rating"] == "PG-13" && PG13Rating == true) || (movie["rating"] == "R" && RRating == true))
+      (movie["rating"] == "G" && GRating == true) || (movie["rating"] == "PG" && PGRating == true) || (movie["rating"] == "PG-13" && PG13Rating == true) || (movie["rating"] == "R" && RRating == true))
   );
   // movie rating includes rating && rating !== false (rating is NOT undefined)
 
@@ -127,6 +138,7 @@ export default function Home() {
       <body>
         <NavBar />
         <main >
+
           <div id="movies-view">
             <div id="filters-column">
               <h1>Filter By</h1>
@@ -159,14 +171,19 @@ export default function Home() {
               <div id="currently-showing-movies">
 
                 {currentlyShowingMoviesFilter.length !== 0 ? currentlyShowingMoviesFilter.map((filteredMovie) =>
-                  <div className={`image-wrapper ${filteredMovie["rating"]}`}>
-                    <Image src={filteredMovie["imageSource"]} layout="responsive" width={2} height={3} />
+                  <div className={`image-wrapper ${filteredMovie["rating"]}`} onClick={() => showMovie(filteredMovie)}>
+
+                    <Image src={filteredMovie["imageSource"]} height={300} width={200}/>
                     <h4>{filteredMovie["title"]}</h4>
+
+                    <p class="image-wrapper-rating">{filteredMovie["rating"]}</p>
                   </div>
                 ) : <h2>No movies matched your search criteria.</h2>}
 
               </div>
               <div id="coming-soon-section">
+
+
                 <h1>Coming Soon</h1>
                 <div id="coming-soon-movies">
                   <div className="image-wrapper">
