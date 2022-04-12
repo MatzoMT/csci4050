@@ -23,11 +23,9 @@
 #movies-column > #coming-soon-section > #coming-soon-movies > .image-wrapper > h2 {
     font-size: 125%;
 }
+
 .image-wrapper {
     margin-bottom: 2em;
-}
-#coming-soon-section {
-    margin-top: 100em;
 }
 
 #movies-column {
@@ -39,8 +37,7 @@
     background-color: #e9e9e9;
 }
 
-.filter-checkbox {
-}
+
 .image-wrapper-rating {
     color: #747474;
     border: 0.1em solid #747474;
