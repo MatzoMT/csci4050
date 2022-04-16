@@ -30,7 +30,7 @@ export default function Home() {
   const [RRating, setRRating] = useState(false);
   const [currentlyShowingFilter, setCurrentlyShowingFilter] = useState(false);
   const [comingSoonFilter, setComingSoonFilter] = useState(false);
-  const genreList = [];
+  const [genreList, setGenreList] = useState([]);
   const [ratingsState, setRatingsState] = useState(
     new Array(ratings.length)
     // ratings
@@ -172,21 +172,37 @@ export default function Home() {
     { "movieID": 6, "title": "Napoleon Dynamite", "imageSource": require("../images/napoleondynamite.jpeg"), "rating": "PG", "videoLink": "https://www.youtube.com/embed/ZHDi_AnqwN4?&autoplay=1" }
   ]
 
-  const movieInGenre = (genre, event) => {
+  const addGenre = (genre, event) => {
+    
     if (event.target.checked == true) {
-      genreList.push(genre);
+      setGenreList(genreList => [...genreList, genre]);
     } else {
-      const index = genreList.indexOf(genre);
-      genreList.splice(index, 1); // 2nd parameter means remove one item only
+      setGenreList(genreList.filter(oldGenre => oldGenre !== genre))
+     // const index = genreList.indexOf(genre);
+     // genreList.splice(index, 1); // 2nd parameter means remove one item only
     }
 
+  //  console.log(genreList);
+  }
+
+  const movieInGenre = (movieID, genreList) => {
     console.log(genreList);
+    if (genreList.length == 0) {
+      return true;
+    }
+    for (let i = 0; i < movieGenres.length; i++) {
+      if (movieGenres[i]["movieID"] == movieID && genreList.indexOf(movieGenres[i]["genre"].toLowerCase()) !== -1) {
+        return true;
+      }
+    }
+    return false;
   }
 
   const currentlyShowingMoviesFilter = currentlyShowingMovies.filter(movie =>
     movie["title"].toLowerCase().includes(titleFilter) && ((GRating == false && PGRating == false && PG13Rating == false && RRating == false) ||
       (movie["rating"] == "G" && GRating == true) || (movie["rating"] == "PG" && PGRating == true) || (movie["rating"] == "PG-13" && PG13Rating == true) || (movie["rating"] == "R" && RRating == true))
     && ((currentlyShowingFilter == false && comingSoonFilter == false) || (currentlyShowingFilter == true))
+    && (movieInGenre(movie["movieID"], genreList) == true)
   );
   // movie rating includes rating && rating !== false (rating is NOT undefined)
 
@@ -199,6 +215,10 @@ export default function Home() {
   const onClick = useEffect((a, b) => {
     // do something with a, b and props.x
   }, [currentlyShowingMovies]);
+
+  useEffect(() => {
+
+  }, [genreList])
 
 
   return (
@@ -238,7 +258,7 @@ export default function Home() {
               {
                 genres.map((genre) =>
                   <div>
-                    <input className="filter-checkbox" type="checkbox" id={genre.toLowerCase()} name={genre.toLowerCase()} value={genre.toLowerCase()} onChange={(e) => movieInGenre(genre.toLocaleLowerCase(), e)}></input>
+                    <input className="filter-checkbox" type="checkbox" id={genre.toLowerCase()} name={genre.toLowerCase()} value={genre.toLowerCase()} onChange={(e) => addGenre(genre.toLocaleLowerCase(), e)}></input>
                     <label for={genre.toLowerCase()}>{genre}</label><br></br>
 
                   </div>
