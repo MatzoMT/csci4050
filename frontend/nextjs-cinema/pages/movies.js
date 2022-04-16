@@ -210,7 +210,8 @@ export default function Home() {
     movie["title"].toLowerCase().includes(titleFilter) && ((GRating == false && PGRating == false && PG13Rating == false && RRating == false) ||
       (movie["rating"] == "G" && GRating == true) || (movie["rating"] == "PG" && PGRating == true) || (movie["rating"] == "PG-13" && PG13Rating == true) || (movie["rating"] == "R" && RRating == true))
     && ((comingSoonFilter == false && currentlyShowingFilter == false) || (comingSoonFilter == true))
-  );
+    && (movieInGenre(movie["movieID"], genreList) == true)
+    );
 
   const onClick = useEffect((a, b) => {
     // do something with a, b and props.x
