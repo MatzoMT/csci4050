@@ -30,6 +30,7 @@ export default function Home() {
   const [RRating, setRRating] = useState(false);
   const [currentlyShowingFilter, setCurrentlyShowingFilter] = useState(false);
   const [comingSoonFilter, setComingSoonFilter] = useState(false);
+  const genreList = [];
   const [ratingsState, setRatingsState] = useState(
     new Array(ratings.length)
     // ratings
@@ -59,8 +60,8 @@ export default function Home() {
     'Science Fiction',
     'Thriller',
     'Western'
-
   ]
+
 
   const router = useRouter();
 
@@ -155,14 +156,32 @@ export default function Home() {
     { "movieID": 2, "title": "Isle of Dogs", "imageSource": require("../images/isleofdogs.jpg"), "rating": "PG-13", "videoLink": "https://www.youtube.com/embed/dt__kig8PVU?&autoplay=1", "description": "Set in Japan, Isle of Dogs follows a boy's odyssey in search of his lost dog.", "director": "Wes Anderson" },
     { "movieID": 3, "title": "Whiplash", "imageSource": require("../images/whiplash.jpeg"), "rating": "R", "videoLink": "https://www.youtube.com/embed/7d_jQycdQGo?&autoplay=1", "description": "A promising young drummer enrolls at a cut-throat music conservatory where his dreams of greatness are mentored by an instructor who will stop at nothing to realize a student's potential.", "director": "Damien Chazelle" },
     { "movieID": 4, "title": "The Terminal", "imageSource": require("../images/theterminal.jpg"), "rating": "PG-13", "videoLink": "https://www.youtube.com/embed/iZqQRmhRvyg?&autoplay=1" },
-
-    // {"title": "TITLE", }
   ];
+
+  const movieGenres = [
+    { "movieID": 1, "genre": "Drama"},
+    { "movieID": 2, "genre": "Animation"},
+    { "movieID": 2, "genre": "Adventure"},
+    { "movieID": 2, "genre": "Drama"},
+    { "movieID": 2, "genre": "Science Fiction"},
+    { "movieID": 2, "genre": "Comedy"}
+  ]
 
   const comingSoonMovies = [
     { "movieID": 5, "title": "Kill Bill Vol. 1", "imageSource": require("../images/killBill.png"), "rating": "R", "videoLink": "https://www.youtube.com/embed/c_dNIXwrbzY?&autoplay=1" },
     { "movieID": 6, "title": "Napoleon Dynamite", "imageSource": require("../images/napoleondynamite.jpeg"), "rating": "PG", "videoLink": "https://www.youtube.com/embed/ZHDi_AnqwN4?&autoplay=1" }
   ]
+
+  const movieInGenre = (genre, event) => {
+    if (event.target.checked == true) {
+      genreList.push(genre);
+    } else {
+      const index = genreList.indexOf(genre);
+      genreList.splice(index, 1); // 2nd parameter means remove one item only
+    }
+
+    console.log(genreList);
+  }
 
   const currentlyShowingMoviesFilter = currentlyShowingMovies.filter(movie =>
     movie["title"].toLowerCase().includes(titleFilter) && ((GRating == false && PGRating == false && PG13Rating == false && RRating == false) ||
@@ -219,7 +238,7 @@ export default function Home() {
               {
                 genres.map((genre) =>
                   <div>
-                    <input className="filter-checkbox" type="checkbox" id={genre.toLowerCase()} name={genre.toLowerCase()} value={genre.toLowerCase()}></input>
+                    <input className="filter-checkbox" type="checkbox" id={genre.toLowerCase()} name={genre.toLowerCase()} value={genre.toLowerCase()} onChange={(e) => movieInGenre(genre.toLocaleLowerCase(), e)}></input>
                     <label for={genre.toLowerCase()}>{genre}</label><br></br>
 
                   </div>
