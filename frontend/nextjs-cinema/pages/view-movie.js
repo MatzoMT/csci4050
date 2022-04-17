@@ -29,13 +29,19 @@ export default function Home(movieName) {
                 setMovie(currentlyShowingMovies[i]);
             }
         }
-    });
+    }, []);
 
     const bookMovie = () => {
-        router.push({
-            pathname: '/select-time',
-            query: { "movieID": router.query.movieID },
-        })
+        console.log(window.sessionStorage.getItem("email"));
+        if (window.sessionStorage.getItem("email") == null) {
+            router.push('/login');
+        } else {
+            router.push({
+                pathname: '/select-time',
+                query: { "movieID": router.query.movieID },
+            })
+        }
+
     }
 
 
