@@ -71,6 +71,8 @@ def route_get_user_by_email(request):
     users = User.objects.all().filter(email=data['email'])
 """
 
+
+
 @api_view(['POST'])
 def route_get_user_information(request):
     data = JSONParser().parse(request)
@@ -652,3 +654,43 @@ def route_schedule_movie(request):
         except Exception as err:
             print(err)
     return JsonResponse(response)
+
+
+"""
+
+"""
+# Below route for rendering movies
+@api_view(['POST'])
+def route_get_currently_showing_movies(request):
+    movies = Movie.objects.all()
+    #show_times = 
+    print(movies[0].description)
+    movie_list = []
+    for movie in movies:
+        movie_dict = {}
+        movie_dict["id"] = movie.id
+        movie_dict["title"] = movie.title
+        movie_dict["imageSource"] = movie.image_source
+        movie_dict["rating"] = movie.rating
+        movie_dict["videoLink"] = movie.video_link
+        movie_dict["description"] = movie.description
+        movie_dict["director"] = movie.director
+
+        genres = Genre.objects.all().filter(movieID_id=movie.id)
+        genre_list = []
+        for genre in genres:
+            genre_list.append(genre.TYPE_CHOICES[int(genre.genre) - 1])
+        movie_dict["genres"] = genre_list#Genre.objects.all().filter(movieID_id=movie.id)
+        cast = Cast.objects.all().filter(movieID_id=movie.id)
+        cast_list = []
+        for cast_member in cast:
+            cast_list.append(cast_member.actor)
+            #cast_list.append(genre.TYPE_CHOICES[int(genre.genre) - 1][1])
+        movie_dict["cast"] = cast_list#Cast.objects.all().filter(movieID_id=movie.id)
+        movie_list.append(movie_dict)  
+
+    context = {
+        'isSuccessful': 'true',
+        'list': movie_list
+    }
+    return JsonResponse(context)

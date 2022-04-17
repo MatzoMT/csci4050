@@ -62,13 +62,16 @@ export default function SelectTime() {
 
                     }
                 }
-                result.push(<div className="book-movie-date">
+                if (movieShows[i]["movieID"] == router.query.movieID) {
+                    result.push(<div className="book-movie-date">
                     <h2>{movieShows[i]["show_date"]}</h2>
                     <div className="book-movie-date-time">
 
                         {resultDate}
                     </div>
                 </div>)
+                }
+
                 alreadyShownDates.push(movieShows[i]["show_date"]);
             }
         }
