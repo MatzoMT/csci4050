@@ -604,3 +604,51 @@ def route_decode_jwt(request):
         }
         print(err)
     return JsonResponse(response)
+
+
+#SCHEDULING MOVIE
+@api_view(['GET', 'POST'])
+def route_schedule_movie(request):
+    print("Request method: ",request.method)
+    print("Request ", request.data)
+    success = "false"
+    response = []
+    if(request.method == "POST"):
+        show = ""
+        try:
+            movie = Movie.objects.get(title=request.data['movie'])
+            room = Room.objects.get(room_name=request.data['room'])
+            if(len(MovieShow.objects.filter(show_time=request.data['time'], show_date=request.data['date']))>0):
+                response = {
+                    'success': success,
+                    'error': "There is already a movie scheduled for this date and time."
+                }
+                return JsonResponse(response)
+            show = MovieShow(movieID = movie, roomID = room, show_date = request.data['date'], show_time = request.data['time']) 
+            show.save()
+            success = "true"
+            response = {
+                'success': success
+            }
+        except Exception as err:
+            print(err)
+
+    if(request.method == "GET"):
+        movies = []
+        rooms = []
+        try:
+            movies = Movie.objects.all()
+            rooms = Room.objects.all()
+            roomlist=[]
+            movielist=[]
+            for i in rooms:
+                roomlist.append(i.room_name)
+            for i in movies:
+                movielist.append(i.title)
+            response = {
+                'movies': list(movielist),
+                'rooms': list(roomlist)
+            }
+        except Exception as err:
+            print(err)
+    return JsonResponse(response)

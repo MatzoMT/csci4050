@@ -51,7 +51,7 @@ export default function AdminHome() {
 
             <h1>Hello {email}.</h1>
             <h2>You are currently logged in as an administrator.</h2>
-            <h1><a href="#">Manage and Schedule Movies</a></h1>
+            <h1><a href="/schedule-movie">Manage and Schedule Movies</a></h1>
             <h1><a href="#">Manage Users</a></h1>
             <h1><a href="#">Manage Promotions</a></h1>
 

@@ -1,5 +1,6 @@
+from unicodedata import name
 from django.db import models
-from django.core.validators import EmailValidator
+from django.core.validators import EmailValidator 	
 
 # Create your models here.
 
@@ -57,11 +58,10 @@ class Movie(models.Model):
 	video_link = models.CharField(max_length=255)
 	description = models.CharField(max_length=255)
 	director = models.CharField(max_length=255)
-	
-
 
 	def __str__(self):
 		return self.title
+
 
 class Cast(models.Model):
 	actor = models.CharField(max_length=255)
@@ -69,6 +69,7 @@ class Cast(models.Model):
 		Movie, 
 		on_delete=models.PROTECT
 	)
+
 
 class Genre(models.Model):
 	TYPE_CHOICES = [
@@ -92,3 +93,28 @@ class Genre(models.Model):
 	genre = models.CharField(max_length=3, choices=TYPE_CHOICES)
 
 
+class Room(models.Model):
+	room_name = models.CharField(max_length=255, unique=True)
+	number_seats = models.IntegerField()
+	def __str__(self):
+		return self.room_name
+
+
+class MovieShow(models.Model):
+	movieID = models.ForeignKey(
+		Movie, 
+		on_delete=models.PROTECT
+	)
+
+	roomID = models.ForeignKey(
+		Room, 
+		on_delete=models.PROTECT
+	)
+
+	show_date = models.CharField(max_length=255)
+	show_time = models.CharField(max_length=255)
+
+	class Meta: 
+		constraints = [
+			models.UniqueConstraint(fields=['show_date', 'show_time'], name='unique_datetime')
+		]
