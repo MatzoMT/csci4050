@@ -694,3 +694,10 @@ def route_get_currently_showing_movies(request):
         'list': movie_list
     }
     return JsonResponse(context)
+
+@api_view(['POST'])
+def route_save_image(request):
+    print("foo")
+    print("Posted file: {}".format(request.files['file']))
+    print("bar")
+    return HttpResponse(200)

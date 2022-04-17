@@ -19,4 +19,5 @@ urlpatterns = [
     path('v1/generate-activation-link', views.route_generate_activation_link),
     path('v1/activate-account', views.route_activate_account),
     path('v1/schedule-movie', views.route_schedule_movie),
+    path('v1/save-image', views.route_save_image)
 ]
