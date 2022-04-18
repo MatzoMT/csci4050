@@ -50,11 +50,12 @@ const [incorrectInfo, setIncorrectInfo] = useState('');
   }
   let handleSubmit = async (e) => {
     e.preventDefault();
-    if (promotionCode == "") {
+    console.log(promotionCode)
+    if (promotionCode == "" || promotionCode == null) {
       setIncorrectInfo("You must provide a valid code");
       return;
     }
-    if (promotionDiscount == "" || !isInDesiredForm(promotionDiscount)) {
+    if (promotionDiscount == "" || promotionDiscount == null || !isInDesiredForm(promotionDiscount)) {
       setIncorrectInfo("You must provide a valid discount");
       return;
     }

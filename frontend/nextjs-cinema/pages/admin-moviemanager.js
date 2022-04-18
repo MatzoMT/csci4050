@@ -132,7 +132,7 @@ export default function AdminHome() {
     //console.log("not preventing :(")
     console.log()
     
-    if (title == "") {
+    if (title == "" || title == null) {
       setIncorrectInfoMessage("You must provide the movie with a title.");
       return;
     }
@@ -140,15 +140,15 @@ export default function AdminHome() {
       setIncorrectInfoMessage("You must upload an image for the movie.")
       return;
     }*/
-    if (videoLink == "") {
+    if (videoLink == "" || videoLink == null) {
       setIncorrectInfoMessage("You must provide the movie with a trailer link.");
       return;
     }
-    if (description == "") {
+    if (description == "" || description == null) {
       setIncorrectInfoMessage("You must provide a description for the movie.");
       return;
     }
-    if (director == "") {
+    if (director == "" || director == null) {
       setIncorrectInfoMessage("This movie must have a director.")
       return;
     }
