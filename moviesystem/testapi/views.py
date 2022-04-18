@@ -891,4 +891,141 @@ def route_get_movies_genres(request):
         'list': genres_list
     }
     return JsonResponse(context)
-    
+
+@api_view(['POST'])
+def route_get_movie_by_id(request):
+    data = JSONParser().parse(request)
+    movie = Movie.objects.get(id=data["id"])
+    movie_dict = {}
+    #         { "movieID": 1, "title": "Gran Torino", "imageSource": require("../images/grantorino.jpg"), "rating": "R", "videoLink": "https://www.youtube.com/embed/RMhbr2XQblk?&autoplay=1", "description": "Disgruntled Korean War veteran Walt Kowalski sets out to reform his neighbor, Thao Lor, a Hmong teenager who tried to steal Kowalski's prized possession: a 1972 Gran Torino.", "director": "Clint Eastwood" },
+    try:
+        movie_dict["movieID"] = movie.id
+        movie_dict["title"] = movie.title
+        movie_dict["imageSource"] = movie.image_source
+        movie_dict["rating"] = movie.rating
+        movie_dict["videoLink"] = movie.video_link
+        movie_dict["description"] = movie.description
+        movie_dict["director"] = movie.director
+        context = {
+            'isSuccessful': 'true',
+            'data': movie_dict
+        }
+    except:
+        context = {
+            'isSuccessful': 'false'
+        }
+    return JsonResponse(context)
+
+@api_view(['POST'])
+def route_get_genres_by_id(request):
+    data = JSONParser().parse(request)
+    genres = Genre.objects.filter(movieID_id=data["id"])
+    genres_dict = []
+    #         { "movieID": 1, "title": "Gran Torino", "imageSource": require("../images/grantorino.jpg"), "rating": "R", "videoLink": "https://www.youtube.com/embed/RMhbr2XQblk?&autoplay=1", "description": "Disgruntled Korean War veteran Walt Kowalski sets out to reform his neighbor, Thao Lor, a Hmong teenager who tried to steal Kowalski's prized possession: a 1972 Gran Torino.", "director": "Clint Eastwood" },
+    try:
+        for genre in genres:
+            
+            genre_string = ""
+            genre_number = int(genre.genre)
+            if genre_number == 1:
+                genre_string = "COMEDY"
+            elif genre_number == 2:
+                genre_string = "HORROR"
+            elif genre_number == 3:
+                genre_string = "ACTION"
+            elif genre_number == 4:
+                genre_string = "ADVENTURE"
+            elif genre_number == 5:
+                genre_string = "ANIMATION"
+            elif genre_number == 6:
+                genre_string = "DRAMA"
+            elif genre_number == 7:
+                genre_string = "FANTASY"
+            elif genre_number == 8:
+                genre_string = "HISTORICAL"
+            elif genre_number == 9:
+                genre_string = "SCIENCE FICTION"
+            elif genre_number == 10:
+                genre_string = "THRILLER"
+            else:
+                genre_string = "WESTERN"
+            genres_dict.append(genre_string)
+        context = {
+            'isSuccessful': 'true',
+            'genres': genres_dict
+        }
+    except Exception as e:
+        print(e)
+        context = {
+            'isSuccessful': 'false'
+        }
+    return JsonResponse(context)
+
+@api_view(['POST'])
+def route_get_movie_by_id(request):
+    data = JSONParser().parse(request)
+    movie = Movie.objects.get(id=data["id"])
+    movie_dict = {}
+    #         { "movieID": 1, "title": "Gran Torino", "imageSource": require("../images/grantorino.jpg"), "rating": "R", "videoLink": "https://www.youtube.com/embed/RMhbr2XQblk?&autoplay=1", "description": "Disgruntled Korean War veteran Walt Kowalski sets out to reform his neighbor, Thao Lor, a Hmong teenager who tried to steal Kowalski's prized possession: a 1972 Gran Torino.", "director": "Clint Eastwood" },
+    try:
+        movie_dict["movieID"] = movie.id
+        movie_dict["title"] = movie.title
+        movie_dict["imageSource"] = movie.image_source
+        movie_dict["rating"] = movie.rating
+        movie_dict["videoLink"] = movie.video_link
+        movie_dict["description"] = movie.description
+        movie_dict["director"] = movie.director
+        context = {
+            'isSuccessful': 'true',
+            'data': movie_dict
+        }
+    except:
+        context = {
+            'isSuccessful': 'false'
+        }
+    return JsonResponse(context)
+
+@api_view(['POST'])
+def route_get_cast_by_id(request):
+    data = JSONParser().parse(request)
+    cast = Cast.objects.filter(movieID_id=data["id"])
+    cast_list = []
+    #         { "movieID": 1, "title": "Gran Torino", "imageSource": require("../images/grantorino.jpg"), "rating": "R", "videoLink": "https://www.youtube.com/embed/RMhbr2XQblk?&autoplay=1", "description": "Disgruntled Korean War veteran Walt Kowalski sets out to reform his neighbor, Thao Lor, a Hmong teenager who tried to steal Kowalski's prized possession: a 1972 Gran Torino.", "director": "Clint Eastwood" },
+    try:
+        for actor in cast:
+            cast_list.append(actor.actor)
+        context = {
+            'isSuccessful': 'true',
+            'cast': cast_list
+        }
+    except Exception as e:
+        print(e)
+        context = {
+            'isSuccessful': 'false'
+        }
+    return JsonResponse(context)
+
+@api_view(['POST'])
+def route_get_showtimes_by_id(request):
+    data = JSONParser().parse(request)
+    showtimes = MovieShow.objects.filter(movieID_id=data["id"])
+    showtime_list = []
+    #         { "movieID": 1, "title": "Gran Torino", "imageSource": require("../images/grantorino.jpg"), "rating": "R", "videoLink": "https://www.youtube.com/embed/RMhbr2XQblk?&autoplay=1", "description": "Disgruntled Korean War veteran Walt Kowalski sets out to reform his neighbor, Thao Lor, a Hmong teenager who tried to steal Kowalski's prized possession: a 1972 Gran Torino.", "director": "Clint Eastwood" },
+    try:
+        for showtime in showtimes:
+            showtime_dict = {}
+            showtime_dict["roomID"] = showtime.roomID_id
+            showtime_dict["show_date"] = showtime.show_date
+            showtime_dict["show_time"] = showtime.show_time
+            showtime_list.append(showtime_dict)
+        context = {
+            'isSuccessful': 'true',
+            'showtimes': showtime_list
+        }
+    except Exception as e:
+        print(e)
+        context = {
+            'isSuccessful': 'false'
+        }
+    return JsonResponse(context)
+

@@ -24,5 +24,9 @@ urlpatterns = [
     path('v1/get-coming-soon-movies', views.route_get_coming_soon_movies),
     path('v1/get-movies-genres', views.route_get_movies_genres),
     path('v1/add-movie', views.route_add_movie),
-    path('v1/get-movies', views.route_get_movies)
+    path('v1/get-movies', views.route_get_movies),
+    path('v1/get-movie-by-id', views.route_get_movie_by_id),
+    path('v1/get-genres-by-id', views.route_get_genres_by_id),
+    path('v1/get-cast-by-id', views.route_get_cast_by_id),
+    path('v1/get-showtimes-by-id', views.route_get_showtimes_by_id)
 ]
