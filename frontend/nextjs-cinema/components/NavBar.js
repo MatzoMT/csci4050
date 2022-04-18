@@ -30,7 +30,6 @@ function NavBar() {
       return (<div>
         <div className="navbar">
           <a id="logo" href="..">FilmMax</a>
-          <a id="searchbar"><input type="text" placeholder="Search for movies.."></input></a>
           <a className="navbar-button" href="/movies">MOVIES</a>
           <a className="navbar-button">ABOUT US</a>
           <a id="profile-button" onClick={showDropdown}>Profile ⋮</a>
@@ -45,7 +44,6 @@ function NavBar() {
     } else {
       return (<div className="navbar">
       <a id="logo" href="..">FilmMax</a>
-      <a id="searchbar"><input type="text" placeholder="Search for movies.."></input></a>
       <a className="navbar-button" href="/movies">MOVIES</a>
       <a className="navbar-button">ABOUT US</a>
       <a id="sign-in" href="/login">Sign In</a>
@@ -55,7 +53,6 @@ function NavBar() {
   } else {
     return (<div className="navbar">
     <a id="logo" href="..">FilmMax</a>
-    <a id="searchbar"><input type="text" placeholder="Search for movies.."></input></a>
     <a className="navbar-button" href="/movies">MOVIES</a>
     <a className="navbar-button">ABOUT US</a>
     <a id="sign-in" href="/login">Sign In</a>
