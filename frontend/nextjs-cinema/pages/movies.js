@@ -12,7 +12,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import theTerminal from '../images/theterminal.jpg';
 import killBillVol1 from '../images/killBill.png';
 import napoleonDynamite from '../images/napoleondynamite.jpeg';
-import { Redirect } from 'react-router-dom';
 import dynamic from "next/dynamic";
 import { useRouter } from 'next/router';
 import axios from 'axios';

@@ -90,7 +90,7 @@ def route_add_movie(request):
     data = JSONParser().parse(request)
     print(data['description'])
     title = data['title']
-    image_source = 'grantorino.jpg'#data['imageSource']
+    image_source = data['imageSource']
     rating = data['rating']
     video_link = data['videoLink']
     description = data['description']

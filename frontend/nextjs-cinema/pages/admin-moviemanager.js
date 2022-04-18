@@ -136,10 +136,10 @@ export default function AdminHome() {
       setIncorrectInfoMessage("You must provide the movie with a title.");
       return;
     }
-    /*if (imageSource == "") {
+    if (imageSource == "" || imageSource == null) {
       setIncorrectInfoMessage("You must upload an image for the movie.")
       return;
-    }*/
+    }
     if (videoLink == "" || videoLink == null) {
       setIncorrectInfoMessage("You must provide the movie with a trailer link.");
       return;
@@ -228,6 +228,8 @@ export default function AdminHome() {
                   reader.readAsDataURL(val.target.files[0]);
                   reader.addEventListener("load", () => {
                     //console.log(reader.result);
+                    console.log(val.target.files[0])
+                    setImageSource(val.target.files[0].name)
                     setImageDataURL(reader.result)
                     //need to save in ""../images"
                     
