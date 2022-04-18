@@ -37,6 +37,7 @@ export default function Home() {
   const [currentlyShowingMoviesFilter, setCurrentlyShowingMoviesFilter] = useState([]);
   const [comingSoonMovies, setComingSoonMovies] = useState([]);
   const [comingSoonMoviesFilter, setComingSoonMoviesFilter] = useState([]);
+  const [movieGenres, setMovieGenres] = useState([]);
   const [ratingsState, setRatingsState] = useState(
     new Array(ratings.length)
     // ratings
@@ -164,21 +165,21 @@ export default function Home() {
     { "movieID": 3, "title": "Whiplash", "imageSource": require("../images/whiplash.jpeg"), "rating": "R", "videoLink": "https://www.youtube.com/embed/7d_jQycdQGo?&autoplay=1", "description": "A promising young drummer enrolls at a cut-throat music conservatory where his dreams of greatness are mentored by an instructor who will stop at nothing to realize a student's potential.", "director": "Damien Chazelle" },
     { "movieID": 4, "title": "The Terminal", "imageSource": require("../images/theterminal.jpg"), "rating": "PG-13", "videoLink": "https://www.youtube.com/embed/iZqQRmhRvyg?&autoplay=1" },
   ];*/
-
-  const movieGenres = [
-    { "movieID": 1, "genre": "Drama" },
-    { "movieID": 2, "genre": "Animation" },
-    { "movieID": 2, "genre": "Adventure" },
-    { "movieID": 2, "genre": "Drama" },
-    { "movieID": 2, "genre": "Science Fiction" },
-    { "movieID": 2, "genre": "Comedy" }
-  ]
-/*
-  const comingSoonMovies = [
-    { "movieID": 5, "title": "Kill Bill Vol. 1", "imageSource": require("../images/killBill.png"), "rating": "R", "videoLink": "https://www.youtube.com/embed/c_dNIXwrbzY?&autoplay=1" },
-    { "movieID": 6, "title": "Napoleon Dynamite", "imageSource": require("../images/napoleondynamite.jpeg"), "rating": "PG", "videoLink": "https://www.youtube.com/embed/ZHDi_AnqwN4?&autoplay=1" }
-  ]
-  */
+  /*
+    const movieGenres = [
+      { "movieID": 1, "genre": "Drama" },
+      { "movieID": 2, "genre": "Animation" },
+      { "movieID": 2, "genre": "Adventure" },
+      { "movieID": 2, "genre": "Drama" },
+      { "movieID": 2, "genre": "Science Fiction" },
+      { "movieID": 2, "genre": "Comedy" }
+    ]*/
+  /*
+    const comingSoonMovies = [
+      { "movieID": 5, "title": "Kill Bill Vol. 1", "imageSource": require("../images/killBill.png"), "rating": "R", "videoLink": "https://www.youtube.com/embed/c_dNIXwrbzY?&autoplay=1" },
+      { "movieID": 6, "title": "Napoleon Dynamite", "imageSource": require("../images/napoleondynamite.jpeg"), "rating": "PG", "videoLink": "https://www.youtube.com/embed/ZHDi_AnqwN4?&autoplay=1" }
+    ]
+    */
 
   const addGenre = (genre, event) => {
 
@@ -193,13 +194,14 @@ export default function Home() {
     //  console.log(genreList);
   }
 
-  const movieInGenre = (movieID, genreList) => {
-    console.log(genreList);
+  const movieInGenre = (movieTitle, genreList) => {
+  
     if (genreList.length == 0) {
       return true;
     }
     for (let i = 0; i < movieGenres.length; i++) {
-      if (movieGenres[i]["movieID"] == movieID && genreList.indexOf(movieGenres[i]["genre"].toLowerCase()) !== -1) {
+      console.log(movieGenres[i]["genre"]);
+      if (movieGenres[i]["movieID"] == movieTitle && genreList.indexOf(movieGenres[i]["genre"].toLowerCase()) !== -1) {
         return true;
       }
     }
@@ -208,13 +210,13 @@ export default function Home() {
 
 
   // movie rating includes rating && rating !== false (rating is NOT undefined)
-/*
-  const comingSoonMoviesFilter = comingSoonMovies.filter(movie =>
-    movie["title"].toLowerCase().includes(titleFilter) && ((GRating == false && PGRating == false && PG13Rating == false && RRating == false) ||
-      (movie["rating"] == "G" && GRating == true) || (movie["rating"] == "PG" && PGRating == true) || (movie["rating"] == "PG-13" && PG13Rating == true) || (movie["rating"] == "R" && RRating == true))
-    && ((comingSoonFilter == false && currentlyShowingFilter == false) || (comingSoonFilter == true))
-    && (movieInGenre(movie["movieID"], genreList) == true)
-  );*/
+  /*
+    const comingSoonMoviesFilter = comingSoonMovies.filter(movie =>
+      movie["title"].toLowerCase().includes(titleFilter) && ((GRating == false && PGRating == false && PG13Rating == false && RRating == false) ||
+        (movie["rating"] == "G" && GRating == true) || (movie["rating"] == "PG" && PGRating == true) || (movie["rating"] == "PG-13" && PG13Rating == true) || (movie["rating"] == "R" && RRating == true))
+      && ((comingSoonFilter == false && currentlyShowingFilter == false) || (comingSoonFilter == true))
+      && (movieInGenre(movie["movieID"], genreList) == true)
+    );*/
 
   const onClick = useEffect((a, b) => {
     // do something with a, b and props.x
@@ -224,8 +226,7 @@ export default function Home() {
     await axios.get("http://localhost:8000/api/v1/get-currently-showing-movies").then((response) => {
       let responseCopy = response["data"]["list"];
       for (let i = 0; i < responseCopy.length; i++) {
-        responseCopy[i]["imageSource"] = require("../images/"+responseCopy[i]["imageSource"]);
-        console.log(responseCopy[i]["imageSource"]);
+        responseCopy[i]["imageSource"] = require("../images/" + responseCopy[i]["imageSource"]);
       }
       setCurrentlyShowingMovies(responseCopy);
 
@@ -234,11 +235,14 @@ export default function Home() {
     await axios.get("http://localhost:8000/api/v1/get-coming-soon-movies").then((response) => {
       let responseCopy = response["data"]["list"];
       for (let i = 0; i < responseCopy.length; i++) {
-        responseCopy[i]["imageSource"] = require("../images/"+responseCopy[i]["imageSource"]);
-        console.log(responseCopy[i]["imageSource"]);
+        responseCopy[i]["imageSource"] = require("../images/" + responseCopy[i]["imageSource"]);
       }
       setComingSoonMovies(responseCopy);
 
+    });
+    await axios.get("http://localhost:8000/api/v1/get-movies-genres").then((response) => {
+      setMovieGenres(response["data"]["list"]);
+      console.log(response["data"]["list"])
     });
   }, [])
 
@@ -248,37 +252,37 @@ export default function Home() {
       movie["title"].toLowerCase().includes(titleFilter) && ((GRating == false && PGRating == false && PG13Rating == false && RRating == false) ||
         (movie["rating"] == "G" && GRating == true) || (movie["rating"] == "PG" && PGRating == true) || (movie["rating"] == "PG-13" && PG13Rating == true) || (movie["rating"] == "R" && RRating == true))
       && ((currentlyShowingFilter == false && comingSoonFilter == false) || (currentlyShowingFilter == true))
-      && (movieInGenre(movie["movieID"], genreList) == true)
+      && (movieInGenre(movie["title"], genreList) == true)
     ));
     setComingSoonMoviesFilter(comingSoonMovies.filter(movie =>
       movie["title"].toLowerCase().includes(titleFilter) && ((GRating == false && PGRating == false && PG13Rating == false && RRating == false) ||
-      (movie["rating"] == "G" && GRating == true) || (movie["rating"] == "PG" && PGRating == true) || (movie["rating"] == "PG-13" && PG13Rating == true) || (movie["rating"] == "R" && RRating == true))
-    && ((comingSoonFilter == false && currentlyShowingFilter == false) || (comingSoonFilter == true))
-    && (movieInGenre(movie["movieID"], genreList) == true)
+        (movie["rating"] == "G" && GRating == true) || (movie["rating"] == "PG" && PGRating == true) || (movie["rating"] == "PG-13" && PG13Rating == true) || (movie["rating"] == "R" && RRating == true))
+      && ((comingSoonFilter == false && currentlyShowingFilter == false) || (comingSoonFilter == true))
+      && (movieInGenre(movie["title"], genreList) == true)
     ));
   }, [currentlyShowingMovies, comingSoonMovies, GRating, PGRating, PG13Rating, RRating, comingSoonFilter, currentlyShowingFilter, genreList])
 
-/*
-  const renderCurrentlyShowing = () => {
-    if (currentlyShowingMoviesFilter.length !== 0) {
-      let result = [];
-      currentlyShowingMoviesFilter.map((filteredMovie) =>
-        result.push(
-          <div className={`image-wrapper ${filteredMovie["rating"]}`} onClick={() => showMovie(filteredMovie)}>
-
-            <Image src={filteredMovie["imageSource"]} height={300} width={200} />
-            <h4>{filteredMovie["title"]}</h4>
-
-            <p class="image-wrapper-rating">{filteredMovie["rating"]}</p>
-          </div>)
-      )
-      return <h2>dafsdfadsfa</h2>
-      return result;
-
-    } else {
-      return <h2>No movies matched your search criteria.</h2>
-    }
-  }*/
+  /*
+    const renderCurrentlyShowing = () => {
+      if (currentlyShowingMoviesFilter.length !== 0) {
+        let result = [];
+        currentlyShowingMoviesFilter.map((filteredMovie) =>
+          result.push(
+            <div className={`image-wrapper ${filteredMovie["rating"]}`} onClick={() => showMovie(filteredMovie)}>
+  
+              <Image src={filteredMovie["imageSource"]} height={300} width={200} />
+              <h4>{filteredMovie["title"]}</h4>
+  
+              <p class="image-wrapper-rating">{filteredMovie["rating"]}</p>
+            </div>)
+        )
+        return <h2>dafsdfadsfa</h2>
+        return result;
+  
+      } else {
+        return <h2>No movies matched your search criteria.</h2>
+      }
+    }*/
 
   return (
     <div className="container">

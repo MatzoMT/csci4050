@@ -21,5 +21,6 @@ urlpatterns = [
     path('v1/schedule-movie', views.route_schedule_movie),
     path('v1/save-image', views.route_save_image),
     path('v1/get-currently-showing-movies', views.route_get_currently_showing_movies),
-    path('v1/get-coming-soon-movies', views.route_get_coming_soon_movies)
+    path('v1/get-coming-soon-movies', views.route_get_coming_soon_movies),
+    path('v1/get-movies-genres', views.route_get_movies_genres)
 ]

@@ -766,4 +766,44 @@ def route_get_coming_soon_movies(request):
     return JsonResponse(context) 
 
 
-
+@api_view(['GET'])
+def route_get_movies_genres(request):
+    movies_genres = Genre.objects.all()
+    genres_list = []
+    for genre in movies_genres:
+        print(genre.movieID)
+        genres_dict = {}
+        genres_dict["movieID"] = str(genre.movieID)
+        genre_string = ""
+        genre_number = int(genre.genre)
+    
+        if genre_number == 1:
+            genre_string = "COMEDY"
+        elif genre_number == 2:
+            genre_string = "HORROR"
+        elif genre_number == 3:
+            genre_string = "ACTION"
+        elif genre_number == 4:
+            genre_string = "ADVENTURE"
+        elif genre_number == 5:
+            genre_string = "ANIMATION"
+        elif genre_number == 6:
+            genre_string = "DRAMA"
+        elif genre_number == 7:
+            genre_string = "FANTASY"
+        elif genre_number == 8:
+            genre_string = "HISTORICAL"
+        elif genre_number == 9:
+            genre_string = "SCIENCE FICTION"
+        elif genre_number == 10:
+            genre_string = "THRILLER"
+        else:
+            genre_string = "WESTERN"
+        genres_dict["genre"] = genre_string
+        genres_list.append(genres_dict)
+    context = {
+        'isSuccessful': 'true',
+        'list': genres_list
+    }
+    return JsonResponse(context)
+    
