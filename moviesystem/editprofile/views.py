@@ -22,6 +22,12 @@ def index(request):
     }
 	return HttpResponse(template.render(context, request))
 
+
+
+
+def add_movie(request):
+	print("adding a movie")
+
 def edit_profile(request):
 	try:
 		user = User.objects.get(pk=1)

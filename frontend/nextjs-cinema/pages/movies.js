@@ -236,7 +236,7 @@ export default function Home() {
                     <Image src={filteredMovie["imageSource"]} height={300} width={200} />
                     <h4>{filteredMovie["title"]}</h4>
 
-                    <p class="image-wrapper-rating">{filteredMovie["rating"]}</p>
+                    <p className="image-wrapper-rating">{filteredMovie["rating"]}</p>
                   </div>
                 ) : <h2>No movies matched your search criteria.</h2>}
 
@@ -252,7 +252,7 @@ export default function Home() {
                       <Image src={filteredMovie["imageSource"]} height={300} width={200} />
                       <h4>{filteredMovie["title"]}</h4>
 
-                      <p class="image-wrapper-rating">{filteredMovie["rating"]}</p>
+                      <p className="image-wrapper-rating">{filteredMovie["rating"]}</p>
                     </div>
                   ) : <h2>No movies matched your search criteria.</h2>}
                 </div>
