@@ -22,5 +22,7 @@ urlpatterns = [
     path('v1/save-image', views.route_save_image),
     path('v1/get-currently-showing-movies', views.route_get_currently_showing_movies),
     path('v1/get-coming-soon-movies', views.route_get_coming_soon_movies),
-    path('v1/get-movies-genres', views.route_get_movies_genres)
+    path('v1/get-movies-genres', views.route_get_movies_genres),
+    path('v1/add-movie', views.route_add_movie),
+    path('v1/get-movies', views.route_get_movies)
 ]

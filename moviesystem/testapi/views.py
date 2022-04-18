@@ -51,9 +51,95 @@ def route_get_finland(request):
     return JsonResponse(data)
 
 # Below route for rendering movies
-@api_view(['GET'])
+@api_view(['POST'])
 def route_get_movies(request):
-    print("hello")
+    movies = Movie.objects.all()
+    print(movies[0].description)
+    movie_list = []
+    for movie in movies:
+        movie_dict = {}
+        movie_dict["id"] = movie.id
+        movie_dict["title"] = movie.title
+        movie_dict["imageSource"] = movie.image_source
+        movie_dict["rating"] = movie.rating
+        movie_dict["videoLink"] = movie.video_link
+        movie_dict["description"] = movie.description
+        movie_dict["director"] = movie.director
+
+        genres = Genre.objects.all().filter(movieID_id=movie.id)
+        genre_list = []
+        for genre in genres:
+            genre_list.append(genre.TYPE_CHOICES[int(genre.genre) - 1])
+        movie_dict["genres"] = genre_list#Genre.objects.all().filter(movieID_id=movie.id)
+        cast = Cast.objects.all().filter(movieID_id=movie.id)
+        cast_list = []
+        for cast_member in cast:
+            cast_list.append(cast_member.actor)
+            #cast_list.append(genre.TYPE_CHOICES[int(genre.genre) - 1][1])
+        movie_dict["cast"] = cast_list#Cast.objects.all().filter(movieID_id=movie.id)
+        movie_list.append(movie_dict)  
+
+    context = {
+        'isSuccessful': 'true',
+        'list': movie_list
+    }
+    return JsonResponse(context)
+
+@api_view(['POST'])
+def route_add_movie(request):
+    print("adding a movie")
+    request_success = "true"
+    data = JSONParser().parse(request)
+    print(data['description'])
+    title = data['title']
+    image_source = 'grantorino.jpg'#data['imageSource']
+    rating = data['rating']
+    video_link = data['videoLink']
+    description = data['description']
+    director = data['director']
+    genres = data['genres']
+    cast = data['cast']
+
+    movie = Movie(title=title, image_source=image_source, rating=rating, video_link=video_link, description=description, director=director)
+    movie.save()   
+
+    for genre in genres:
+        genreId = 0
+        if genre == "COMEDY":
+            genreId = 1
+        elif genre == "HORROR":
+            genreId = 2
+        elif genre == "ACTION":
+            genreId = 3
+        elif genre == "ADVENTURE":
+            genreId = 4
+        elif genre == "ANIMATION":
+            genreId = 5
+        elif genre == "DRAMA":
+            genreId = 6
+        elif genre == "FANTASY":
+            genreId = 7
+        elif genre == "HISTORICAL":
+            genreId = 8
+        elif genre == "SCIENCE FICTION":
+            genreId = 9
+        elif genre == "THRILLER":
+            genreId = 10
+        elif genre == "WESTERN":
+            genreId = 11
+        movieGenre = Genre(movieID=movie, genre=genreId)
+        movieGenre.save()
+
+    for castMember in cast:
+        castPerson = Cast(movieID=movie, actor=castMember)
+        castPerson.save()
+
+    #print(movie_id)
+    response = {
+        'requestSuccess': request_success
+    }
+    return JsonResponse(response)
+
 
 # This route is for forgot password option
 # Searches database to see if email is registered in system
@@ -163,7 +249,6 @@ def route_send_password_reset_email(request):
 
         resetUrl = 'http://localhost:3000/reset-password-form?jwt=' + encoded
         
-
         name = data["name"]
         email = data["email"]
         #send email

@@ -1,6 +1,5 @@
-from unicodedata import name
 from django.db import models
-from django.core.validators import EmailValidator 	
+from django.core.validators import EmailValidator
 
 # Create your models here.
 
@@ -53,15 +52,14 @@ class PaymentCard(models.Model):
 class Movie(models.Model):
 
 	title = models.CharField(max_length=255)
-	image_source = models.CharField(max_length=255)
-	rating = models.CharField(max_length=10)
-	video_link = models.CharField(max_length=255)
-	description = models.CharField(max_length=255)
-	director = models.CharField(max_length=255)
-
+	image_source = models.CharField(max_length=255) #trailer image
+	rating = models.CharField(max_length=10) #reviews
+	video_link = models.CharField(max_length=255) #trailer video
+	description = models.CharField(max_length=255) #synopsis
+	director = models.CharField(max_length=255) #director
+	#producer = models.CharField(max_length=255) #producer
 	def __str__(self):
 		return self.title
-
 
 class Cast(models.Model):
 	actor = models.CharField(max_length=255)
@@ -69,7 +67,8 @@ class Cast(models.Model):
 		Movie, 
 		on_delete=models.PROTECT
 	)
-
+	def __str__(self):
+		return self.movieID.title #+ " - " + self.genre
 
 class Genre(models.Model):
 	TYPE_CHOICES = [
@@ -86,11 +85,17 @@ class Genre(models.Model):
 		('11', 'WESTERN')
 	]
 	
+	#print(TYPE_CHOICES[1])
+
 	movieID = models.ForeignKey(
 		Movie, 
 		on_delete=models.PROTECT
 	)
+	
 	genre = models.CharField(max_length=3, choices=TYPE_CHOICES)
+	def __str__(self):
+		#print(self.genre)
+		return self.movieID.title #+ " - " + self.genre
 
 
 class Room(models.Model):

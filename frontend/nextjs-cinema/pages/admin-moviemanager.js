@@ -6,7 +6,14 @@ import CurrentlyShowingMovies from '../static/currently-showing.js';
 import isleOfDogs from '../images/isleofdogs.jpg';
 import whiplash from '../images/whiplash.jpeg';
 import AdminNavBar from '../components/AdminNavBar.js';
+import { useRouter } from 'next/router';
+import React, { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
+import MovieInfo from '../components/MovieInfo.js';
 
+
+
+// import { setHttpAgentOptions } from 'next/dist/server/config';
 
 // ---THE TABLES---
 //movies table (movie_id, movie_name, movie_rating, movie_genre, movie_director, movie_description, movie_trailer, movie_status)
@@ -17,6 +24,162 @@ import AdminNavBar from '../components/AdminNavBar.js';
 //probably want to make each table "item" its own element for cleanliness?? idk
 
 export default function AdminHome() {
+  let movieArray = [];
+  
+  const router = useRouter();
+  const [movies, setMovies] = useState([]);
+  const [imageSource, setImageSource] = useState("");
+  const [imageDataURL, setImageDataURL] = useState("")
+  const [email, setEmail] = useState("");
+  const [title, setTitle] = useState("");
+  const [videoLink, setVideoLink] = useState("");
+  const [description, setDescription] = useState("");
+  const [director, setDirector] = useState("");
+  const [rating, setRating] = useState("G");
+  const [incorrectInfoMessage, setIncorrectInfoMessage] = useState("");
+  const [genres, setGenres] = React.useState([]);
+  const [cast, setCast] = React.useState([]);
+
+  
+  const addGenre = event => {
+    if (event.key == "Enter") {
+      //console.log("ok")
+      console.log(typeof genres)
+      const currGenre = event.target.value;
+      console.log("evt: " + currGenre)
+
+      if (currGenre == "COMEDY" || currGenre == "HORROR" || currGenre == "ACTION" || currGenre == "ADVENTURE" || currGenre == "ANIMATION" || currGenre == "DRAMA" || currGenre == "FANTASY" || currGenre == "HISTORICAL" || currGenre == "SCIENCE FICTION" || currGenre == "THRILLER" || currGenre == "WESTERN") {
+        if (genres.indexOf(currGenre) === -1) {
+          setGenres([...genres, currGenre])
+        }
+      }
+      event.target.value = "";
+      console.log(genres)
+    }
+  }
+
+  const removeGenre = indexToRemove => {
+    setGenres(genres.filter((_, index) => index != indexToRemove))
+  }
+
+  const removeCast = indexToRemove => {
+    setCast(cast.filter((_, index) => index != indexToRemove))
+  }
+
+  const toInputUppercase = e => {
+    e.target.value = ("" + e.target.value).toUpperCase();
+  };
+
+  const addCast = event => {
+    if (event.key == "Enter") {
+      //console.log("ok")
+      console.log(typeof genres)
+      const currCast = event.target.value;
+      console.log("evt: " + currCast)
+      if (cast.indexOf(currCast) === -1) {
+        setCast([...cast, currCast])
+      }
+      event.target.value = "";
+      console.log(cast)
+    }
+    
+  
+  }
+
+  useEffect(async () => {
+    try {
+      axios.post("http://localhost:8000/api/v1/get-user-information",
+      { email: window.sessionStorage.getItem("email") }).then((response) => {
+        if (response.data.requestSuccess == "true" && response.data.isAdmin == "true") {
+          setEmail(window.sessionStorage.getItem("email"));
+          //handleCheckbox();
+        } else if (response.data.requestSuccess == "true" && response.data.isAdmin == "false") {
+          router.push('/');
+        } else {
+          router.push('/login');
+        }
+      });
+      await axios.post("http://localhost:8000/api/v1/get-movies",
+        { email: window.sessionStorage.getItem("email") }).then((response) => {
+          
+          console.log(response.data)
+          if (response.data.isSuccessful == "true") {
+            // setApples(response.data.list.);
+            for (const element of response.data.list) {
+              let movieGenres = [];
+              console.log(element.genres.length)
+              for (let i = 0; i < element.genres.length; i++) {
+                movieGenres.push(element.genres[i][1])
+              }
+              movieArray.push(<MovieInfo title={element.title} imageSource={element.imageSource} genres={movieGenres.join(", ")} rating={element.rating} director={element.director} description={element.description} videoLink={element.videoLink} cast={element.cast.join(", ")} />);
+            }
+
+            console.log(movieArray);
+          }
+  
+        });
+        setMovies(movieArray);
+      
+    //setCards(cardArray);
+    } catch (err) {
+      console.log('ran into an error:');
+      console.log(err);
+    }
+  }, []);
+
+  let handleSubmit = async (e) => {
+    e.preventDefault();
+    //console.log("not preventing :(")
+    console.log()
+    
+    if (title == "") {
+      setIncorrectInfoMessage("You must provide the movie with a title.");
+      return;
+    }
+    /*if (imageSource == "") {
+      setIncorrectInfoMessage("You must upload an image for the movie.")
+      return;
+    }*/
+    if (videoLink == "") {
+      setIncorrectInfoMessage("You must provide the movie with a trailer link.");
+      return;
+    }
+    if (description == "") {
+      setIncorrectInfoMessage("You must provide a description for the movie.");
+      return;
+    }
+    if (director == "") {
+      setIncorrectInfoMessage("This movie must have a director.")
+      return;
+    }
+    if (genres.length == 0) {
+      setIncorrectInfoMessage("This movie cannot have 0 genres.")
+      return;
+    }
+    if (cast.length == 0) {
+      setIncorrectInfoMessage("This movie cannot have 0 cast members.")
+      return;
+    }
+
+    
+    await axios.post("http://localhost:8000/api/v1/add-movie", { title: title, imageSource: imageSource, rating: rating, videoLink: videoLink, description: description, director: director, genres: genres, cast:cast }).then((response) => {
+      //alert("You have successfully added a payment type to your account.")
+      if (response.data.success == "false") {
+        setIncorrectInfoMessage(response.data.errMsg);
+      } else {
+        setIncorrectInfoMessage("Successfully added movie.");
+        router.reload()
+      }
+    
+    })
+    
+    
+  };
+
+
+
+
+
   return (
     <div className="container">
 
@@ -32,74 +195,108 @@ export default function AdminHome() {
 
           <div id="movie-manager-section">
 
-            <h1>Hello AdminUser12345.</h1>
+            <h1>Hello {email}.</h1>
             <h2>You are currently logged in as an administrator.</h2>
             <h1>Movies</h1>
-            <button type="button">Add new movie</button> 
-            <table className="table">
+            
+            <table className="table" id="movieTable">
               <tr>
-                <th/>
                 <th>Name</th>
+                <th>Image</th>
                 <th>Genre</th>
                 <th>Rating</th>
                 <th>Director</th>
                 <th>Description</th>
                 <th>Trailer</th>
-                <th>Status</th>
+                <th>Cast</th>
+                <th/>
               </tr>
-              <tr>
-                <td><button>Manage Movie</button></td>
-                <td>Gran Torino</td>
-                <td>Drama</td>
-                <td>R</td>
-                <td>Clint Eastwood</td>
-                <td>Disgruntled Korean War veteran Walt Kowalski sets out to reform his neighbor, Thao Lor, a Hmong teenager who tried to steal Kowalski's prized possession: a 1972 Gran Torino.</td>
-                <td>https://www.youtube.com/embed/RMhbr2XQblk</td>
-                <td>COMING SOON</td>
-              </tr>
-              <tr>
-              <td><button>Manage Movie</button></td>
-                <td>Isle of Dogs</td>
-                <td>Comedy, Adventure</td>
-                <td>PG-13</td>
-                <td>Wes Anderson</td>
-                <td>Set in Japan, Isle of Dogs follows a boy's odyssey in search of his lost dog.</td>
-                <td>https://www.youtube.com/embed/dt__kig8PVU?&autoplay=1</td>
-                <td>BOOK TICKETS</td>
-              </tr>
-              <tr>
-              <td><button>Manage Movie</button></td>
-                <td>Whiplash</td>
-                <td>Drama</td>
-                <td>R</td>
-                <td>Damien Chazelle</td>
-                <td>A promising young drummer enrolls at a cut-throat music conservatory where his dreams of greatness are mentored by an instructor who will stop at nothing to realize a student's potential.</td>
-                <td>https://www.youtube.com/embed/7d_jQycdQGo?&autoplay=1</td>
-                <td>COMING SOON</td>
-              </tr>
-            </table>
-
-
-
-            <h1>Now Showing</h1>
-            <button type="button">Add new showtime</button> 
-            <table>
-              <tr>
-              <th/>
-                <th>Name</th>
-                <th>Date</th>
-                <th>Showtime</th>
-              </tr>
-              <tr>
-                <td><button>Manage Showtime</button></td>
-                <td>Isle of Dogs</td>
-                <td>2-23-2022</td>
-                <td>18:00</td>
-              </tr>
-            </table>
+              {movies}
+            </table>           
+            <h3>Add New Movie</h3>
             
+            <form onSubmit={handleSubmit}>
+              <p>Title:</p>
+              <a><input onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} type="text" name="title" placeholder="Enter a title" onChange={(val) => setTitle(val.target.value)}></input></a><br></br>
+              <p>Image:</p>
+              <input onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} type="file" id="movieImage" onChange={ (val) => {
+                  console.log("SUBMITTED")
+                  console.log(val.target.files[0].type.replace('image/', ''));
+                  let fileType = val.target.files[0].type.replace('image/', '');
+
+                  const reader = new FileReader();
+                  reader.readAsDataURL(val.target.files[0]);
+                  reader.addEventListener("load", () => {
+                    //console.log(reader.result);
+                    setImageDataURL(reader.result)
+                    //need to save in ""../images"
+                    
+                    //this is a dataURL but i'm not sure what to do with it.
+                    //i've verified that it is indeed the image the 
+                  })
+
+              }}></input>
+              <p>Rating:</p>
+              <select id="rating" name="rating" onChange={(val) => {
+                console.log(val.target.value)
+                setRating(val.target.value)
+                }}>
+                <option value="G">G</option>
+                <option value="PG">PG</option>
+                <option value="PG-13">PG-13</option>
+                <option value="R">R</option>
+              </select>
+              <p>Trailer Link:</p>
+              <a><input onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} type="text" name="trailerLink" placeholder="Enter a trailer link" onChange={(val) => setVideoLink(val.target.value)}></input></a><br></br>
+              <p>Description:</p>
+              <a><textarea name="description" placeholder="Enter a description" onChange={(val) => setDescription(val.target.value)}></textarea></a><br></br>
+              <p>Director:</p>
+              <a><input onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} type="text" name="director" placeholder="Enter the director name" onChange={(val) => setDirector(val.target.value)}></input></a><br></br>
+              <p>Genres:</p>
+              <div className="genres-input">
+                <ul>
+                  {genres.map((genre, index) => (
+                    <li key={index}>
+                      <span>{genre}</span>
+                      <i onClick={() => removeGenre(index)}>                       
+                      ❌
+                      </i>
+                    </li>
+                  ))}
+                </ul>
+                <input        
+                  onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }}              
+                  type="text"
+                  placeholder="Press enter to add genre"
+                  onKeyUp={addGenre}
+                  onInput={toInputUppercase}
+                />
+              </div>  
+              <p>Cast:</p>
+              <div className="cast-input">
+                <ul>
+                  {cast.map((castMember, index) => (
+                    <li key={index}>
+                      <span>{castMember}</span>
+                      <i onClick={() => removeCast(index)}>                       
+                      ❌
+                      </i>
+                    </li>
+                  ))}
+                </ul>
+                <input   
+                  onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }}                   
+                  type="text"
+                  placeholder="Press enter to add cast member"
+                  onKeyUp={addCast}
+                />
+              </div>  
+              <h3 id="incorrect-credentials" style={{color: 'red'}}>{incorrectInfoMessage}</h3>
+              <button type="submit">Add new movie</button>
+            </form>
 
          </div>
+
         </main>
 
       </body>
