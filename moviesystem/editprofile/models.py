@@ -1,3 +1,4 @@
+import code
 from django.db import models
 from django.core.validators import EmailValidator
 
@@ -26,6 +27,13 @@ class User(models.Model):
 	)
 	def __str__(self):
 		return self.email
+
+class Promotion(models.Model):
+	promotion_code = models.CharField(max_length=255)
+	promotion_discount = models.IntegerField()
+	promotion_expiry = models.CharField(max_length=255)
+	def __str__(self):
+		return self.promotion_code
 
 class PaymentCard(models.Model):
 	TYPE_CHOICES = [

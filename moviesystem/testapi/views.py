@@ -34,8 +34,6 @@ from django.template.loader import get_template
 from django.template import Context
 
 
-
-
 @api_view(['GET', 'POST', 'DELETE'])
 def tutorial_list(request):
     # GET list of tutorials, POST a new tutorial, DELETE all tutorials
@@ -232,7 +230,43 @@ def route_get_payments(request):
     return JsonResponse(response)
 """
 
+@api_view(['POST'])
+def route_create_promotion(request):
+    data = JSONParser().parse(request)
+    promo_code = data['promotionCode']
+    promo_discount = data['promotionDiscount']
+    promo_expiry = data['promotionExpiration']
+    promotion = Promotion(promotion_code = promo_code, promotion_discount = promo_discount, promotion_expiry = promo_expiry)
+    promotion.save()
+    response = {
+        'requestSuccess': 'true'
+    }
+    users = User.objects.all().filter(promotion = True)
+    for user in users:
+        htmly = loader.get_template('users/NewPromoEmail.html')
+        d = { 'username': user.first_name, 'promoCode': promo_code, 'promoDiscount': promo_discount, 'promoExpiry': promo_expiry}
+        subject, from_email, to = 'New Promotion Code!', user.first_name, user.email
+        html_content = htmly.render(d)
+        msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+    return JsonResponse(response)
 
+@api_view(['POST'])
+def route_get_promotions(request):
+    promotions = Promotion.objects.all()
+    promo_list = []
+    for promotion in promotions: 
+        promotion.promotion_code
+        promo_dict = {}
+        promo_dict["promotionCode"] = promotion.promotion_code
+        promo_dict["promotionDiscount"] = promotion.promotion_discount
+        promo_dict["promotionExpiration"] = promotion.promotion_expiry
+        promo_list.append(promo_dict)
+    context = {
+        'list': promo_list
+    }
+    return JsonResponse(context)
 
 
 @api_view(['POST'])
