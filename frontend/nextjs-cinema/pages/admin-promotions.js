@@ -24,6 +24,7 @@ import "react-datepicker/dist/react-datepicker.css";
 export default function AdminHome() {
 const router = useRouter();
 let promotionArray = []
+const [email, setEmail] = useState("");
 const [promotions, setPromotions] = useState([]);
 const [promotionCode, setPromotionCode] = useState();
 const [promotionDiscount, setPromotionDiscount] = useState();
@@ -31,6 +32,18 @@ const [promotionExpiration, setPromotionExpiration] = useState(new Date());
 const [incorrectInfo, setIncorrectInfo] = useState(''); 
   useEffect(async () => {
     try {
+      axios.post("http://localhost:8000/api/v1/get-user-information",
+      { email: window.sessionStorage.getItem("email") }).then((response) => {
+        if (response.data.requestSuccess == "true" && response.data.isAdmin == "true") {
+          setEmail(window.sessionStorage.getItem("email"));
+          //handleCheckbox();
+        } else if (response.data.requestSuccess == "true" && response.data.isAdmin == "false") {
+          router.push('/');
+        } else {
+          router.push('/login');
+        }
+      });
+
       console.log('test')
       await axios.post("http://localhost:8000/api/v1/get-promotions",
         { email: window.sessionStorage.getItem("email") }).then((response) => {
@@ -84,7 +97,7 @@ const [incorrectInfo, setIncorrectInfo] = useState('');
 
           <div id="movie-manager-section">
 
-            <h1>Hello AdminUser12345.</h1>
+            <h1>Hello {email}.</h1>
             <h2>You are currently logged in as an administrator.</h2>
             <h1>Promotions</h1>
             <table className="table">
