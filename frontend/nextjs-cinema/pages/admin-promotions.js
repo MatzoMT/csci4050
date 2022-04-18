@@ -6,7 +6,12 @@ import CurrentlyShowingMovies from '../static/currently-showing.js';
 import isleOfDogs from '../images/isleofdogs.jpg';
 import whiplash from '../images/whiplash.jpeg';
 import AdminNavBar from '../components/AdminNavBar.js';
-
+import Promotion from '../components/Promotion.js';
+import React , {useState, useEffect} from 'react';
+import axios from 'axios';
+import {useRouter} from 'next/router';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 // ---THE TABLES---
 //movies table (movie_id, movie_name, movie_rating, movie_genre, movie_director, movie_description, movie_trailer, movie_status)
@@ -14,9 +19,55 @@ import AdminNavBar from '../components/AdminNavBar.js';
       //(showtimes and movies are linked by movie_id)
 //users table (stuff)
 //promotions table (promotion_id, promotion_code, promotion_discount, promotion_expiry)
-//probably want to make each table "item" its own element for cleanliness?? idk
+//probably want to make each table "item" its own element for cleanliness?? idk weewooweewooweewooweewooweewoo
 
 export default function AdminHome() {
+const router = useRouter();
+let promotionArray = []
+const [promotions, setPromotions] = useState([]);
+const [promotionCode, setPromotionCode] = useState();
+const [promotionDiscount, setPromotionDiscount] = useState();
+const [promotionExpiration, setPromotionExpiration] = useState(new Date());
+const [incorrectInfo, setIncorrectInfo] = useState(''); 
+  useEffect(async () => {
+    try {
+      console.log('test')
+      await axios.post("http://localhost:8000/api/v1/get-promotions",
+        { email: window.sessionStorage.getItem("email") }).then((response) => {
+          console.log(response.data.list)
+          for (const element of response.data.list) {
+            promotionArray.push(<Promotion promotionCode={element.promotionCode} promotionDiscount={element.promotionDiscount} promotionExpiration={element.promotionExpiration} />);
+          }
+        });
+      setPromotions(promotionArray);
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
+  function isInDesiredForm(str) {
+    var n = Math.floor(Number(str));
+    return n !== Infinity && String(n) === str && n >= 0;
+  }
+  let handleSubmit = async (e) => {
+    e.preventDefault();
+    if (promotionCode == "") {
+      setIncorrectInfo("You must provide a valid code");
+      return;
+    }
+    if (promotionDiscount == "" || !isInDesiredForm(promotionDiscount)) {
+      setIncorrectInfo("You must provide a valid discount");
+      return;
+    }
+    setIncorrectInfo('Successfully added a promotion!')
+    const formdate = promotionExpiration.toLocaleDateString('en-US', {
+      day: 'numeric',
+      month: 'numeric',
+      year: 'numeric',
+    });
+    await axios.post("http://localhost:8000/api/v1/create-promotion", { promotionCode: promotionCode, promotionDiscount: promotionDiscount, promotionExpiration: formdate }).then((response) => {
+        router.reload()
+    }) 
+  };
   return (
     <div className="container">
 
@@ -35,21 +86,26 @@ export default function AdminHome() {
             <h1>Hello AdminUser12345.</h1>
             <h2>You are currently logged in as an administrator.</h2>
             <h1>Promotions</h1>
-            <button type="button">Add new promotion</button> 
             <table className="table">
               <tr>
-                <th/>
                 <th>Code</th>
                 <th>Discount Amount</th>
                 <th>Expiry Date</th>
               </tr>
-              <tr>
-                <td><button>Manage Promotion</button></td>
-                <td>XXXXXXXX</td>
-                <td>10%</td>
-                <td>2-23-2022</td>
-              </tr>
+              {promotions}
             </table>
+
+            <form onSubmit={handleSubmit}>
+              <h3 id="incorrect-credentials" style={{ color: 'red' }}>{incorrectInfo}</h3>
+              <label for="promotion_code" className="field-label"><h3>Promotion Code</h3></label>
+              <a><input type="text" className="fields" name="promotion_code" placeholder="Promo Code" onChange={(val) => setPromotionCode(val.target.value)} defaultValue={promotionCode}></input></a><br />
+              <label for="promotion_discount" className="field-label"><h3>Promotion Discount</h3></label>
+              <a><input type="text" className="fields" name="promotion_discount" placeholder="Enter discount percentage in percentage form" onChange={(val) => setPromotionDiscount(val.target.value)} defaultValue={promotionDiscount}></input></a><br />
+              <label for="promotion_expiry" className="field-label"><h3>Promotion Expiration Date</h3></label>
+              <a><DatePicker className='fields' selected={promotionExpiration} onChange={(date) => setPromotionExpiration(date)} /></a><br></br>
+              <button type="submit">Add new promotion</button> 
+            </form>
+
          </div>
         </main>
 

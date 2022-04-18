@@ -17,5 +17,7 @@ urlpatterns = [
     path('v1/generate-password-reset-link', views.route_generate_password_reset_link),
     path('v1/decode-jwt', views.route_decode_jwt),
     path('v1/generate-activation-link', views.route_generate_activation_link),
-    path('v1/activate-account', views.route_activate_account)
+    path('v1/activate-account', views.route_activate_account),
+    path('v1/create-promotion', views.route_create_promotion),
+    path('v1/get-promotions', views.route_get_promotions)
 ]
