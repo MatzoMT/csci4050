@@ -10,6 +10,7 @@ import axios from 'axios';
 export default function Home(movieName) {
     const [movie, setMovie] = useState({});
     const [comingSoonMovies, setComingSoonMovies] = useState([]);
+    const [genres, setGenres] = useState([]);
     const [currentlyShowingMovies, setCurrentlyShowingMovies] = useState([]);
     const { query } = useRouter();
     const router = useRouter();
@@ -30,14 +31,18 @@ export default function Home(movieName) {
     */
 
     useEffect(async () => {
-        await axios.post("http://localhost:8000/api/v1/get-movie-by-id", {"id": router.query.movieID}).then((response) => {
+        await axios.post("http://localhost:8000/api/v1/get-movie-by-id", { "id": router.query.movieID }).then((response) => {
 
-          setMovie(response["data"]["data"]);
+            setMovie(response["data"]["data"]);
             console.log(response["data"]["data"]);
         });
-    
 
-      }, [])
+        await axios.post("http://localhost:8000/api/v1/get-genres-by-id", { "id": router.query.movieID }).then((response) => {
+            setGenres(response["data"]["genres"]);
+            console.log(response["data"]);
+        });
+
+    }, [])
 
     const bookMovie = () => {
         console.log(window.sessionStorage.getItem("email"));
@@ -60,10 +65,10 @@ export default function Home(movieName) {
         </div>
         <div className="movie-info">
             <h1 className="movie-title">{movie["title"]}</h1>
-            <button className="book-button" type="button" onClick={() => bookMovie() }><a className="book-tickets-text">BOOK TICKETS</a></button>
+            <button className="book-button" type="button" onClick={() => bookMovie()}><a className="book-tickets-text">BOOK TICKETS</a></button>
             <h2 className="movie-description">{movie["description"]}</h2>
-            <p className="movie-director">Director: Wes Anderson</p>
-            <p className="movie-genre">Genre: Comedy, Adventure</p>
+            <p className="movie-director">Director: {movie["director"]}</p>
+            <p className="movie-genre">Genre: {genres}</p>
             <p className="movie-rating">Rating: {movie["rating"]}</p>
         </div>
 

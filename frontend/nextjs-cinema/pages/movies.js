@@ -260,7 +260,7 @@ export default function Home() {
       && ((comingSoonFilter == false && currentlyShowingFilter == false) || (comingSoonFilter == true))
       && (movieInGenre(movie["title"], genreList) == true)
     ));
-  }, [currentlyShowingMovies, comingSoonMovies, GRating, PGRating, PG13Rating, RRating, comingSoonFilter, currentlyShowingFilter, genreList])
+  }, [currentlyShowingMovies, comingSoonMovies, GRating, PGRating, PG13Rating, RRating, comingSoonFilter, currentlyShowingFilter, genreList, titleFilter])
 
   /*
     const renderCurrentlyShowing = () => {
