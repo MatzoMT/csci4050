@@ -661,7 +661,7 @@ def route_schedule_movie(request):
 """
 # Below route for rendering movies
 @api_view(['POST'])
-def route_get_currently_showing_movies(request):
+def route_get_movies_example(request):
     movies = Movie.objects.all()
     #show_times = 
     print(movies[0].description)
@@ -701,3 +701,69 @@ def route_save_image(request):
     print("Posted file: {}".format(request.files['file']))
     print("bar")
     return HttpResponse(200)
+
+@api_view(['GET'])
+def route_get_currently_showing_movies(request):
+    movie_shows = MovieShow.objects.all()
+    movies = Movie.objects.all()
+    movie_list = []
+    print(movie_shows)
+
+    for movie in movies:
+        try:
+            movie_show = MovieShow.objects.filter(movieID_id=movie.id)
+            print("MOVIE SHOW")
+            if len(movie_show) > 0:
+                movie_dict = {}
+                movie_dict["id"] = movie.id
+                movie_dict["title"] = movie.title
+                movie_dict["imageSource"] = movie.image_source
+                movie_dict["rating"] = movie.rating
+                movie_dict["videoLink"] = movie.video_link
+                movie_dict["description"] = movie.description
+                movie_dict["director"] = movie.director
+
+                movie_list.append(movie_dict)
+        except Exception as e:
+            print(e)
+            print("adfa")
+    context = {
+        'isSuccessful': 'true',
+        'list': movie_list
+    }
+    return JsonResponse(context)  
+
+@api_view(['GET'])
+def route_get_coming_soon_movies(request):
+    print("dafda")
+    movie_shows = MovieShow.objects.all()
+    movies = Movie.objects.all()
+    movie_list = []
+    print(movie_shows)
+
+    for movie in movies:
+        try:
+            movie_show = MovieShow.objects.filter(movieID_id=movie.id)
+            print("MOVIE SHOW")
+            if len(movie_show) == 0:
+                movie_dict = {}
+                movie_dict["id"] = movie.id
+                movie_dict["title"] = movie.title
+                movie_dict["imageSource"] = movie.image_source
+                movie_dict["rating"] = movie.rating
+                movie_dict["videoLink"] = movie.video_link
+                movie_dict["description"] = movie.description
+                movie_dict["director"] = movie.director
+
+                movie_list.append(movie_dict)
+        except Exception as e:
+            print(e)
+            print("adfa")
+    context = {
+        'isSuccessful': 'true',
+        'list': movie_list
+    }
+    return JsonResponse(context) 
+
+
+
