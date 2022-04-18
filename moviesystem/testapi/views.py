@@ -891,4 +891,29 @@ def route_get_movies_genres(request):
         'list': genres_list
     }
     return JsonResponse(context)
-    
+
+@api_view(['POST'])
+def route_get_movie_by_id(request):
+    data = JSONParser().parse(request)
+    movie = Movie.objects.get(id=data["id"])
+    movie_dict = {}
+    #         { "movieID": 1, "title": "Gran Torino", "imageSource": require("../images/grantorino.jpg"), "rating": "R", "videoLink": "https://www.youtube.com/embed/RMhbr2XQblk?&autoplay=1", "description": "Disgruntled Korean War veteran Walt Kowalski sets out to reform his neighbor, Thao Lor, a Hmong teenager who tried to steal Kowalski's prized possession: a 1972 Gran Torino.", "director": "Clint Eastwood" },
+    try:
+        movie_dict["movieID"] = movie.id
+        movie_dict["title"] = movie.title
+        movie_dict["imageSource"] = movie.image_source
+        movie_dict["rating"] = movie.rating
+        movie_dict["videoLink"] = movie.video_link
+        movie_dict["description"] = movie.description
+        movie_dict["director"] = movie.director
+        context = {
+            'isSuccessful': 'true',
+            'data': movie_dict
+        }
+    except:
+        context = {
+            'isSuccessful': 'false'
+        }
+    return JsonResponse(context)
+
+

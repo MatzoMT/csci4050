@@ -12,9 +12,13 @@ import { useRouter } from 'next/router';
 export default function SelectTime() {
     const [movie, setMovie] = useState({});
     const [showTimes, setShowTimes] = useState([]);
+    const [currentlyShowingMovies, setCurrentlyShowingMovies] = useState([]);
+
     const router = useRouter();
 
 
+
+/*
     const currentlyShowingMovies = [
         { "movieID": 1, "title": "Gran Torino", "imageSource": require("../images/grantorino.jpg"), "rating": "R", "videoLink": "https://www.youtube.com/embed/RMhbr2XQblk?&autoplay=1", "description": "Disgruntled Korean War veteran Walt Kowalski sets out to reform his neighbor, Thao Lor, a Hmong teenager who tried to steal Kowalski's prized possession: a 1972 Gran Torino.", "director": "Clint Eastwood" },
         { "movieID": 2, "title": "Isle of Dogs", "imageSource": require("../images/isleofdogs.jpg"), "rating": "PG-13", "videoLink": "https://www.youtube.com/embed/dt__kig8PVU?&autoplay=1", "description": "Set in Japan, Isle of Dogs follows a boy's odyssey in search of his lost dog.", "director": "Wes Anderson" },
@@ -24,13 +28,12 @@ export default function SelectTime() {
         { "movieID": 6, "title": "Napoleon Dynamite", "imageSource": require("../images/napoleondynamite.jpeg"), "rating": "PG", "videoLink": "https://www.youtube.com/embed/ZHDi_AnqwN4?&autoplay=1" }
         // {"title": "TITLE", }
     ];
+    */
 
     const movieShows = [
         { "movieID": 1, "roomID": 1, "show_date": "04/19/22", "show_time": "15:00" },
         { "movieID": 1, "roomID": 1, "show_date": "04/19/22", "show_time": "18:00" },
         { "movieID": 1, "roomID": 1, "show_date": "04/21/22", "show_time": "19:00" },
-
-
     ]
 
     //const [alreadyShownDates, setAlreadyShownDates] = useState([]);
