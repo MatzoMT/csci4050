@@ -34,7 +34,7 @@ export default function Home(movieName) {
         await axios.post("http://localhost:8000/api/v1/get-movie-by-id", { "id": router.query.movieID }).then((response) => {
 
             setMovie(response["data"]["data"]);
-            console.log(response["data"]["data"]);
+            //console.log(response["data"]["data"]);
         });
 
         await axios.post("http://localhost:8000/api/v1/get-genres-by-id", { "id": router.query.movieID }).then((response) => {
@@ -57,6 +57,12 @@ export default function Home(movieName) {
 
     }
 
+    const displayGenres = () => {
+        let genresResult = [];
+        for (let i = 0; i < genres.length; i++) {
+        }
+    }
+
 
     return <div>
         <NavBar />
@@ -68,7 +74,7 @@ export default function Home(movieName) {
             <button className="book-button" type="button" onClick={() => bookMovie()}><a className="book-tickets-text">BOOK TICKETS</a></button>
             <h2 className="movie-description">{movie["description"]}</h2>
             <p className="movie-director">Director: {movie["director"]}</p>
-            <p className="movie-genre">Genre: {genres}</p>
+            <p className="movie-genre">Genre: {genres.map(genre => <p>{genre}</p>)}</p>
             <p className="movie-rating">Rating: {movie["rating"]}</p>
         </div>
 
