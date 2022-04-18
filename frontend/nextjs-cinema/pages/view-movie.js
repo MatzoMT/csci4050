@@ -12,6 +12,7 @@ export default function Home(movieName) {
     const [comingSoonMovies, setComingSoonMovies] = useState([]);
     const [genres, setGenres] = useState([]);
     const [currentlyShowingMovies, setCurrentlyShowingMovies] = useState([]);
+    const [showTimes, setShowTimes] = useState([]);
     const [cast, setCast] = useState([]);
     const { query } = useRouter();
     const router = useRouter();
@@ -49,6 +50,12 @@ export default function Home(movieName) {
             
         });
 
+        await axios.post("http://localhost:8000/api/v1/get-showtimes-by-id", { "id": router.query.movieID }).then((response) => {
+
+            setShowTimes(response["data"]["showtimes"]);
+            console.log(response);
+        });
+
     }, [])
 
     const bookMovie = () => {
@@ -78,7 +85,7 @@ export default function Home(movieName) {
         </div>
         <div className="movie-info">
             <h1 className="movie-title">{movie["title"]}</h1>
-            <button className="book-button" type="button" onClick={() => bookMovie()}><a className="book-tickets-text">BOOK TICKETS</a></button>
+            {showTimes.length > 0 ? <button className="book-button" type="button" onClick={() => bookMovie()}><a className="book-tickets-text">BOOK TICKETS</a></button> : <button className="coming-soon-button" type="button">COMING SOON</button>}
             <h2 className="movie-description">{movie["description"]}</h2>
             <p className="movie-director">Director: {movie["director"]}</p>
             <p className="movie-genre">Genre: {genres.map(genre => <p>{genre}</p>)}</p>
