@@ -3,6 +3,8 @@ import isleOfDogs from '../images/isleofdogs.jpg';
 import Image from 'next/image';
 import { useState, useEffect, useSearchParams } from 'react';
 import { useRouter } from 'next/router';
+import axios from 'axios';
+
 
 
 
@@ -39,43 +41,45 @@ export default function SelectTime() {
     //const [alreadyShownDates, setAlreadyShownDates] = useState([]);
     let alreadyShownDates = []
 
-    useEffect(() => {
-        for (let i = 0; i < currentlyShowingMovies.length; i++) {
-            if (currentlyShowingMovies[i]["movieID"] == router.query.movieID) {
-                setMovie(currentlyShowingMovies[i]);
-            }
-        }
-        for (let i = 0; i < movieShows.length; i++) {
-            if (movieShows[i]["movieID"] == router.query.movieID) {
-                setShowTimes(showTimes => [...showTimes, movieShows[i]]);
-            }
-        }
-    }, []);
+    useEffect(async () => {
+        await axios.post("http://localhost:8000/api/v1/get-movie-by-id", { "id": router.query.movieID }).then((response) => {
+            let responseCopy = response["data"]["data"];
+            responseCopy["imageSource"] = require("../images/" + responseCopy["imageSource"]);
+            setMovie(responseCopy);
+            //console.log(response["data"]["data"]);
+        });
+
+        await axios.post("http://localhost:8000/api/v1/get-showtimes-by-id", { "id": router.query.movieID }).then((response) => {
+
+            setShowTimes(response["data"]["showtimes"]);
+            console.log(response);
+        });
+
+    }, [])
 
     const renderTimes = () => {
         let result = [];
-        for (let i = 0; i < movieShows.length; i++) {
-            if (alreadyShownDates.indexOf(movieShows[i]["show_date"]) > -1) {
+        for (let i = 0; i < showTimes.length; i++) {
+            if (alreadyShownDates.indexOf(showTimes[i]["show_date"]) > -1) {
                 continue;
             } else {
                 let resultDate = [];
-                for (let j = i; j < movieShows.length; j++) {
-                    if (movieShows[j]["movieID"] == router.query.movieID && movieShows[j]["show_date"] == movieShows[i]["show_date"]) {
-                        resultDate.push(<h3>{movieShows[j]["show_time"]}</h3>);
+                for (let j = i; j < showTimes.length; j++) {
+                    if (showTimes[j]["show_date"] == showTimes[i]["show_date"]) {
+                        resultDate.push(<h3>{showTimes[j]["show_time"]}</h3>);
 
                     }
                 }
-                if (movieShows[i]["movieID"] == router.query.movieID) {
                     result.push(<div className="book-movie-date">
-                    <h2>{movieShows[i]["show_date"]}</h2>
+                    <h2>{showTimes[i]["show_date"]}</h2>
                     <div className="book-movie-date-time">
 
                         {resultDate}
                     </div>
                 </div>)
-                }
+                
 
-                alreadyShownDates.push(movieShows[i]["show_date"]);
+                alreadyShownDates.push(showTimes[i]["show_date"]);
             }
         }
         return result;
