@@ -150,7 +150,7 @@ export default function Home() {
     //router.push('/view-movie');
     router.push({
       pathname: '/view-movie',
-      query: { "movieID": movie["movieID"] },
+      query: { "movieID": movie["id"] },
     })
 
   }
