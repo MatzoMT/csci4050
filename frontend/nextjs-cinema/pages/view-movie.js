@@ -12,6 +12,7 @@ export default function Home(movieName) {
     const [comingSoonMovies, setComingSoonMovies] = useState([]);
     const [genres, setGenres] = useState([]);
     const [currentlyShowingMovies, setCurrentlyShowingMovies] = useState([]);
+    const [cast, setCast] = useState([]);
     const { query } = useRouter();
     const router = useRouter();
 
@@ -40,6 +41,12 @@ export default function Home(movieName) {
         await axios.post("http://localhost:8000/api/v1/get-genres-by-id", { "id": router.query.movieID }).then((response) => {
             setGenres(response["data"]["genres"]);
             console.log(response["data"]);
+        });
+
+        await axios.post("http://localhost:8000/api/v1/get-cast-by-id", { "id": router.query.movieID }).then((response) => {
+            setCast(response["data"]["cast"]);
+            console.log(response["data"]["cast"])
+            
         });
 
     }, [])
@@ -76,6 +83,7 @@ export default function Home(movieName) {
             <p className="movie-director">Director: {movie["director"]}</p>
             <p className="movie-genre">Genre: {genres.map(genre => <p>{genre}</p>)}</p>
             <p className="movie-rating">Rating: {movie["rating"]}</p>
+            <p className="movie-cast">Cast: {cast.map(actor => <p>{actor}</p>)}</p>
         </div>
 
 

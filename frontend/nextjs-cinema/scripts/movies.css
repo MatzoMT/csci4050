@@ -40,7 +40,7 @@
     color: #FFFFFF;
 }
 
-.movie-director, .movie-genre {
+.movie-director, .movie-genre, .movie-rating {
     border-bottom: 0.1em solid #c4c4c4;
     padding-bottom: 0.75em;
 }
