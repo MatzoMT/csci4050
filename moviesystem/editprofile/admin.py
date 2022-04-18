@@ -1,8 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import UserType, User, PaymentCard, Genre, Cast, Movie
-from .models import UserType, User, PaymentCard, Promotion
+from .models import UserType, User, PaymentCard, Genre, Cast, Movie, Promotion
 
 admin.site.register(UserType)
 admin.site.register(User)
