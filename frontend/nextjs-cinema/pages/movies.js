@@ -15,6 +15,8 @@ import napoleonDynamite from '../images/napoleondynamite.jpeg';
 import { Redirect } from 'react-router-dom';
 import dynamic from "next/dynamic";
 import { useRouter } from 'next/router';
+import axios from 'axios';
+
 
 
 // USE RATINGS AS CLASS NAMES
@@ -31,6 +33,10 @@ export default function Home() {
   const [currentlyShowingFilter, setCurrentlyShowingFilter] = useState(false);
   const [comingSoonFilter, setComingSoonFilter] = useState(false);
   const [genreList, setGenreList] = useState([]);
+  const [currentlyShowingMovies, setCurrentlyShowingMovies] = useState([]);
+  const [currentlyShowingMoviesFilter, setCurrentlyShowingMoviesFilter] = useState([]);
+  const [comingSoonMovies, setComingSoonMovies] = useState([]);
+  const [comingSoonMoviesFilter, setComingSoonMoviesFilter] = useState([]);
   const [ratingsState, setRatingsState] = useState(
     new Array(ratings.length)
     // ratings
@@ -151,38 +157,40 @@ export default function Home() {
   // HARD CODE
   // IMPORTANT! React does not like dynamic url for Image component
   // Solution: change each image to require('source') after getting movies
-  const currentlyShowingMovies = [
+
+  /*const currentlyShowingMovies = [
     { "movieID": 1, "title": "Gran Torino", "imageSource": require("../images/grantorino.jpg"), "rating": "R", "videoLink": "https://www.youtube.com/embed/RMhbr2XQblk?&autoplay=1", "description": "Disgruntled Korean War veteran Walt Kowalski sets out to reform his neighbor, Thao Lor, a Hmong teenager who tried to steal Kowalski's prized possession: a 1972 Gran Torino.", "director": "Clint Eastwood", "genre": "" },
     { "movieID": 2, "title": "Isle of Dogs", "imageSource": require("../images/isleofdogs.jpg"), "rating": "PG-13", "videoLink": "https://www.youtube.com/embed/dt__kig8PVU?&autoplay=1", "description": "Set in Japan, Isle of Dogs follows a boy's odyssey in search of his lost dog.", "director": "Wes Anderson" },
     { "movieID": 3, "title": "Whiplash", "imageSource": require("../images/whiplash.jpeg"), "rating": "R", "videoLink": "https://www.youtube.com/embed/7d_jQycdQGo?&autoplay=1", "description": "A promising young drummer enrolls at a cut-throat music conservatory where his dreams of greatness are mentored by an instructor who will stop at nothing to realize a student's potential.", "director": "Damien Chazelle" },
     { "movieID": 4, "title": "The Terminal", "imageSource": require("../images/theterminal.jpg"), "rating": "PG-13", "videoLink": "https://www.youtube.com/embed/iZqQRmhRvyg?&autoplay=1" },
-  ];
+  ];*/
 
   const movieGenres = [
-    { "movieID": 1, "genre": "Drama"},
-    { "movieID": 2, "genre": "Animation"},
-    { "movieID": 2, "genre": "Adventure"},
-    { "movieID": 2, "genre": "Drama"},
-    { "movieID": 2, "genre": "Science Fiction"},
-    { "movieID": 2, "genre": "Comedy"}
+    { "movieID": 1, "genre": "Drama" },
+    { "movieID": 2, "genre": "Animation" },
+    { "movieID": 2, "genre": "Adventure" },
+    { "movieID": 2, "genre": "Drama" },
+    { "movieID": 2, "genre": "Science Fiction" },
+    { "movieID": 2, "genre": "Comedy" }
   ]
-
+/*
   const comingSoonMovies = [
     { "movieID": 5, "title": "Kill Bill Vol. 1", "imageSource": require("../images/killBill.png"), "rating": "R", "videoLink": "https://www.youtube.com/embed/c_dNIXwrbzY?&autoplay=1" },
     { "movieID": 6, "title": "Napoleon Dynamite", "imageSource": require("../images/napoleondynamite.jpeg"), "rating": "PG", "videoLink": "https://www.youtube.com/embed/ZHDi_AnqwN4?&autoplay=1" }
   ]
+  */
 
   const addGenre = (genre, event) => {
-    
+
     if (event.target.checked == true) {
       setGenreList(genreList => [...genreList, genre]);
     } else {
       setGenreList(genreList.filter(oldGenre => oldGenre !== genre))
-     // const index = genreList.indexOf(genre);
-     // genreList.splice(index, 1); // 2nd parameter means remove one item only
+      // const index = genreList.indexOf(genre);
+      // genreList.splice(index, 1); // 2nd parameter means remove one item only
     }
 
-  //  console.log(genreList);
+    //  console.log(genreList);
   }
 
   const movieInGenre = (movieID, genreList) => {
@@ -198,29 +206,79 @@ export default function Home() {
     return false;
   }
 
-  const currentlyShowingMoviesFilter = currentlyShowingMovies.filter(movie =>
-    movie["title"].toLowerCase().includes(titleFilter) && ((GRating == false && PGRating == false && PG13Rating == false && RRating == false) ||
-      (movie["rating"] == "G" && GRating == true) || (movie["rating"] == "PG" && PGRating == true) || (movie["rating"] == "PG-13" && PG13Rating == true) || (movie["rating"] == "R" && RRating == true))
-    && ((currentlyShowingFilter == false && comingSoonFilter == false) || (currentlyShowingFilter == true))
-    && (movieInGenre(movie["movieID"], genreList) == true)
-  );
-  // movie rating includes rating && rating !== false (rating is NOT undefined)
 
+  // movie rating includes rating && rating !== false (rating is NOT undefined)
+/*
   const comingSoonMoviesFilter = comingSoonMovies.filter(movie =>
     movie["title"].toLowerCase().includes(titleFilter) && ((GRating == false && PGRating == false && PG13Rating == false && RRating == false) ||
       (movie["rating"] == "G" && GRating == true) || (movie["rating"] == "PG" && PGRating == true) || (movie["rating"] == "PG-13" && PG13Rating == true) || (movie["rating"] == "R" && RRating == true))
     && ((comingSoonFilter == false && currentlyShowingFilter == false) || (comingSoonFilter == true))
     && (movieInGenre(movie["movieID"], genreList) == true)
-    );
+  );*/
 
   const onClick = useEffect((a, b) => {
     // do something with a, b and props.x
   }, [currentlyShowingMovies]);
 
+  useEffect(async () => {
+    await axios.get("http://localhost:8000/api/v1/get-currently-showing-movies").then((response) => {
+      let responseCopy = response["data"]["list"];
+      for (let i = 0; i < responseCopy.length; i++) {
+        responseCopy[i]["imageSource"] = require("../images/"+responseCopy[i]["imageSource"]);
+        console.log(responseCopy[i]["imageSource"]);
+      }
+      setCurrentlyShowingMovies(responseCopy);
+
+    });
+
+    await axios.get("http://localhost:8000/api/v1/get-coming-soon-movies").then((response) => {
+      let responseCopy = response["data"]["list"];
+      for (let i = 0; i < responseCopy.length; i++) {
+        responseCopy[i]["imageSource"] = require("../images/"+responseCopy[i]["imageSource"]);
+        console.log(responseCopy[i]["imageSource"]);
+      }
+      setComingSoonMovies(responseCopy);
+
+    });
+  }, [])
+
   useEffect(() => {
+    console.log("FIRe")
+    setCurrentlyShowingMoviesFilter(currentlyShowingMovies.filter(movie =>
+      movie["title"].toLowerCase().includes(titleFilter) && ((GRating == false && PGRating == false && PG13Rating == false && RRating == false) ||
+        (movie["rating"] == "G" && GRating == true) || (movie["rating"] == "PG" && PGRating == true) || (movie["rating"] == "PG-13" && PG13Rating == true) || (movie["rating"] == "R" && RRating == true))
+      && ((currentlyShowingFilter == false && comingSoonFilter == false) || (currentlyShowingFilter == true))
+      && (movieInGenre(movie["movieID"], genreList) == true)
+    ));
+    setComingSoonMoviesFilter(comingSoonMovies.filter(movie =>
+      movie["title"].toLowerCase().includes(titleFilter) && ((GRating == false && PGRating == false && PG13Rating == false && RRating == false) ||
+      (movie["rating"] == "G" && GRating == true) || (movie["rating"] == "PG" && PGRating == true) || (movie["rating"] == "PG-13" && PG13Rating == true) || (movie["rating"] == "R" && RRating == true))
+    && ((comingSoonFilter == false && currentlyShowingFilter == false) || (comingSoonFilter == true))
+    && (movieInGenre(movie["movieID"], genreList) == true)
+    ));
+  }, [currentlyShowingMovies, comingSoonMovies, GRating, PGRating, PG13Rating, RRating, comingSoonFilter, currentlyShowingFilter, genreList])
 
-  }, [genreList])
+/*
+  const renderCurrentlyShowing = () => {
+    if (currentlyShowingMoviesFilter.length !== 0) {
+      let result = [];
+      currentlyShowingMoviesFilter.map((filteredMovie) =>
+        result.push(
+          <div className={`image-wrapper ${filteredMovie["rating"]}`} onClick={() => showMovie(filteredMovie)}>
 
+            <Image src={filteredMovie["imageSource"]} height={300} width={200} />
+            <h4>{filteredMovie["title"]}</h4>
+
+            <p class="image-wrapper-rating">{filteredMovie["rating"]}</p>
+          </div>)
+      )
+      return <h2>dafsdfadsfa</h2>
+      return result;
+
+    } else {
+      return <h2>No movies matched your search criteria.</h2>
+    }
+  }*/
 
   return (
     <div className="container">
@@ -284,7 +342,7 @@ export default function Home() {
               <div id="coming-soon-section">
 
 
-              {currentlyShowingFilter == false || (currentlyShowingFilter == true && comingSoonFilter == true) ? <h1>Coming Soon</h1> : <h1>Adjust filter to view coming soon movies.</h1>}
+                {currentlyShowingFilter == false || (currentlyShowingFilter == true && comingSoonFilter == true) ? <h1>Coming Soon</h1> : <h1>Adjust filter to view coming soon movies.</h1>}
                 <div id="currently-showing-movies">
                   {comingSoonMoviesFilter.length !== 0 ? comingSoonMoviesFilter.map((filteredMovie) =>
                     <div className={`image-wrapper ${filteredMovie["rating"]}`} onClick={() => showMovie(filteredMovie)}>
