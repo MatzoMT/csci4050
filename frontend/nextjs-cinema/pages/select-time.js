@@ -57,6 +57,13 @@ export default function SelectTime() {
 
     }, [])
 
+    const showTickets = (showTime) => {
+        router.push({
+            pathname: '/select-tickets',
+            query: { "movieID": router.query.movieID, "showtimeID": showTime },
+        })
+    }
+
     const renderTimes = () => {
         let result = [];
         for (let i = 0; i < showTimes.length; i++) {
@@ -66,7 +73,7 @@ export default function SelectTime() {
                 let resultDate = [];
                 for (let j = i; j < showTimes.length; j++) {
                     if (showTimes[j]["show_date"] == showTimes[i]["show_date"]) {
-                        resultDate.push(<h3>{showTimes[j]["show_time"]}</h3>);
+                        resultDate.push(<h3 onClick={() => showTickets(showTimes[j]["showtime_id"])}>{showTimes[j]["show_time"]}</h3>);
 
                     }
                 }
