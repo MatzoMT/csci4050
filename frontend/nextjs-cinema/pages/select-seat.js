@@ -67,25 +67,6 @@ export default function SelectSeat(movieName) {
                 <p className="vacant-seat-legend">VACANT SEAT</p>
                 <p className="closed-seat-legend">CLOSED SEAT</p>
             </div>
-            <h2 className="book-movie-available-times">Ticket Ages</h2>
-            <div class="age-select">
-                <h2>Child ($4)</h2>
-                <span class="minus-child">-</span>
-                <input type="text" value="1" class="age-select-field" />
-                <span class="plus-child">+</span>
-            </div>
-            <div class="age-select">
-                <h2>Adult ($7)</h2>
-                <span class="minus-child">-</span>
-                <input type="text" value="1" class="age-select-field" />
-                <span class="plus-child">+</span>
-            </div>
-            <div class="age-select">
-                <h2>Senior ($4)</h2>
-                <span class="minus-child">-</span>
-                <input type="text" value="1" class="age-select-field" />
-                <span class="plus-child">+</span>
-            </div>
             <button id="return-home-button" type="button"><a href="checkout" id="return-home-text">Proceed to Checkout</a></button>
 
 
