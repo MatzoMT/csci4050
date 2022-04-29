@@ -1088,3 +1088,30 @@ def route_get_showtime_by_showtime_id(request):
         }
         return HttpResponse(400)
     return JsonResponse(context)
+
+@api_view(['POST'])
+def route_get_seats_by_movieshow(request):
+    data = JSONParser().parse(request)
+    movieshow = MovieShow.objects.get(id=data["showtimeID"])
+    seats = Seat.objects.filter(roomID=movieshow.roomID_id)
+    seat_list = []
+    for seat in seats:
+        seat_list.append(seat.number)
+    context = {
+        'isSuccessful': 'true',
+        'seats': seat_list
+    }
+    return JsonResponse(context)
+
+@api_view(['POST'])
+def route_get_reserved_seats_by_movieshow(request):
+    data = JSONParser().parse(request)
+    reserved_seats = ReservedSeat.objects.filter(showtimeID=data["showtimeID"])
+    seat_list = []
+    for seat in reserved_seats:
+        seat_list.append(seat.number)
+    context = {
+        'isSuccessful': 'true',
+        'reservedSeats': seat_list
+    }
+    return JsonResponse(context)

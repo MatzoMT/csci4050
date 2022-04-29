@@ -14,7 +14,7 @@ import { Router } from 'react-router-dom';
 export default function SelectSeat(movieName) {
     const [movie, setMovie] = useState({});
     const [showTime, setShowTime] = useState({});
-    const [seats, setSeats] = useState(["A1", "A2", "A3", "B1", "B2", "B3"])
+    const [seats, setSeats] = useState([])
     const [reservedSeats, setReservedSeats] = useState(["B2"]);
     const [selectedSeats, setSelectedSeats] = useState([]);
     const [errorMessage, setErrorMessage] = useState("");
@@ -32,6 +32,10 @@ export default function SelectSeat(movieName) {
         await axios.post("http://localhost:8000/api/v1/get-showtime-by-showtime-id", { "movieID": router.query.movieID, "showtimeID": router.query.showtimeID }).then((response) => {
             console.log(response);
             setShowTime(response["data"]["showtime"]);
+        });
+
+        await axios.post("http://localhost:8000/api/v1/get-seats-by-movieshow", {"showtimeID": router.query.showtimeID}).then((response) => {
+            setSeats(response["data"]["seats"]);
         });
     }, []);
 
@@ -101,7 +105,7 @@ export default function SelectSeat(movieName) {
             <h3>Tickets Reserved: {numSeats}</h3>
             <h2 className="book-movie-available-times">Available Seats</h2>
             <h3 id="screen">SCREEN</h3>
-            {renderSeats()}
+            {seats[0] !== undefined && renderSeats()}
 
             {/* <div className="seat-row">
                 <p className="vacant-seat">A1</p>
