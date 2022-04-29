@@ -7,8 +7,48 @@ import isleOfDogs from '../images/isleofdogs.jpg';
 import whiplash from '../images/whiplash.jpeg';
 import granTorino from '../images/grantorino.jpg';
 import granTorinoBanner from '../images/granTorinoBanner.jpg';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/router';
+import axios from 'axios';
+
 
 export default function Home() {
+  const [comingSoonMovies, setComingSoonMovies] = useState([]);
+  const [currentlyShowingMovies, setCurrentlyShowingMovies] = useState([]);
+  const router = useRouter();
+
+
+  const showMovie = (movie) => {
+    //router.query.movie = movie["title"].toLowerCase().replaceAll(' ', '-');
+    //router.push('/view-movie');
+    router.push({
+      pathname: '/view-movie',
+      query: { "movieID": movie["id"] },
+    })
+
+  }
+
+  useEffect(async () => {
+    await axios.get("http://localhost:8000/api/v1/get-currently-showing-movies").then((response) => {
+      let responseCopy = response["data"]["list"];
+      for (let i = 0; i < responseCopy.length; i++) {
+        responseCopy[i]["imageSource"] = require("../images/" + responseCopy[i]["imageSource"]);
+      }
+      setCurrentlyShowingMovies(responseCopy);
+      console.log(responseCopy);
+
+    });
+
+    await axios.get("http://localhost:8000/api/v1/get-coming-soon-movies").then((response) => {
+      let responseCopy = response["data"]["list"];
+      for (let i = 0; i < responseCopy.length; i++) {
+        responseCopy[i]["imageSource"] = require("../images/" + responseCopy[i]["imageSource"]);
+      }
+      setComingSoonMovies(responseCopy);
+
+    });
+  }, [])
+
   return (
     <div className="container">
 
@@ -27,26 +67,19 @@ export default function Home() {
           <div id="currently-showing-section">
             <h1>Currently Showing</h1>
             <div id="currently-showing-movies">
-              <div className="image-wrapper">
-                <a href="movies/isle-of-dogs" style={{textDecoration: 'none', color: '#000000'}}>
-                  <Image src={isleOfDogs} layout="responsive" sizes="50vw" />
-                  <h2>Isle of Dogs</h2>
-                </a>
+              {currentlyShowingMovies.map((filteredMovie) =>
+                <div className={`image-wrapper ${filteredMovie["rating"]}`} onClick={() => showMovie(filteredMovie)}>
 
-              </div>
+                  <Image src={filteredMovie["imageSource"]} height={300} width={200} />
+                  <h4>{filteredMovie["title"]}</h4>
 
-              <div className="image-wrapper">
-              <a href="movies/gran-torino" style={{textDecoration: 'none', color: '#000000'}}>
-                <Image src={granTorino} />
-                <h2>Gran Torino</h2>
-                </a>
-              </div>
-
+                  <p className="image-wrapper-rating">{filteredMovie["rating"]}</p>
+                </div>)}
             </div>
           </div>
 
 
-          <div id="coming-soon-section">
+          {/*<div id="coming-soon-section">
             <h1>Coming Soon</h1>
             <div id="coming-soon-movies">
               <div className="image-wrapper">
@@ -54,7 +87,7 @@ export default function Home() {
                 <h2>Whiplash</h2>
               </div>
             </div>
-          </div>
+          </div>*/}
 
 
 

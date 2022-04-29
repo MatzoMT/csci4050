@@ -1106,7 +1106,7 @@ def route_get_seats_by_movieshow(request):
 @api_view(['POST'])
 def route_get_reserved_seats_by_movieshow(request):
     data = JSONParser().parse(request)
-    reserved_seats = ReservedSeat.objects.filter(showtimeID=data["showtimeID"])
+    reserved_seats = ReservedSeat.objects.filter(showTimeID=data["showtimeID"])
     seat_list = []
     for seat in reserved_seats:
         seat_list.append(seat.number)
