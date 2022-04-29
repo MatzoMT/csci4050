@@ -59,7 +59,7 @@ export default function SelectSeat(movieName) {
                 // After above steps are complete, redirect like below
                 router.push({
                     pathname: '/select-seat',
-                    query: { "movieID": router.query.movieID, "showtimeID": router.query.showtime, "children": childTickets, "adults": adultTickets, "seniors": seniorTickets },
+                    query: { "movieID": router.query.movieID, "showtimeID": router.query.showtimeID, "children": childTickets, "adults": adultTickets, "seniors": seniorTickets },
                 })               
 
             }
