@@ -131,3 +131,63 @@ class MovieShow(models.Model):
 		constraints = [
 			models.UniqueConstraint(fields=['show_date', 'show_time'], name='unique_datetime')
 		]
+
+class Seat(models.Model):
+	number = models.CharField(max_length=5)
+	roomID = models.ForeignKey(
+		Room,
+		on_delete=models.CASCADE
+	)
+	def __str__(self):
+		return self.row + self.number
+	
+class Ticket(models.Model):
+	TYPE_CHOICES = [
+		('A', 'Adult'),
+		('C', 'Child'),
+		('S', 'Senior'),
+	]
+	ticket_type = models.CharField(max_length=1, choices=TYPE_CHOICES)
+	seatID = models.ForeignKey(
+		Seat,
+		on_delete = models.CASCADE
+	)
+	show_time = models.ForeignKey(
+		MovieShow,
+		on_delete=models.CASCADE
+	)
+	ticket_price = models.CharField(max_length=10)
+
+class Booking(models.Model):
+	userID = models.ForeignKey(
+		User,
+		on_delete=models.CASCADE
+	)
+	showTimeID = models.ForeignKey(
+		MovieShow,
+		on_delete=models.CASCADE
+	)
+	cardID = models.ForeignKey(
+		PaymentCard,
+		on_delete=models.PROTECT
+	)
+	promoID = models.ForeignKey(
+		Promotion,
+		on_delete=models.PROTECT
+	)
+	reserved = models.BooleanField()
+	paid = models.BooleanField()
+
+class ReservedSeat(models.Model):
+	seatID = models.ForeignKey(
+		Seat,
+		on_delete=models.CASCADE
+	)
+	showTimeID = models.ForeignKey(
+		MovieShow,
+		on_delete=models.CASCADE
+	)
+	BookingID = models.ForeignKey(
+		Booking,
+		on_delete=models.CASCADE
+	)
