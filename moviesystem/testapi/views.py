@@ -1048,6 +1048,7 @@ def route_get_showtimes_by_id(request):
     try:
         for showtime in showtimes:
             showtime_dict = {}
+            showtime_dict["showtime_id"] = showtime.id
             showtime_dict["roomID"] = showtime.roomID_id
             showtime_dict["show_date"] = showtime.show_date
             showtime_dict["show_time"] = showtime.show_time
@@ -1063,3 +1064,27 @@ def route_get_showtimes_by_id(request):
         }
     return JsonResponse(context)
 
+@api_view(['POST'])
+def route_get_showtime_by_showtime_id(request):
+    try:
+        data = JSONParser().parse(request)
+        showtime = MovieShow.objects.get(id=data["showtimeID"])
+        showtime_list = []
+        #         { "movieID": 1, "title": "Gran Torino", "imageSource": require("../images/grantorino.jpg"), "rating": "R", "videoLink": "https://www.youtube.com/embed/RMhbr2XQblk?&autoplay=1", "description": "Disgruntled Korean War veteran Walt Kowalski sets out to reform his neighbor, Thao Lor, a Hmong teenager who tried to steal Kowalski's prized possession: a 1972 Gran Torino.", "director": "Clint Eastwood" },
+
+        showtime_dict = {}
+        showtime_dict["showtime_id"] = showtime.id
+        showtime_dict["roomID"] = showtime.roomID_id
+        showtime_dict["show_date"] = showtime.show_date
+        showtime_dict["show_time"] = showtime.show_time
+        context = {
+            'isSuccessful': 'true',
+            'showtime': showtime_dict
+        }
+    except Exception as e:
+        print(e)
+        context = {
+            'isSuccessful': 'false'
+        }
+        return HttpResponse(400)
+    return JsonResponse(context)

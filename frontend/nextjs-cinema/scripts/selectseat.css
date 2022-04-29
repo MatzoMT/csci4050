@@ -12,6 +12,10 @@
   border: 0.25em solid #1965d8;
   background-color: #1965d8;
 }
+.selected-seat {
+  border: 0.25em solid #14b311;
+  background-color: #14b311;
+}
 .vacant-seat:hover {
   background-color: #357eec;
   border: 0.25em solid #357eec;
@@ -84,4 +88,13 @@
     width: 3%;
     margin-left: 0.5%;
     margin-right: 0.5%;
+}
+
+.unselectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }

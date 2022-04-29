@@ -2,25 +2,108 @@ import NavBar from '../components/NavBar.js';
 import isleOfDogs from '../images/isleofdogs.jpg';
 import Image from 'next/image';
 import Footer from '../components/Footer.js';
+import { useState, useEffect, useSearchParams } from 'react';
+import { useRouter } from 'next/router';
+import axios from 'axios';
+import { Router } from 'react-router-dom';
 
 
 
 // This is a hardcoded example
 // In the future, pass movie metadata as props?
 export default function SelectSeat(movieName) {
+    const [movie, setMovie] = useState({});
+    const [showTime, setShowTime] = useState({});
+    const [seats, setSeats] = useState(["A1", "A2", "A3", "B1", "B2", "B3"])
+    const [reservedSeats, setReservedSeats] = useState(["B2"]);
+    const [selectedSeats, setSelectedSeats] = useState([]);
+    const [errorMessage, setErrorMessage] = useState("");
+    const router = useRouter();
+
+    let numSeats = parseInt(router.query.children) + parseInt(router.query.adults) + parseInt(router.query.seniors);
+
+    useEffect(async () => {
+        await axios.post("http://localhost:8000/api/v1/get-movie-by-id", { "id": router.query.movieID }).then((response) => {
+            let responseCopy = response["data"]["data"];
+            responseCopy["imageSource"] = require("../images/" + responseCopy["imageSource"]);
+            setMovie(responseCopy);
+        });
+
+        await axios.post("http://localhost:8000/api/v1/get-showtime-by-showtime-id", { "movieID": router.query.movieID, "showtimeID": router.query.showtimeID }).then((response) => {
+            console.log(response);
+            setShowTime(response["data"]["showtime"]);
+        });
+    }, []);
+
+    const addSeat = (seat) => {
+        console.log("NUMSEATS")
+        console.log(numSeats);
+        if (selectedSeats.length < numSeats && selectedSeats.indexOf(seat) == -1) {
+            setSelectedSeats(selectedSeats => [...selectedSeats, seat]);
+        } else if (selectedSeats.indexOf(seat) !== -1) {
+            setSelectedSeats(selectedSeats.filter(oldSeat => oldSeat !== seat))
+        }
+        console.log(selectedSeats);
+    }
+
+    const handleSubmit = () => {
+        if (selectedSeats.length !== numSeats) {
+            setErrorMessage("You must select " + numSeats + " seats to continue.");
+        } else {
+            router.push({
+                pathname: '/checkout',
+                query: {
+                    "movieID": router.query.movieID,
+                    "showtimeID": router.query.showtimeID,
+                    "children": router.query.children,
+                    "adults": router.query.adults,
+                    "seniors": router.query.seniors,
+                    "seats": selectedSeats
+                },
+            })
+        }
+    }
+
+    const renderSeats = () => {
+        let seatLetter = seats[0].charAt(0);
+        let returnCode = [];
+        for (let i = 0; i < seats.length; i++) {
+            if (seats[i].charAt(0) !== seatLetter) {
+                seatLetter = seats[i].charAt(0);
+                returnCode.push(<br></br>);
+            }
+            if (reservedSeats.indexOf(seats[i]) == -1) {
+                if (selectedSeats.indexOf(seats[i]) == -1) {
+                    returnCode.push(<span onClick={() => addSeat(seats[i])}><p className="vacant-seat" >{seats[i]}</p></span>);
+
+                } else {
+                    returnCode.push(<span onClick={() => addSeat(seats[i])}><p className="selected-seat" >{seats[i]}</p></span>);
+                }
+            } else {
+                returnCode.push(<p className="closed-seat">{seats[i]}</p>);
+            }
+        }
+        return <div className="seat-row">
+            {returnCode}
+        </div>
+    }
+
     return <div>
         <NavBar />
         <div class="book-movie-poster">
-            <Image src={isleOfDogs} />
+            {movie["imageSource"] !== undefined && <Image src={movie["imageSource"]} height={300} width={200} />}
         </div>
 
         <div className="center">
-            <h1 className="book-movie-title">Isle of Dogs</h1>
-            <h3>Wednesday, February 23</h3>
-            <h3>4:30</h3>
+            <h1 className="book-movie-title">{movie["title"]}</h1>
+            <h3>{showTime["show_date"]}</h3>
+            <h3>{showTime["show_time"]}</h3>
+            <h3>Tickets Reserved: {numSeats}</h3>
             <h2 className="book-movie-available-times">Available Seats</h2>
             <h3 id="screen">SCREEN</h3>
-            <div className="seat-row">
+            {renderSeats()}
+
+            {/* <div className="seat-row">
                 <p className="vacant-seat">A1</p>
                 <p className="closed-seat">A2</p>
                 <p className="vacant-seat">A3</p>
@@ -62,32 +145,13 @@ export default function SelectSeat(movieName) {
                 <p className="vacant-seat">D9</p>
                 <br></br>
 
-            </div>
+            </div>*/}
             <div id="legend">
-                <p className="vacant-seat-legend">VACANT SEAT</p>
+                <p className="vacant-seat-legend" >VACANT SEAT</p>
                 <p className="closed-seat-legend">CLOSED SEAT</p>
             </div>
-            <h2 className="book-movie-available-times">Ticket Ages</h2>
-            <div class="age-select">
-                <h2>Child ($4)</h2>
-                <span class="minus-child">-</span>
-                <input type="text" value="1" class="age-select-field" />
-                <span class="plus-child">+</span>
-            </div>
-            <div class="age-select">
-                <h2>Adult ($7)</h2>
-                <span class="minus-child">-</span>
-                <input type="text" value="1" class="age-select-field" />
-                <span class="plus-child">+</span>
-            </div>
-            <div class="age-select">
-                <h2>Senior ($4)</h2>
-                <span class="minus-child">-</span>
-                <input type="text" value="1" class="age-select-field" />
-                <span class="plus-child">+</span>
-            </div>
-            <button id="return-home-button" type="button"><a href="checkout" id="return-home-text">Proceed to Checkout</a></button>
-
+            <button id="return-home-button" type="button" onClick={handleSubmit}><a id="return-home-text">Proceed to Checkout</a></button>
+            <p style={{ color: "red" }}>{errorMessage}</p>
 
 
 
