@@ -54,7 +54,7 @@ export default function SelectSeat(movieName) {
                 pathname: '/checkout',
                 query: {
                     "movieID": router.query.movieID,
-                    "showtimeID": router.query.showtime,
+                    "showtimeID": router.query.showtimeID,
                     "children": router.query.children,
                     "adults": router.query.adults,
                     "seniors": router.query.seniors,
