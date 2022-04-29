@@ -138,8 +138,12 @@ class Seat(models.Model):
 		Room,
 		on_delete=models.CASCADE
 	)
+	class Meta: 
+		constraints = [
+			models.UniqueConstraint(fields=['number', 'roomID'], name='unique_seat')
+		]
 	def __str__(self):
-		return self.row + self.number
+		return self.number + " in " + self.roomID
 	
 class Ticket(models.Model):
 	TYPE_CHOICES = [
