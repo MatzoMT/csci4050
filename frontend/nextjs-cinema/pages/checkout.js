@@ -1,6 +1,8 @@
 import NavBar from '../components/NavBar.js';
 import isleOfDogs from '../images/isleofdogs.jpg';
 import Image from 'next/image';
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
 import { useState, useEffect, useSearchParams } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
@@ -10,10 +12,17 @@ import { Router } from 'react-router-dom';
 export default function SelectTime() {
     const [movie, setMovie] = useState({});
     const [showTime, setShowTime] = useState({});
+    const [cards, setCards] = useState([]);
+    const [selectCard, setSelectCard] = useState();
+
     const router = useRouter();
     let total = (parseInt(router.query.children) * 4.00) + (parseInt(router.query.adults) * 7.00) + (parseInt(router.query.seniors) * 4.00);
 
     useEffect(async () => {
+        await axios.post("http://localhost:8000/api/v1/prepare-checkout", {"user":window.sessionStorage.getItem("email")}).then((response) => {
+            let c1 = response.data.cards;
+            setCards(c1)
+        });
         await axios.post("http://localhost:8000/api/v1/get-movie-by-id", { "id": router.query.movieID }).then((response) => {
             let responseCopy = response["data"]["data"];
             responseCopy["imageSource"] = require("../images/" + responseCopy["imageSource"]);
@@ -26,6 +35,27 @@ export default function SelectTime() {
         });
     }, []);
 
+    // let handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     const formdate = dateSelected.toLocaleDateString('en-US', {
+    //         day: 'numeric',
+    //         month: 'numeric',
+    //         year: 'numeric',
+    //       });
+    //     try {
+    //         axios.post("http://localhost:8000/api/v1/schedule-movie", {date: formdate, time: timeSelected, movie: movieSelected, room: roomSelected}).then((response) => {
+    //         if (response.data.success == "true") {
+    //             router.push('/movies');
+    //         } else {
+    //             setIncorrectMessage(response.data.error);
+    //             router.push('/schedule-movie');
+    //         } 
+    //         });
+    //     } catch (err) {
+    //       console.log(err);
+    //     }
+    
+    //    };
 
     return <div>
         <NavBar />
@@ -33,41 +63,30 @@ export default function SelectTime() {
             <h1>Checkout</h1>
             <div id="checkout-row">
                 <div id="checkout-left">
-                    <h2>Billing Information</h2>
-                    <h3>Full Name</h3>
-                    <input type="text" class="billing-field" id="full-name" name="full-name"></input>
-                    <h3>Email</h3>
-                    <input type="text" class="billing-field" id="email" name="email"></input>
-                    <h3>Billing Address</h3>
-                    <input type="text" class="billing-field" id="billing-address" name="billing-address"></input>
-                    <h3>Zip Code</h3>
-                    <input type="text" class="billing-field" id="zip" name="zip"></input>
-                    <h2>Payment Method</h2>
-                    <select class="billing-field" name="payment-method" id="payment-method">
-                        <option value="Credit Card">Credit Card</option>
-                        <option value="Debit Card">Debit Card</option>
-                    </select>
-                    <h3>Card Number</h3>
-                    <input class="billing-field" type="text" id="email" name="email"></input>
+                    <h2>Pick a payment method</h2>
+                    <a><Dropdown  name="card" options={cards} onChange={(val) => setSelectCard(val.value)} value={selectCard} placeholder="Select an option..." /></a><br />
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
 
-                    <h3>Expiration Date</h3>
-                    <select class="billing-field" name="expiration-month" id="experiment-month" placeholder="Month">
-                        <option value="January">January</option>
-                        <option value="February">February</option>
-                        <option value="March">March</option>
-                        <option value="April">April</option>
-                        <option value="May">May</option>
-                        <option value="June">June</option>
-                        <option value="July">July</option>
-                        <option value="August">August</option>
-                        <option value="September">September</option>
-                        <option value="October">October</option>
-                        <option value="November">November</option>
-                        <option value="December">December</option>
-                    </select>
-                    <input class="billing-field" type="text" id="expiration-year" name="expiration-year" placeholder="Year"></input>
-
-                    <h3>CV</h3>
                 </div>
 
                 <div id="checkout-right">

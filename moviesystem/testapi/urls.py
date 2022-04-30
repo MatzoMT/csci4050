@@ -31,5 +31,6 @@ urlpatterns = [
     path('v1/get-showtimes-by-id', views.route_get_showtimes_by_id),
     path('v1/create-promotion', views.route_create_promotion),
     path('v1/get-promotions', views.route_get_promotions),
-    path('v1/get-showtime-by-showtime-id', views.route_get_showtime_by_showtime_id)
+    path('v1/get-showtime-by-showtime-id', views.route_get_showtime_by_showtime_id),
+    path('v1/prepare-checkout', views.route_checkout_payment_info)
 ]
