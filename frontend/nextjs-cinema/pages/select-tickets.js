@@ -55,16 +55,18 @@ export default function SelectSeat(movieName) {
             // make API request => setTicketsAvailable();
             if (childTickets + adultTickets + seniorTickets > numSeats - numReservedSeats) {
                 setErrorMessage("You cannot book above the number of tickets available.");
-            // Below iterates if ticket numbers are successfully validated
-            // Decrease tickets available for this showing as a preliminary action
-            // Tickets should be re-incremented after 10 minutes 
+
+               
+                // Below iterates if ticket numbers are successfully validated
+                // Decrease tickets available for this showing as a preliminary action
+                // Tickets should be re-incremented after 10 minutes 
             } else {
 
                 // After above steps are complete, redirect like below
                 router.push({
                     pathname: '/select-seat',
                     query: { "movieID": router.query.movieID, "showtimeID": router.query.showtimeID, "children": childTickets, "adults": adultTickets, "seniors": seniorTickets },
-                })               
+                })
 
             }
 
@@ -81,7 +83,8 @@ export default function SelectSeat(movieName) {
             <h1 className="book-movie-title">{movie["title"]}</h1>
             <h3>{showTime["show_date"]}</h3>
             <h3>{showTime["show_time"]}</h3>
-            <h2>Tickets Available: {numSeats - numReservedSeats}</h2>
+            <h2>Tickets Available: 39</h2>
+            {/*<h2>Tickets Available: {numSeats - numReservedSeats}</h2>*/}
             <h2 className="book-movie-available-times">Select Tickets</h2>
             <div class="age-select">
                 <h2>Child ($4)</h2>

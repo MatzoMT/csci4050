@@ -26,6 +26,22 @@ export default function SelectTime() {
         });
     }, []);
 
+    const handleSubmit = () => {
+
+        router.push({
+            pathname: '/ticket-confirmation',
+            query: {
+                "movieID": router.query.movieID,
+                "showtimeID": router.query.showtimeID,
+                "children": router.query.children,
+                "adults": router.query.adults,
+                "seniors": router.query.seniors,
+                "seats": router.query.seats
+            },
+        })
+
+    }
+
 
     return <div>
         <NavBar />
@@ -86,7 +102,7 @@ export default function SelectTime() {
                     {parseInt(router.query.seniors) !== 0 && <p>{router.query.seniors}x Seniors</p>}
 
                     <h2>Total: ${total.toFixed(2)}</h2>
-                    <button id="return-home-button" type="button"><a href="ticket-confirmation" id="return-home-text">Checkout</a></button>
+                    <button id="return-home-button" type="button" onClick={() => handleSubmit()}><a id="return-home-text">Checkout</a></button>
 
                 </div>
             </div>

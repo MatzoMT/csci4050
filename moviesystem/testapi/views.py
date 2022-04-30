@@ -1115,3 +1115,7 @@ def route_get_reserved_seats_by_movieshow(request):
         'reservedSeats': seat_list
     }
     return JsonResponse(context)
+
+@api_view(['POST'])
+def route_set_available_tickets(request):
+    print("dasf")

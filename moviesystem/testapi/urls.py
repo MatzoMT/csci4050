@@ -34,4 +34,5 @@ urlpatterns = [
     path('v1/get-showtime-by-showtime-id', views.route_get_showtime_by_showtime_id),
     path('v1/get-seats-by-movieshow', views.route_get_seats_by_movieshow),
     path('v1/get-reserved-seats-by-movieshow', views.route_get_reserved_seats_by_movieshow),
+    path('v1/set-available-tickets', views.route_set_available_tickets)
 ]
