@@ -126,6 +126,7 @@ class MovieShow(models.Model):
 
 	show_date = models.CharField(max_length=255)
 	show_time = models.CharField(max_length=255)
+	available_seats = models.IntegerField(default=40)
 
 	class Meta: 
 		constraints = [

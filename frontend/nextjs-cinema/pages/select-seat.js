@@ -15,7 +15,7 @@ export default function SelectSeat(movieName) {
     const [movie, setMovie] = useState({});
     const [showTime, setShowTime] = useState({});
     const [seats, setSeats] = useState([])
-    const [reservedSeats, setReservedSeats] = useState(["B2"]);
+    const [reservedSeats, setReservedSeats] = useState([]);
     const [selectedSeats, setSelectedSeats] = useState([]);
     const [errorMessage, setErrorMessage] = useState("");
     const router = useRouter();
@@ -36,6 +36,10 @@ export default function SelectSeat(movieName) {
 
         await axios.post("http://localhost:8000/api/v1/get-seats-by-movieshow", {"showtimeID": router.query.showtimeID}).then((response) => {
             setSeats(response["data"]["seats"]);
+        });
+        await axios.post("http://localhost:8000/api/v1/get-reserved-seats-by-movieshow", { "showtimeID": router.query.showtimeID }).then((response) => {
+            setReservedSeats(response["data"]["reservedSeats"]);
+
         });
     }, []);
 

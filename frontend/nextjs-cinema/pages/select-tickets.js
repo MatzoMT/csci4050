@@ -83,8 +83,7 @@ export default function SelectSeat(movieName) {
             <h1 className="book-movie-title">{movie["title"]}</h1>
             <h3>{showTime["show_date"]}</h3>
             <h3>{showTime["show_time"]}</h3>
-            <h2>Tickets Available: 39</h2>
-            {/*<h2>Tickets Available: {numSeats - numReservedSeats}</h2>*/}
+            <h2>Tickets Available: {numSeats - numReservedSeats}</h2>
             <h2 className="book-movie-available-times">Select Tickets</h2>
             <div class="age-select">
                 <h2>Child ($4)</h2>

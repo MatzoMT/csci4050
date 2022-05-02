@@ -745,7 +745,8 @@ def route_schedule_movie(request):
                     'error': "There is already a movie scheduled for this date and time."
                 }
                 return JsonResponse(response)
-            show = MovieShow(movieID = movie, roomID = room, show_date = request.data['date'], show_time = request.data['time']) 
+            seat_number = room.number_seats
+            show = MovieShow(movieID = movie, roomID = room, show_date = request.data['date'], show_time = request.data['time'], available_seats=seat_number) 
             show.save()
             success = "true"
             response = {
@@ -1108,8 +1109,11 @@ def route_get_reserved_seats_by_movieshow(request):
     data = JSONParser().parse(request)
     reserved_seats = ReservedSeat.objects.filter(showTimeID=data["showtimeID"])
     seat_list = []
-    for seat in reserved_seats:
+    for reserved_seat in reserved_seats:
+        seat = Seat.objects.get(id=reserved_seat.seatID_id)
+        print("Try")
         seat_list.append(seat.number)
+        print("catch")
     context = {
         'isSuccessful': 'true',
         'reservedSeats': seat_list
@@ -1119,3 +1123,7 @@ def route_get_reserved_seats_by_movieshow(request):
 @api_view(['POST'])
 def route_set_available_tickets(request):
     print("dasf")
+
+@api_view(['POST'])
+def route_set_reserved_seats(request):
+    print("hello")
