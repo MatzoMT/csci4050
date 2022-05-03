@@ -32,8 +32,8 @@ export default function SelectTime() {
             <h1>Success!</h1>
             <h2>You have booked tickets for the following movie:</h2>
             <div id="confirmation-row">
-                <div id="book-movie-poster" class="left">
-                    <Image src={isleOfDogs} />
+                <div id="confirmation-poster" class="left">
+                    {movie["imageSource"] !== undefined && <Image src={movie["imageSource"]} />}
                 </div>
 
                 <div id="movie-confirmation-info" class="right">
