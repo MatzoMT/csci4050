@@ -35,6 +35,25 @@ export default function SelectTime() {
         });
     }, []);
 
+
+    const handleSubmit = () => {
+        // Need to check if router.query.seats is object or string before continuing
+        axios.post("http://localhost:8000/api/v1/create-booking", {"showtimeID": router.query.showtimeID, "email": localStorage.getItem("email"), "seats": router.query.seats, "children": router.query.children, "adults": router.query.adults, "seniors": router.query.seniors});
+        router.push({
+            pathname: '/ticket-confirmation',
+            query: {
+                "movieID": router.query.movieID,
+                "showtimeID": router.query.showtimeID,
+                "children": router.query.children,
+                "adults": router.query.adults,
+                "seniors": router.query.seniors,
+                "seats": router.query.seats
+            },
+        })
+
+    }
+
+
     // let handleSubmit = async (e) => {
     //     e.preventDefault();
     //     const formdate = dateSelected.toLocaleDateString('en-US', {
@@ -56,6 +75,7 @@ export default function SelectTime() {
     //     }
     
     //    };
+
 
     return <div>
         <NavBar />
@@ -98,14 +118,14 @@ export default function SelectTime() {
                     <p>{showTime["show_date"]}</p>
                     <p>{showTime["show_time"]}</p>
                     <h3 class="info-tag">SEATS</h3>
-                    {router.query.seats.map(seat => <p>{seat}</p>)}
+                    {typeof router.query.seats === Object ? router.query.seats.map(seat => <p>{seat}</p>) : <p>{router.query.seats}</p>}
                     <h3 class="info-tag">TICKET TYPES</h3>
                     {parseInt(router.query.children) !== 0 && <p>{router.query.children}x Children</p>}
                     {parseInt(router.query.adults) !== 0 && <p>{router.query.adults}x Adults</p>}
                     {parseInt(router.query.seniors) !== 0 && <p>{router.query.seniors}x Seniors</p>}
 
                     <h2>Total: ${total.toFixed(2)}</h2>
-                    <button id="return-home-button" type="button"><a href="ticket-confirmation" id="return-home-text">Checkout</a></button>
+                    <button id="return-home-button" type="button" onClick={() => handleSubmit()}><a id="return-home-text">Checkout</a></button>
 
                 </div>
             </div>

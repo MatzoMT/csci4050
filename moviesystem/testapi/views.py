@@ -32,6 +32,10 @@ from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.template import Context
+from django.utils.dateparse import parse_date
+from datetime import date
+
+
 
 
 @api_view(['GET', 'POST', 'DELETE'])
@@ -745,7 +749,8 @@ def route_schedule_movie(request):
                     'error': "There is already a movie scheduled for this date and time."
                 }
                 return JsonResponse(response)
-            show = MovieShow(movieID = movie, roomID = room, show_date = request.data['date'], show_time = request.data['time']) 
+            seat_number = room.number_seats
+            show = MovieShow(movieID = movie, roomID = room, show_date = request.data['date'], show_time = request.data['time'], available_seats=seat_number) 
             show.save()
             success = "true"
             response = {
@@ -831,18 +836,25 @@ def route_get_currently_showing_movies(request):
     for movie in movies:
         try:
             movie_show = MovieShow.objects.filter(movieID_id=movie.id)
-            print("MOVIE SHOW")
-            if len(movie_show) > 0:
-                movie_dict = {}
-                movie_dict["id"] = movie.id
-                movie_dict["title"] = movie.title
-                movie_dict["imageSource"] = movie.image_source
-                movie_dict["rating"] = movie.rating
-                movie_dict["videoLink"] = movie.video_link
-                movie_dict["description"] = movie.description
-                movie_dict["director"] = movie.director
 
-                movie_list.append(movie_dict)
+            if len(movie_show) > 0:
+                for showing in movie_show:
+                    if showing.available_seats <= 0:
+                        continue
+                    showing_string = showing.show_date.split('/')
+                    showing_date = parse_date("{:02d}".format(int(showing_string[2]))+'-'+"{:02d}".format(int(showing_string[0]))+'-'+"{:02d}".format(int(showing_string[1])))
+                    print(date.today() <= showing_date)
+                    if date.today() <= showing_date:
+                        movie_dict = {}
+                        movie_dict["id"] = movie.id
+                        movie_dict["title"] = movie.title
+                        movie_dict["imageSource"] = movie.image_source
+                        movie_dict["rating"] = movie.rating
+                        movie_dict["videoLink"] = movie.video_link
+                        movie_dict["description"] = movie.description
+                        movie_dict["director"] = movie.director
+
+                        movie_list.append(movie_dict)
         except Exception as e:
             print(e)
             print("adfa")
@@ -864,6 +876,7 @@ def route_get_coming_soon_movies(request):
         try:
             movie_show = MovieShow.objects.filter(movieID_id=movie.id)
             print("MOVIE SHOW")
+
             if len(movie_show) == 0:
                 movie_dict = {}
                 movie_dict["id"] = movie.id
@@ -875,6 +888,24 @@ def route_get_coming_soon_movies(request):
                 movie_dict["director"] = movie.director
 
                 movie_list.append(movie_dict)
+            else:
+                valid_showing = False
+                for showing in movie_show:
+                    showing_string = showing.show_date.split('/')
+                    showing_date = parse_date("{:02d}".format(int(showing_string[2]))+'-'+"{:02d}".format(int(showing_string[0]))+'-'+"{:02d}".format(int(showing_string[1])))
+                    if date.today() <= showing_date and showing.available_seats > 0:
+                        valid_showing = True
+                if valid_showing == False:
+                    movie_dict = {}
+                    movie_dict["id"] = movie.id
+                    movie_dict["title"] = movie.title
+                    movie_dict["imageSource"] = movie.image_source
+                    movie_dict["rating"] = movie.rating
+                    movie_dict["videoLink"] = movie.video_link
+                    movie_dict["description"] = movie.description
+                    movie_dict["director"] = movie.director
+
+                    movie_list.append(movie_dict)
         except Exception as e:
             print(e)
             print("adfa")
@@ -1090,6 +1121,88 @@ def route_get_showtime_by_showtime_id(request):
     return JsonResponse(context)
 
 @api_view(['POST'])
+def route_get_seats_by_movieshow(request):
+    data = JSONParser().parse(request)
+    movieshow = MovieShow.objects.get(id=data["showtimeID"])
+    seats = Seat.objects.filter(roomID=movieshow.roomID_id)
+    seat_list = []
+    for seat in seats:
+        seat_list.append(seat.number)
+    context = {
+        'isSuccessful': 'true',
+        'seats': seat_list
+    }
+    return JsonResponse(context)
+
+@api_view(['POST'])
+def route_get_reserved_seats_by_movieshow(request):
+    data = JSONParser().parse(request)
+    reserved_seats = ReservedSeat.objects.filter(showTimeID=data["showtimeID"])
+    seat_list = []
+    for reserved_seat in reserved_seats:
+        seat = Seat.objects.get(id=reserved_seat.seatID_id)
+        seat_list.append(seat.number)
+    context = {
+        'isSuccessful': 'true',
+        'reservedSeats': seat_list
+    }
+    return JsonResponse(context)
+
+@api_view(['POST'])
+def route_set_available_tickets(request):
+    print("dasf")
+
+@api_view(['POST'])
+def route_set_available_seats(request):
+    print("hello")
+    return HttpResponse(200)
+
+@api_view(['POST'])
+def route_create_booking(request):
+    print("begin")
+    try:
+        data = JSONParser().parse(request)
+        user = User.objects.get(email=data["email"])
+        showing = MovieShow.objects.get(id=data["showtimeID"])
+        booking = Booking(reserved=1, paid=1, showTimeID_id=data["showtimeID"], userID_id=user.id)
+        booking.save()
+        room = Room.objects.get(id=showing.roomID_id)
+        print(data["seats"])
+        if isinstance(data["seats"], list) == True:
+
+            for seat in data["seats"]:
+                try:
+                    print("loop is iterating")
+                    print(seat)
+                    seat_number = Seat.objects.get(roomID_id=showing.roomID_id,number=seat)
+                    reserve = ReservedSeat(BookingID_id=booking.id, seatID_id=seat_number.id,showTimeID_id=data["showtimeID"])
+                    reserve.save()
+                    print("ends")
+                except Exception as e:
+                    print(e)
+        else:
+            print("this is iterating")
+            seat_number = Seat.objects.get(roomID_id=showing.roomID_id,number=data["seats"])
+            reserve = ReservedSeat(BookingID_id=booking.id, seatID_id=seat_number.id,showTimeID_id=data["showtimeID"])
+            reserve.save()
+        try:
+            htmly = loader.get_template('users/TicketConfirmation.html')
+            movie = Movie.objects.get(id=showing.movieID_id)
+            d = { 'username': data["email"], 'movie': movie.title, 'seats': data["seats"], 'children': data["children"], 'adults': data["adults"], 'seniors': data["seniors"], 'date': showing.show_date, 'time': showing.show_time}
+            subject, from_email, to = 'Booking Confirmation', data["email"], data["email"]
+            html_content = htmly.render(d)
+            msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
+            print("EMAIL SUCCESS")
+        except Exception as e:
+            print(e)
+        print("SUCCESS")
+        return HttpResponse(200)
+    except:
+        return HttpResponse(400)
+    
+
 def route_checkout_payment_info(request):
     data = JSONParser().parse(request)
     print("data: ", data)
@@ -1117,3 +1230,4 @@ def route_checkout_payment_info(request):
 #         promo = Promotion.objects.filter(pk=data["promo"])
 #         booking = Booking(userID=user, ShowTimeID = movieshow, PaymentCardID = card, promoID = promo, reserved=True, paid=False)
 #         booking.save()
+

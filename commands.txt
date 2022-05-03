@@ -2,11 +2,14 @@ curl -w POST http://127.0.0.1:8000/api/v1/login
 
 INSERT INTO editprofile_movie (title, image_source, rating, video_link, description, director) VALUES ('Gran Torino', 'grantorino.jpg', 'R', 'https://www.youtube.com/embed/RMhbr2XQblk?&autoplay=1', "Disgruntled Korean War veteran Walt Kowalski sets out to reform his neighbor, Thao Lor, a Hmong teenager who tried to steal Kowalski's prized possession: a 1972 Gran Torino.", 'Clint Eastwood');
 INSERT INTO editprofile_movie (title, image_source, rating, video_link, description, director) VALUES ('Isle of Dogs', 'isleofdogs.jpg', 'PG-13', 'https://www.youtube.com/embed/dt__kig8PVU?&autoplay=1', "Set in Japan, Isle of Dogs follows a boy's odyssey in search of his lost dog.", 'Wes Anderson');
+INSERT INTO editprofile_movie (title, image_source, rating, video_link, description, director) VALUES ('Kill Bill Vol. 1', 'killBill.png', 'R', 'https://www.youtube.com/embed/7kSuas6mRpk?&autoplay=1', "After awakening from a four-year coma, a former assassin wreaks vengeance on the team of assassins who betrayed her.", 'Quentin Tarantino');
+
 
 
 INSERT INTO editprofile_movieshow (show_date, show_time, movieID_id, roomID_id) VALUES ('04/20/2022', '12:30', '2', '1');
 
-INSERT INTO editprofile_room (room_name, number_seats) VALUES ('ROOM 1', 250);
+
+INSERT INTO editprofile_room (room_name, number_seats) VALUES ('ROOM 1', 40);
 
 INSERT INTO editprofile_movieshow (show_date, show_time, movieID_id, roomID_id) VALUES ('04/20/2022', '15:30', '2', '1');
 INSERT INTO editprofile_movieshow (show_date, show_time, movieID_id, roomID_id) VALUES ('04/22/2022', '15:30', '2', '1');
@@ -16,6 +19,53 @@ INSERT INTO editprofile_genre (genre, movieID_id) VALUES (6, 3);
 INSERT INTO editprofile_genre (genre, movieID_id) VALUES (5, 3);
 INSERT INTO editprofile_genre (genre, movieID_id) VALUES (9, 3);
 INSERT INTO editprofile_genre (genre, movieID_id) VALUES (1, 3);
+
+INSERT INTO editprofile_reservedseat (BookingID_id, seatID_id, showTimeID_id) VALUES (2, 89, 18);
+INSERT INTO editprofile_booking (reserved, paid, showTimeID_id, userID_id) VALUES
+(1, 1, 18, 20);
+
+INSERT INTO editprofile_seat (number, roomID_id) VALUES 
+('A1', 4),
+('A2', 4),
+('A3', 4),
+('A4', 4),
+('A5', 4),
+('A6', 4),
+('A7', 4),
+('A8', 4),
+('B1', 4),
+('B2', 4),
+('B3', 4),
+('B4', 4),
+('B5', 4),
+('B6', 4),
+('B7', 4),
+('B8', 4),
+('C1', 4),
+('C2', 4),
+('C3', 4),
+('C4', 4),
+('C5', 4),
+('C6', 4),
+('C7', 4),
+('C8', 4),
+('D1', 4),
+('D2', 4),
+('D3', 4),
+('D4', 4),
+('D5', 4),
+('D6', 4),
+('D7', 4),
+('D8', 4),
+('E1', 4),
+('E2', 4),
+('E3', 4),
+('E4', 4),
+('E5', 4),
+('E6', 4),
+('E7', 4),
+('E8', 4)
+;
 
 
 
