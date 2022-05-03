@@ -29,7 +29,7 @@ export default function SelectTime() {
     const handleSubmit = () => {
         // Need to check if router.query.seats is object or string before continuing
         axios.post("http://localhost:8000/api/v1/create-booking", {"showtimeID": router.query.showtimeID, "email": localStorage.getItem("email"), "seats": router.query.seats});
-        /*router.push({
+        router.push({
             pathname: '/ticket-confirmation',
             query: {
                 "movieID": router.query.movieID,
@@ -39,7 +39,7 @@ export default function SelectTime() {
                 "seniors": router.query.seniors,
                 "seats": router.query.seats
             },
-        })*/
+        })
 
     }
 
@@ -96,7 +96,6 @@ export default function SelectTime() {
                     <p>{showTime["show_date"]}</p>
                     <p>{showTime["show_time"]}</p>
                     <h3 class="info-tag">SEATS</h3>
-                    {alert(router.query.seats)}
                     {typeof router.query.seats === Object ? router.query.seats.map(seat => <p>{seat}</p>) : <p>{router.query.seats}</p>}
                     <h3 class="info-tag">TICKET TYPES</h3>
                     {parseInt(router.query.children) !== 0 && <p>{router.query.children}x Children</p>}

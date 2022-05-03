@@ -1142,12 +1142,15 @@ def route_create_booking(request):
 
         if isinstance(data["seats"], list):
             for seat in data["seats"]:
-                print("loop is iterating")
-                print(seat)
-                seat_number = Seat.objects.get(roomID_id=showing.roomID_id,number=seat)
-                reserve = ReservedSeat(BookingID_id=booking.id, seatID_id=seat_number.id,showTimeID_id=data["showtimeID"])
-                reserve.save()
-                print("ends")
+                try:
+                    print("loop is iterating")
+                    print(seat)
+                    seat_number = Seat.objects.get(roomID_id=showing.roomID_id,number=seat)
+                    reserve = ReservedSeat(BookingID_id=booking.id, seatID_id=seat_number.id,showTimeID_id=data["showtimeID"])
+                    reserve.save()
+                    print("ends")
+                except Exception as e:
+                    print(e)
 
                 #BookingID_id, seatID_id, showTimeID_id
         else:
@@ -1155,6 +1158,7 @@ def route_create_booking(request):
             seat_number = Seat.objects.get(roomID_id=showing.roomID_id,number=seat)
             reserve = ReservedSeat(BookingID_id=booking.id, seatID_id=seat_number.id,showTimeID_id=data["showtimeID"])
             reserve.save()
+
         return HttpResponse(200)
     except:
         return HttpResponse(400)
