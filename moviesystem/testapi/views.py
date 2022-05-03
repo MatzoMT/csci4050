@@ -1111,9 +1111,7 @@ def route_get_reserved_seats_by_movieshow(request):
     seat_list = []
     for reserved_seat in reserved_seats:
         seat = Seat.objects.get(id=reserved_seat.seatID_id)
-        print("Try")
         seat_list.append(seat.number)
-        print("catch")
     context = {
         'isSuccessful': 'true',
         'reservedSeats': seat_list
@@ -1139,8 +1137,8 @@ def route_create_booking(request):
         booking.save()
         room = Room.objects.get(id=showing.roomID_id)
         print(data["seats"])
+        if isinstance(data["seats"], list) == True:
 
-        if isinstance(data["seats"], list):
             for seat in data["seats"]:
                 try:
                     print("loop is iterating")
@@ -1155,7 +1153,7 @@ def route_create_booking(request):
                 #BookingID_id, seatID_id, showTimeID_id
         else:
             print("this is iterating")
-            seat_number = Seat.objects.get(roomID_id=showing.roomID_id,number=seat)
+            seat_number = Seat.objects.get(roomID_id=showing.roomID_id,number=data["seats"])
             reserve = ReservedSeat(BookingID_id=booking.id, seatID_id=seat_number.id,showTimeID_id=data["showtimeID"])
             reserve.save()
 
