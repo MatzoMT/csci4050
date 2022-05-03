@@ -32,6 +32,10 @@ from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.template import Context
+from django.utils.dateparse import parse_date
+from datetime import date
+
+
 
 
 @api_view(['GET', 'POST', 'DELETE'])
@@ -832,17 +836,23 @@ def route_get_currently_showing_movies(request):
     for movie in movies:
         try:
             movie_show = MovieShow.objects.filter(movieID_id=movie.id)
-            if len(movie_show) > 0:
-                movie_dict = {}
-                movie_dict["id"] = movie.id
-                movie_dict["title"] = movie.title
-                movie_dict["imageSource"] = movie.image_source
-                movie_dict["rating"] = movie.rating
-                movie_dict["videoLink"] = movie.video_link
-                movie_dict["description"] = movie.description
-                movie_dict["director"] = movie.director
 
-                movie_list.append(movie_dict)
+            if len(movie_show) > 0:
+                for showing in movie_show:
+                    showing_string = showing.show_date.split('/')
+                    showing_date = parse_date("{:02d}".format(int(showing_string[2]))+'-'+"{:02d}".format(int(showing_string[0]))+'-'+"{:02d}".format(int(showing_string[1])))
+                    print(date.today() <= showing_date)
+                    if date.today() <= showing_date:
+                        movie_dict = {}
+                        movie_dict["id"] = movie.id
+                        movie_dict["title"] = movie.title
+                        movie_dict["imageSource"] = movie.image_source
+                        movie_dict["rating"] = movie.rating
+                        movie_dict["videoLink"] = movie.video_link
+                        movie_dict["description"] = movie.description
+                        movie_dict["director"] = movie.director
+
+                        movie_list.append(movie_dict)
         except Exception as e:
             print(e)
             print("adfa")
@@ -864,6 +874,7 @@ def route_get_coming_soon_movies(request):
         try:
             movie_show = MovieShow.objects.filter(movieID_id=movie.id)
             print("MOVIE SHOW")
+
             if len(movie_show) == 0:
                 movie_dict = {}
                 movie_dict["id"] = movie.id
@@ -875,6 +886,24 @@ def route_get_coming_soon_movies(request):
                 movie_dict["director"] = movie.director
 
                 movie_list.append(movie_dict)
+            else:
+                valid_showing = False
+                for showing in movie_show:
+                    showing_string = showing.show_date.split('/')
+                    showing_date = parse_date("{:02d}".format(int(showing_string[2]))+'-'+"{:02d}".format(int(showing_string[0]))+'-'+"{:02d}".format(int(showing_string[1])))
+                    if date.today() <= showing_date:
+                        valid_showing = True
+                if valid_showing == False:
+                    movie_dict = {}
+                    movie_dict["id"] = movie.id
+                    movie_dict["title"] = movie.title
+                    movie_dict["imageSource"] = movie.image_source
+                    movie_dict["rating"] = movie.rating
+                    movie_dict["videoLink"] = movie.video_link
+                    movie_dict["description"] = movie.description
+                    movie_dict["director"] = movie.director
+
+                    movie_list.append(movie_dict)
         except Exception as e:
             print(e)
             print("adfa")
