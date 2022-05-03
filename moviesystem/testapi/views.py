@@ -832,7 +832,6 @@ def route_get_currently_showing_movies(request):
     for movie in movies:
         try:
             movie_show = MovieShow.objects.filter(movieID_id=movie.id)
-            print("MOVIE SHOW")
             if len(movie_show) > 0:
                 movie_dict = {}
                 movie_dict["id"] = movie.id
@@ -1151,12 +1150,24 @@ def route_create_booking(request):
                     print(e)
 
                 #BookingID_id, seatID_id, showTimeID_id
+
         else:
             print("this is iterating")
             seat_number = Seat.objects.get(roomID_id=showing.roomID_id,number=data["seats"])
             reserve = ReservedSeat(BookingID_id=booking.id, seatID_id=seat_number.id,showTimeID_id=data["showtimeID"])
             reserve.save()
-
+        try:
+            htmly = loader.get_template('users/TicketConfirmation.html')
+            movie = Movie.objects.get(id=showing.movieID_id)
+            d = { 'username': data["email"], 'movie': movie.title, 'seats': data["seats"], 'children': data["children"], 'adults': data["adults"], 'seniors': data["seniors"], 'date': showing.show_date, 'time': showing.show_time}
+            subject, from_email, to = 'Booking Confirmation', data["email"], data["email"]
+            html_content = htmly.render(d)
+            msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
+            print("EMAIL SUCCESS")
+        except Exception as e:
+            print(e)
         return HttpResponse(200)
     except:
         return HttpResponse(400)
