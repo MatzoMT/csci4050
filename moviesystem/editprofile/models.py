@@ -145,7 +145,24 @@ class Seat(models.Model):
 		]
 	def __str__(self):
 		return self.number + " in " + self.roomID
-	
+
+class Booking(models.Model):
+	userID = models.ForeignKey(
+		User,
+		on_delete=models.CASCADE
+	)
+	showTimeID = models.ForeignKey(
+		MovieShow,
+		on_delete=models.CASCADE
+	)
+	cardID = models.ForeignKey(
+		PaymentCard,
+		on_delete=models.PROTECT,
+		null=True
+	)
+	reserved = models.BooleanField()
+	paid = models.BooleanField()
+
 class Ticket(models.Model):
 	TYPE_CHOICES = [
 		('A', 'Adult'),
@@ -161,27 +178,12 @@ class Ticket(models.Model):
 		MovieShow,
 		on_delete=models.CASCADE
 	)
+	bookingID = models.ForeignKey(
+		Booking,
+		on_delete=models.CASCADE,
+		null=True
+	)
 	ticket_price = models.CharField(max_length=10)
-
-class Booking(models.Model):
-	userID = models.ForeignKey(
-		User,
-		on_delete=models.CASCADE
-	)
-	showTimeID = models.ForeignKey(
-		MovieShow,
-		on_delete=models.CASCADE
-	)
-	cardID = models.ForeignKey(
-		PaymentCard,
-		on_delete=models.PROTECT
-	)
-	promoID = models.ForeignKey(
-		Promotion,
-		on_delete=models.PROTECT
-	)
-	reserved = models.BooleanField()
-	paid = models.BooleanField()
 
 class ReservedSeat(models.Model):
 	seatID = models.ForeignKey(

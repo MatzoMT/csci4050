@@ -1202,3 +1202,32 @@ def route_create_booking(request):
     except:
         return HttpResponse(400)
     
+
+def route_checkout_payment_info(request):
+    data = JSONParser().parse(request)
+    print("data: ", data)
+    cardlist = []
+    try:        
+        u = User.objects.get(email=data["user"])
+        print("user: ",u)
+        cards=PaymentCard.objects.filter(user=u)
+        for i in cards:
+                cardlist.append(i.card_number)
+        context = {
+            'cards': cardlist,
+        }
+    except Exception as e:
+        print("error: ",e)
+        return HttpResponse(400)
+    return JsonResponse(context)
+# @api_view(['POST'])
+# def route_pre_checkout(request):
+#     if(request.method == "POST"):
+#         data = JSONParser().parse(request)
+#         user = User.objects.filter(pk=data["user"])
+#         movieshow = Movie.objects.filter(pk=data["movieshow"])
+#         card = PaymentCard.objects.filter(pk=data["card"])
+#         promo = Promotion.objects.filter(pk=data["promo"])
+#         booking = Booking(userID=user, ShowTimeID = movieshow, PaymentCardID = card, promoID = promo, reserved=True, paid=False)
+#         booking.save()
+
