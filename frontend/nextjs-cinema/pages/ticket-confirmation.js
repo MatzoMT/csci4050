@@ -44,7 +44,7 @@ export default function SelectTime() {
                     <p>{showTime["show_date"]}</p>
                     <p>{showTime["show_time"]}</p>
                     <h3 class="info-tag">SEATS</h3>
-                    {router.query.seats.map(seat => <p>{seat}</p>)}
+                    {typeof router.query.seats === Object ? router.query.seats.map(seat => <p>{seat}</p>) : <p>{router.query.seats}</p>}
                     <h3 class="info-tag">TICKET TYPES</h3>
                     {parseInt(router.query.children) !== 0 && <p>{router.query.children}x Children</p>}
                     {parseInt(router.query.adults) !== 0 && <p>{router.query.adults}x Adults</p>}

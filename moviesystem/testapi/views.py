@@ -1127,3 +1127,35 @@ def route_set_available_tickets(request):
 @api_view(['POST'])
 def route_set_reserved_seats(request):
     print("hello")
+
+@api_view(['POST'])
+def route_create_booking(request):
+
+    try:
+        data = JSONParser().parse(request)
+        user = User.objects.get(email=data["email"])
+        showing = MovieShow.objects.get()
+        booking = Booking(reserved=1, paid=1, showTimeID_id=data["showtimeID"], userID_id=user.id)
+        booking.save()
+        room = Room.objects.get(id=showing.roomID_id)
+        print(data["seats"])
+
+        if isinstance(data["seats"], list):
+            for seat in data["seats"]:
+                print("loop is iterating")
+                print(seat)
+                seat_number = Seat.objects.get(roomID_id=showing.roomID_id,number=seat)
+                reserve = ReservedSeat(BookingID_id=booking.id, seatID_id=seat_number.id,showTimeID_id=data["showtimeID"])
+                reserve.save()
+                print("ends")
+
+                #BookingID_id, seatID_id, showTimeID_id
+        else:
+            print("this is iterating")
+            seat_number = Seat.objects.get(roomID_id=showing.roomID_id,number=seat)
+            reserve = ReservedSeat(BookingID_id=booking.id, seatID_id=seat_number.id,showTimeID_id=data["showtimeID"])
+            reserve.save()
+        return HttpResponse(200)
+    except:
+        return HttpResponse(400)
+    
