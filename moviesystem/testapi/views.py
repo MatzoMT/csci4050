@@ -839,6 +839,8 @@ def route_get_currently_showing_movies(request):
 
             if len(movie_show) > 0:
                 for showing in movie_show:
+                    if showing.available_seats <= 0:
+                        continue
                     showing_string = showing.show_date.split('/')
                     showing_date = parse_date("{:02d}".format(int(showing_string[2]))+'-'+"{:02d}".format(int(showing_string[0]))+'-'+"{:02d}".format(int(showing_string[1])))
                     print(date.today() <= showing_date)
@@ -891,7 +893,7 @@ def route_get_coming_soon_movies(request):
                 for showing in movie_show:
                     showing_string = showing.show_date.split('/')
                     showing_date = parse_date("{:02d}".format(int(showing_string[2]))+'-'+"{:02d}".format(int(showing_string[0]))+'-'+"{:02d}".format(int(showing_string[1])))
-                    if date.today() <= showing_date:
+                    if date.today() <= showing_date and showing.available_seats > 0:
                         valid_showing = True
                 if valid_showing == False:
                     movie_dict = {}
@@ -1151,16 +1153,17 @@ def route_set_available_tickets(request):
     print("dasf")
 
 @api_view(['POST'])
-def route_set_reserved_seats(request):
+def route_set_available_seats(request):
     print("hello")
+    return HttpResponse(200)
 
 @api_view(['POST'])
 def route_create_booking(request):
-
+    print("begin")
     try:
         data = JSONParser().parse(request)
         user = User.objects.get(email=data["email"])
-        showing = MovieShow.objects.get()
+        showing = MovieShow.objects.get(id=data["showtimeID"])
         booking = Booking(reserved=1, paid=1, showTimeID_id=data["showtimeID"], userID_id=user.id)
         booking.save()
         room = Room.objects.get(id=showing.roomID_id)
@@ -1177,9 +1180,6 @@ def route_create_booking(request):
                     print("ends")
                 except Exception as e:
                     print(e)
-
-                #BookingID_id, seatID_id, showTimeID_id
-
         else:
             print("this is iterating")
             seat_number = Seat.objects.get(roomID_id=showing.roomID_id,number=data["seats"])
@@ -1197,6 +1197,7 @@ def route_create_booking(request):
             print("EMAIL SUCCESS")
         except Exception as e:
             print(e)
+        print("SUCCESS")
         return HttpResponse(200)
     except:
         return HttpResponse(400)

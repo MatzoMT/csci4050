@@ -42,6 +42,7 @@ export default function SelectSeat(movieName) {
             setNumReservedSeats(response["data"]["reservedSeats"].length);
 
         });
+
     }, []);
 
     // HANDLE SUBMIT should perform the following:
@@ -53,6 +54,7 @@ export default function SelectSeat(movieName) {
         } else {
             // RE-UPDATE TICKETS AVAILABLE HERE IN CASE SOMEONE ELSE BOOKED TICKETS DURING SESSION
             // make API request => setTicketsAvailable();
+
             if (childTickets + adultTickets + seniorTickets > numSeats - numReservedSeats) {
                 setErrorMessage("You cannot book above the number of tickets available.");
 
@@ -61,7 +63,9 @@ export default function SelectSeat(movieName) {
                 // Decrease tickets available for this showing as a preliminary action
                 // Tickets should be re-incremented after 10 minutes 
             } else {
+                axios.post("http://localhost:8000/api/v1/set-available-seats", { "showtimeID": router.query.showtimeID }).then((response) => {
 
+                });
                 // After above steps are complete, redirect like below
                 router.push({
                     pathname: '/select-seat',
