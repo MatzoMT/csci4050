@@ -1202,7 +1202,7 @@ def route_create_booking(request):
     except:
         return HttpResponse(400)
     
-
+@api_view(['POST'])
 def route_checkout_payment_info(request):
     data = JSONParser().parse(request)
     print("data: ", data)
