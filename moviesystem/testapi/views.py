@@ -1,3 +1,4 @@
+from tkinter.messagebox import showwarning
 from django.shortcuts import render
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser 
@@ -839,7 +840,13 @@ def route_get_currently_showing_movies(request):
 
             if len(movie_show) > 0:
                 for showing in movie_show:
-                    if showing.available_seats <= 0:
+                    total_reserved_seats = len(ReservedSeat.objects.filter(showTimeID_id=showing.id))
+                    print("TOTAL SEATS")
+                    print(total_reserved_seats)
+                    print("OCCUPANCY")
+                    room = Room.objects.get(id=showing.roomID_id)
+                    print(room.number_seats)
+                    if room.number_seats-total_reserved_seats <= 0:
                         continue
                     showing_string = showing.show_date.split('/')
                     showing_date = parse_date("{:02d}".format(int(showing_string[2]))+'-'+"{:02d}".format(int(showing_string[0]))+'-'+"{:02d}".format(int(showing_string[1])))
@@ -893,7 +900,13 @@ def route_get_coming_soon_movies(request):
                 for showing in movie_show:
                     showing_string = showing.show_date.split('/')
                     showing_date = parse_date("{:02d}".format(int(showing_string[2]))+'-'+"{:02d}".format(int(showing_string[0]))+'-'+"{:02d}".format(int(showing_string[1])))
-                    if date.today() <= showing_date and showing.available_seats > 0:
+                    total_reserved_seats = len(ReservedSeat.objects.filter(showTimeID_id=showing.id))
+                    print("TOTAL SEATS")
+                    print(total_reserved_seats)
+                    print("OCCUPANCY")
+                    room = Room.objects.get(id=showing.roomID_id)
+                    print(room.number_seats)
+                    if date.today() <= showing_date and room.number_seats-total_reserved_seats > 0:
                         valid_showing = True
                 if valid_showing == False:
                     movie_dict = {}
@@ -1029,6 +1042,7 @@ def route_get_genres_by_id(request):
 @api_view(['POST'])
 def route_get_movie_by_id(request):
     data = JSONParser().parse(request)
+    print(data)
     movie = Movie.objects.get(id=data["id"])
     movie_dict = {}
     #         { "movieID": 1, "title": "Gran Torino", "imageSource": require("../images/grantorino.jpg"), "rating": "R", "videoLink": "https://www.youtube.com/embed/RMhbr2XQblk?&autoplay=1", "description": "Disgruntled Korean War veteran Walt Kowalski sets out to reform his neighbor, Thao Lor, a Hmong teenager who tried to steal Kowalski's prized possession: a 1972 Gran Torino.", "director": "Clint Eastwood" },
@@ -1070,6 +1084,7 @@ def route_get_cast_by_id(request):
         }
     return JsonResponse(context)
 
+# ONLY GETS PRESENT/FUTURE SHOWTIMES WITH OCCUPANCY
 @api_view(['POST'])
 def route_get_showtimes_by_id(request):
     data = JSONParser().parse(request)
@@ -1078,12 +1093,24 @@ def route_get_showtimes_by_id(request):
     #         { "movieID": 1, "title": "Gran Torino", "imageSource": require("../images/grantorino.jpg"), "rating": "R", "videoLink": "https://www.youtube.com/embed/RMhbr2XQblk?&autoplay=1", "description": "Disgruntled Korean War veteran Walt Kowalski sets out to reform his neighbor, Thao Lor, a Hmong teenager who tried to steal Kowalski's prized possession: a 1972 Gran Torino.", "director": "Clint Eastwood" },
     try:
         for showtime in showtimes:
-            showtime_dict = {}
-            showtime_dict["showtime_id"] = showtime.id
-            showtime_dict["roomID"] = showtime.roomID_id
-            showtime_dict["show_date"] = showtime.show_date
-            showtime_dict["show_time"] = showtime.show_time
-            showtime_list.append(showtime_dict)
+            total_reserved_seats = len(ReservedSeat.objects.filter(showTimeID_id=showtime.id))
+            print("TOTAL SEATS")
+            print(total_reserved_seats)
+            print("OCCUPANCY")
+            room = Room.objects.get(id=showtime.roomID_id)
+            print(room.number_seats)
+            if room.number_seats-total_reserved_seats <= 0:
+                continue
+            showing_string = showtime.show_date.split('/')
+            showing_date = parse_date("{:02d}".format(int(showing_string[2]))+'-'+"{:02d}".format(int(showing_string[0]))+'-'+"{:02d}".format(int(showing_string[1])))
+            print(date.today() <= showing_date)
+            if date.today() <= showing_date:
+                showtime_dict = {}
+                showtime_dict["showtime_id"] = showtime.id
+                showtime_dict["roomID"] = showtime.roomID_id
+                showtime_dict["show_date"] = showtime.show_date
+                showtime_dict["show_time"] = showtime.show_time
+                showtime_list.append(showtime_dict)
         context = {
             'isSuccessful': 'true',
             'showtimes': showtime_list
