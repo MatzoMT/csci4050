@@ -835,6 +835,7 @@ def route_get_currently_showing_movies(request):
     print(movie_shows)
 
     for movie in movies:
+        is_currently_showing = False
         try:
             movie_show = MovieShow.objects.filter(movieID_id=movie.id)
 
@@ -852,19 +853,23 @@ def route_get_currently_showing_movies(request):
                     showing_date = parse_date("{:02d}".format(int(showing_string[2]))+'-'+"{:02d}".format(int(showing_string[0]))+'-'+"{:02d}".format(int(showing_string[1])))
                     print(date.today() <= showing_date)
                     if date.today() <= showing_date:
-                        movie_dict = {}
-                        movie_dict["id"] = movie.id
-                        movie_dict["title"] = movie.title
-                        movie_dict["imageSource"] = movie.image_source
-                        movie_dict["rating"] = movie.rating
-                        movie_dict["videoLink"] = movie.video_link
-                        movie_dict["description"] = movie.description
-                        movie_dict["director"] = movie.director
+                        is_currently_showing = True
 
-                        movie_list.append(movie_dict)
         except Exception as e:
             print(e)
             print("adfa")
+        if is_currently_showing == True:
+            movie_dict = {}
+            movie_dict["id"] = movie.id
+            movie_dict["title"] = movie.title
+            movie_dict["imageSource"] = movie.image_source
+            movie_dict["rating"] = movie.rating
+            movie_dict["videoLink"] = movie.video_link
+            movie_dict["description"] = movie.description
+            movie_dict["director"] = movie.director
+
+            movie_list.append(movie_dict)
+
     context = {
         'isSuccessful': 'true',
         'list': movie_list
