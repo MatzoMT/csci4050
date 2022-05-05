@@ -3,7 +3,11 @@ import { useRouter } from 'next/router';
 import { useState, useEffect, useSearchParams } from 'react';
 import axios from 'axios';
 
-
+export async function getServerSideProps(context) {
+    return {
+      props: {}, // will be passed to the page component as props
+    };
+  }
 
 // This is a hardcoded example
 // In the future, pass movie metadata as props?
@@ -87,10 +91,14 @@ export default function Home(movieName) {
             <h1 className="movie-title">{movie["title"]}</h1>
             {showTimes.length > 0 ? <button className="book-button" type="button" onClick={() => bookMovie()}><a className="book-tickets-text">BOOK TICKETS</a></button> : <button className="coming-soon-button" type="button">COMING SOON</button>}
             <h2 className="movie-description">{movie["description"]}</h2>
-            <p className="movie-director">Director: {movie["director"]}</p>
-            <p className="movie-genre">Genre: {genres.map(genre => <p>{genre}</p>)}</p>
-            <p className="movie-rating">Rating: {movie["rating"]}</p>
-            <p className="movie-cast">Cast: {cast.map(actor => <p>{actor}</p>)}</p>
+            <h3>DIRECTOR</h3>
+            <p className="movie-director">{movie["director"]}</p>
+            <h3>GENRE</h3>
+            <p className="movie-genre">{genres.map(genre => <p>{genre}</p>)}</p>
+            <h3>RATING</h3>
+            <p className="movie-rating">{movie["rating"]}</p>
+            <h3>CAST</h3>
+            <p className="movie-cast">{cast.map(actor => <p>{actor}</p>)}</p>
         </div>
 
 
