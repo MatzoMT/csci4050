@@ -44,5 +44,6 @@ urlpatterns = [
     path('v1/get-users-and-ids', views.route_get_users_and_ids),
     path('v1/get-user-by-id', views.route_get_user_by_id),
     path('v1/update-user', views.route_update_user),
-    path('v1/update-movie', views.route_update_movie)
+    path('v1/update-movie', views.route_update_movie),
+    path('v1/get-promotion-discount', views.route_get_promotion_discount),
 ]

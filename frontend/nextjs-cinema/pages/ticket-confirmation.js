@@ -11,7 +11,8 @@ export default function SelectTime() {
     const [movie, setMovie] = useState({});
     const [showTime, setShowTime] = useState({});
     const router = useRouter();
-    let total = (parseInt(router.query.children) * 4.00) + (parseInt(router.query.adults) * 7.00) + (parseInt(router.query.seniors) * 4.00);
+    let total = parseFloat(router.query.total);
+    console.log("total:"+total)
 
     useEffect(async () => {
         await axios.post("http://localhost:8000/api/v1/get-movie-by-id", { "id": router.query.movieID }).then((response) => {
