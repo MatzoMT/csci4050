@@ -46,12 +46,12 @@ export default function SelectTime() {
 
     const applyPromotion = () => {
         axios.post("http://localhost:8000/api/v1/get-promotion-discount", {"promoCode":promotion}).then( (response) => {
-            if(response["data"]["success"]){
+            if(response["data"]["success"]=="true"){
                 setTotall(total*((100-response["data"]["discount"])/100))
                 setPromoMessage("Applied promotion to your purchase")
             }
             else
-                setPromoMessage("Invalid promotion code")
+                setPromoMessage(response["data"]["error"])
         })
     }
 
@@ -119,7 +119,7 @@ export default function SelectTime() {
                     <h2>Enter a promotion code</h2>
                     <input type="text" className='fields' onChange={(val) => setPromotion(val.target.value)}></input>
                     <button id="return-home-button" type="button" onClick={() => applyPromotion()}><a id="return-home-text">Apply Promtion</a></button>
-                    <h3 id="incorrect-credentials" style={{ color: 'green' }}>{promoMessage}</h3>
+                    <h3 id="incorrect-credentials" style={{ color: 'black' }}>{promoMessage}</h3>
                     <br></br>
                     <br></br>
                     <br></br>
