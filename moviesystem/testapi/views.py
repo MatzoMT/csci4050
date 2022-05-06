@@ -88,7 +88,7 @@ def route_get_movies(request):
     }
     return JsonResponse(context)
 
-
+"""
 @api_view(['POST'])
 def route_delete_movie(request):
 
@@ -97,6 +97,7 @@ def route_delete_movie(request):
         'requestSuccess': request_success
     }
     return JsonResponse(response)
+"""
 
 @api_view(['POST'])
 def route_add_movie(request):
@@ -1488,12 +1489,16 @@ def route_get_promotion_discount(request):
 def route_delete_movie(request):
     try:
         data = JSONParser().parse(request)
-        movie = Movie.objects.get(id=data["id"])
-        print('DELETE this MOVIE')
-        print(movie.title)
+
+        Genre.objects.filter(movieID_id=data["id"]).delete()
+        Cast.objects.filter(movieID_id=data["id"]).delete()
         MovieShow.objects.filter(movieID_id=data["id"]).delete()
         Genre.objects.filter(movieID_id=data["id"]).delete()
         Cast.objects.filter(movieID_id=data["id"]).delete()
+        MovieShow.objects.filter(movieID_id=data["id"]).delete()
+        movie = Movie.objects.get(id=data["id"])
+        print('DELETE this MOVIE')
+
         movie.delete()
         return HttpResponse(200)
     except Exception as e:

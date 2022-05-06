@@ -37,7 +37,8 @@ export default function AdminHome() {
 
   const removeMovie = (movieId) => {
     axios.post("http://localhost:8000/api/v1/delete-movie", { id: id}).then((response) => {
-      
+      router.push('/admin-moviemanager');
+
     })
   }
 
