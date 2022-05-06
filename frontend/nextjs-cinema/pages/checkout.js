@@ -118,8 +118,10 @@ export default function SelectTime() {
                     <br></br>
                     <h2>Enter a promotion code</h2>
                     <input type="text" className='fields' onChange={(val) => setPromotion(val.target.value)}></input>
-                    <button id="return-home-button" type="button" onClick={() => applyPromotion()}><a id="return-home-text">Apply Promtion</a></button>
-                    <h3 id="incorrect-credentials" style={{ color: 'black' }}>{promoMessage}</h3>
+
+                    <button id="return-home-button" type="button" onClick={() => applyPromotion()}><a id="return-home-text">Apply Promotion</a></button>
+                    <h3 id="incorrect-credentials" style={{ color: 'green' }}>{promoMessage}</h3>
+
                     <br></br>
                     <br></br>
                     <br></br>
