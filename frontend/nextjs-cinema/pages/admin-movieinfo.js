@@ -122,7 +122,7 @@ export default function AdminHome() {
           setTitle(movie.title)
           setRating(movie.rating)
           let movieGenres = [];
-          //console.log(response.data.data.genres)
+          console.log(movie.genres.length)
           for (let i = 0; i < movie.genres.length; i++) {
             movieGenres.push(movie.genres[i][1])
           }
