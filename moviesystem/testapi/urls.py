@@ -46,4 +46,5 @@ urlpatterns = [
     path('v1/update-user', views.route_update_user),
     path('v1/update-movie', views.route_update_movie),
     path('v1/get-promotion-discount', views.route_get_promotion_discount),
+    path('v1/delete-movie', views.route_delete_movie)
 ]
