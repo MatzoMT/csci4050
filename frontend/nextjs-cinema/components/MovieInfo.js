@@ -13,6 +13,8 @@ function MovieInfo(props) {
         })
       }
 
+
+
     return <tr onClick={() => editMovie(props.id)}>
         <td> {props.title} </td>
         {/*<td contentEditable='true'> {props.number}</td>*/}
@@ -23,6 +25,7 @@ function MovieInfo(props) {
         <td> {props.description}</td>
         <td> {props.videoLink}</td>
         <td> {props.cast}</td>
+
     </tr>;
 }
 
