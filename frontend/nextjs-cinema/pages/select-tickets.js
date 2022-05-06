@@ -40,7 +40,6 @@ export default function SelectSeat(movieName) {
         });
         await axios.post("http://localhost:8000/api/v1/get-reserved-seats-by-movieshow", { "showtimeID": router.query.showtimeID }).then((response) => {
             setNumReservedSeats(response["data"]["reservedSeats"].length);
-
         });
 
     }, []);

@@ -1,4 +1,4 @@
-from tkinter.messagebox import showwarning
+#from tkinter.messagebox import showwarning
 from django.shortcuts import render
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser 
@@ -1335,21 +1335,29 @@ def route_set_available_seats(request):
 @api_view(['POST'])
 def route_create_booking(request):
     print("begin")
+    context={}
     try:
         data = JSONParser().parse(request)
         user = User.objects.get(email=data["email"])
         showing = MovieShow.objects.get(id=data["showtimeID"])
-        booking = Booking(reserved=1, paid=1, showTimeID_id=data["showtimeID"], userID_id=user.id)
+        card = PaymentCard.objects.get(last_digits=data["card"])
+        booking = Booking(reserved=1, paid=1, showTimeID_id=data["showtimeID"], userID_id=user.id, cardID=card)
         booking.save()
         room = Room.objects.get(id=showing.roomID_id)
         print(data["seats"])
         if isinstance(data["seats"], list) == True:
-
             for seat in data["seats"]:
                 try:
                     print("loop is iterating")
                     print(seat)
                     seat_number = Seat.objects.get(roomID_id=showing.roomID_id,number=seat)
+                    prev = ReservedSeat.objects.filter(seatID_id=seat_number.id,showTimeID_id=data["showtimeID"])
+                    if(prev.count()>0):
+                        context = {
+                            'success': 'false',
+                            'error': "The seat you tried to select was already reserved"
+                        }
+                        return JsonResponse(context)
                     reserve = ReservedSeat(BookingID_id=booking.id, seatID_id=seat_number.id,showTimeID_id=data["showtimeID"])
                     reserve.save()
                     print("ends")
@@ -1358,8 +1366,17 @@ def route_create_booking(request):
         else:
             print("this is iterating")
             seat_number = Seat.objects.get(roomID_id=showing.roomID_id,number=data["seats"])
+            prev = ReservedSeat.objects.filter(seatID_id=seat_number.id,showTimeID_id=data["showtimeID"])
+            print("length prev: ",prev.count())
+            if(prev.count()>0):
+                context = {
+                    'success': 'false',
+                    'error': "The seat you chose is already reserved"
+                }
+                return JsonResponse(context)
             reserve = ReservedSeat(BookingID_id=booking.id, seatID_id=seat_number.id,showTimeID_id=data["showtimeID"])
             reserve.save()
+        
         try:
             htmly = loader.get_template('users/TicketConfirmation.html')
             movie = Movie.objects.get(id=showing.movieID_id)
@@ -1371,11 +1388,18 @@ def route_create_booking(request):
             msg.send()
             print("EMAIL SUCCESS")
         except Exception as e:
+            context = {
+                'success': 'false',
+                'error': "There was a problem. Try again"
+            }
             print(e)
+        context = {
+            'success': 'true',
+        }
         print("SUCCESS")
-        return HttpResponse(200)
+        return JsonResponse(context)
     except:
-        return HttpResponse(400)
+        return JsonResponse(context)
     
 @api_view(['POST'])
 def route_checkout_payment_info(request):
@@ -1387,11 +1411,16 @@ def route_checkout_payment_info(request):
         print("user: ",u)
         cards=PaymentCard.objects.filter(user=u)
         for i in cards:
-                cardlist.append(i.card_number)
+                cardlist.append(i.last_digits)
         context = {
             'cards': cardlist,
+            'success': 'true',
         }
     except Exception as e:
+        context = {
+            'success': 'false',
+            'error': "There was a problem. Try again"
+        }
         print("error: ",e)
         return HttpResponse(400)
     return JsonResponse(context)

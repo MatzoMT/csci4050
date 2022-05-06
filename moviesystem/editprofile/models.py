@@ -51,7 +51,7 @@ class PaymentCard(models.Model):
 	cvv = models.CharField( default= '000', max_length=3)
 	expiration_date = models.DateField()
 	def __str__(self):
-		return self.card_number
+		return self.last_digits
 
 """
 { "movieID": 1, "title": "Gran Torino", "imageSource": require("../images/grantorino.jpg"), "rating": "R", "videoLink": "https://www.youtube.com/embed/RMhbr2XQblk?&autoplay=1", "description": "Disgruntled Korean War veteran Walt Kowalski sets out to reform his neighbor, Thao Lor, a Hmong teenager who tried to steal Kowalski's prized possession: a 1972 Gran Torino.", "director": "Clint Eastwood", "genre": ""},
@@ -204,3 +204,7 @@ class ReservedSeat(models.Model):
 		Booking,
 		on_delete=models.CASCADE
 	)
+	class Meta: 
+		constraints = [
+			models.UniqueConstraint(fields=['seatID', 'showTimeID'], name='unique_reserved_seat')
+		]
