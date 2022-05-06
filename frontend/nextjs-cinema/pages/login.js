@@ -28,7 +28,7 @@ export default function Home() {
     e.preventDefault();
     try {
       axios.post("http://localhost:8000/api/v1/login", { email: email, password: password }).then((response) => {
-        if (response.data.loginSuccess == "true") {
+        if (response.data.loginSuccess == "true" && response.data.status != "Suspended") {
           window.sessionStorage.setItem("email", email);
           if (response.data.isAdmin == "true") {
             window.sessionStorage.setItem("isAdmin", true);
@@ -47,6 +47,9 @@ export default function Home() {
           }
         } else if (response.data.isInactive == "true") {
           setIncorrectMessage("Your account is inactive. Please activate it using the link sent to your email.");
+          
+        } else if (response.data.status == "Suspended") {
+          setIncorrectMessage("Your account has been suspended.");
         } else {
           setIncorrectMessage("Username or password is incorrect.");
         }

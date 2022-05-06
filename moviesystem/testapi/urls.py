@@ -32,5 +32,9 @@ urlpatterns = [
     path('v1/create-promotion', views.route_create_promotion),
     path('v1/get-promotions', views.route_get_promotions),
     path('v1/get-showtime-by-showtime-id', views.route_get_showtime_by_showtime_id),
-    path('v1/prepare-checkout', views.route_checkout_payment_info)
+    path('v1/prepare-checkout', views.route_checkout_payment_info),
+    path('v1/get-users-and-ids', views.route_get_users_and_ids),
+    path('v1/get-user-by-id', views.route_get_user_by_id),
+    path('v1/update-user', views.route_update_user),
+    path('v1/update-movie', views.route_update_movie)
 ]

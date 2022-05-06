@@ -83,6 +83,16 @@ def route_get_movies(request):
     }
     return JsonResponse(context)
 
+
+@api_view(['POST'])
+def route_delete_movie(request):
+
+
+    response = {
+        'requestSuccess': request_success
+    }
+    return JsonResponse(response)
+
 @api_view(['POST'])
 def route_add_movie(request):
     print("adding a movie")
@@ -97,8 +107,11 @@ def route_add_movie(request):
     director = data['director']
     genres = data['genres']
     cast = data['cast']
+    child_price = data['childPrice']
+    adult_price = data['adultPrice']
+    senior_price = data['seniorPrice']
 
-    movie = Movie(title=title, image_source=image_source, rating=rating, video_link=video_link, description=description, director=director)
+    movie = Movie(title=title, image_source=image_source, rating=rating, video_link=video_link, description=description, director=director, child_price=child_price, adult_price=adult_price, senior_price=senior_price)
     movie.save()   
 
     for genre in genres:
@@ -155,7 +168,52 @@ def route_get_user_by_email(request):
     users = User.objects.all().filter(email=data['email'])
 """
 
+@api_view(['POST'])
+def route_get_users_and_ids(request):
+    data = JSONParser().parse(request)
+    users = User.objects.all().filter() #get all users
+    users_info_array = []
+    for user in users:
+        user_dict = {}
+        user_dict["id"] = user.id
+        user_dict["email"] = user.email
+        #user_dict["isAdmin"] = "true" if user.user_type_id==2 else "false"
+        status = "admin" if user.user_type_id==2 else "active"
+        
+        if status != "admin":
+            status = "suspended" if user.status=="Suspended" else "active"
+            if status != "suspended":
+                status = "inactive" if user.status=="Inactive" else "active"
+        
+        user_dict["accType"] = status
 
+        users_info_array.append(user_dict)
+        
+
+    response = {
+        'users': users_info_array,
+        'requestSuccess': "true"
+    }
+    return JsonResponse(response)
+
+@api_view(['POST'])
+def route_get_user_by_id(request):
+    data = JSONParser().parse(request)
+    
+    users = User.objects.all().filter(id=data['id'])
+    user = users[0]
+    response = {
+        'email': user.email,
+        'requestSuccess': "true",
+        'firstName': user.first_name,
+        'lastName': user.last_name,
+        'phone': user.phone,
+        'promotion': user.promotion,
+        'status': user.status,
+        'userType': user.user_type_id
+
+    }
+    return JsonResponse(response)
 
 @api_view(['POST'])
 def route_get_user_information(request):
@@ -212,7 +270,8 @@ def route_login(request):
         'loginSuccess': login_success,
         'email': data['email'],
         'isAdmin': is_admin,
-        'isInactive': is_inactive
+        'isInactive': is_inactive,
+        'status': users[0].status
     }
     return JsonResponse(response)
 
@@ -262,6 +321,9 @@ def route_get_promotions(request):
         promo_dict["promotionCode"] = promotion.promotion_code
         promo_dict["promotionDiscount"] = promotion.promotion_discount
         promo_dict["promotionExpiration"] = promotion.promotion_expiry
+
+
+
         promo_list.append(promo_dict)
     context = {
         'list': promo_list
@@ -447,6 +509,28 @@ def route_change_password(request):
             'errMsg': err_msg
         }
         return JsonResponse(response)
+
+
+@api_view(['POST'])
+def route_update_user(request):
+    data = JSONParser().parse(request)
+    new_query = User.objects.all().get(email=data["email"])
+    new_query.first_name = data["firstName"]
+    new_query.last_name = data["lastName"]
+    
+    if len(data["password"])>0:
+        print("changing password")
+        new_query.password = make_password(data["password"])
+    new_query.phone = data["phone"]
+    new_query.promotion = data["promotion"]
+    new_query.user_type_id = data["userType"]
+    new_query.status = data["status"]
+    new_query.save()
+
+    response = {
+        'changeSuccess': "true",
+    }
+    return JsonResponse(response)
 
 
 
@@ -940,6 +1024,24 @@ def route_get_movie_by_id(request):
         movie_dict["videoLink"] = movie.video_link
         movie_dict["description"] = movie.description
         movie_dict["director"] = movie.director
+        movie_dict["rating"] = movie.rating
+
+        movie_dict["childPrice"] = movie.child_price
+        movie_dict["adultPrice"] = movie.adult_price
+        movie_dict["seniorPrice"] = movie.senior_price
+
+        genres = Genre.objects.all().filter(movieID_id=movie.id)
+        genre_list = []
+        for genre in genres:
+            genre_list.append(genre.TYPE_CHOICES[int(genre.genre) - 1])
+        movie_dict["genres"] = genre_list#Genre.objects.all().filter(movieID_id=movie.id)
+        cast = Cast.objects.all().filter(movieID_id=movie.id)
+        cast_list = []
+        for cast_member in cast:
+            cast_list.append(cast_member.actor)
+            #cast_list.append(genre.TYPE_CHOICES[int(genre.genre) - 1][1])
+        movie_dict["cast"] = cast_list#Cast.objects.all().filter(movieID_id=movie.id)
+
         context = {
             'isSuccessful': 'true',
             'data': movie_dict
@@ -949,6 +1051,72 @@ def route_get_movie_by_id(request):
             'isSuccessful': 'false'
         }
     return JsonResponse(context)
+
+@api_view(['POST'])
+def route_update_movie(request):
+    data = JSONParser().parse(request)
+    print(data)
+    
+    movie = Movie.objects.get(id=data["id"])
+    movie.title = data['title']
+    movie.image_source = data['imageSource']
+    movie.rating = data['rating']
+    movie.video_link = data['videoLink']
+    movie.description = data['description']
+    movie.director = data['director']
+    movie.child_price = data['childPrice']
+    movie.adult_price = data['adultPrice']
+    movie.senior_price = data['seniorPrice']
+
+
+
+    movie.save()
+    genres = data['genres']
+    cast = data['cast']
+    Genre.objects.filter(movieID_id=data["id"]).delete();
+    Cast.objects.filter(movieID_id=data["id"]).delete();
+    for genre in genres:
+        genreId = 0
+        if genre == "COMEDY":
+            genreId = 1
+        elif genre == "HORROR":
+            genreId = 2
+        elif genre == "ACTION":
+            genreId = 3
+        elif genre == "ADVENTURE":
+            genreId = 4
+        elif genre == "ANIMATION":
+            genreId = 5
+        elif genre == "DRAMA":
+            genreId = 6
+        elif genre == "FANTASY":
+            genreId = 7
+        elif genre == "HISTORICAL":
+            genreId = 8
+        elif genre == "SCIENCE FICTION":
+            genreId = 9
+        elif genre == "THRILLER":
+            genreId = 10
+        elif genre == "WESTERN":
+            genreId = 11
+        movieGenre = Genre(movieID=movie, genre=genreId)
+        movieGenre.save()
+
+    for castMember in cast:
+        castPerson = Cast(movieID=movie, actor=castMember)
+        castPerson.save()
+
+
+    
+
+    context = {
+        'isSuccessful': 'true'
+    }
+    return JsonResponse(context)
+
+
+
+
 
 @api_view(['POST'])
 def route_get_genres_by_id(request):
@@ -990,30 +1158,6 @@ def route_get_genres_by_id(request):
         }
     except Exception as e:
         print(e)
-        context = {
-            'isSuccessful': 'false'
-        }
-    return JsonResponse(context)
-
-@api_view(['POST'])
-def route_get_movie_by_id(request):
-    data = JSONParser().parse(request)
-    movie = Movie.objects.get(id=data["id"])
-    movie_dict = {}
-    #         { "movieID": 1, "title": "Gran Torino", "imageSource": require("../images/grantorino.jpg"), "rating": "R", "videoLink": "https://www.youtube.com/embed/RMhbr2XQblk?&autoplay=1", "description": "Disgruntled Korean War veteran Walt Kowalski sets out to reform his neighbor, Thao Lor, a Hmong teenager who tried to steal Kowalski's prized possession: a 1972 Gran Torino.", "director": "Clint Eastwood" },
-    try:
-        movie_dict["movieID"] = movie.id
-        movie_dict["title"] = movie.title
-        movie_dict["imageSource"] = movie.image_source
-        movie_dict["rating"] = movie.rating
-        movie_dict["videoLink"] = movie.video_link
-        movie_dict["description"] = movie.description
-        movie_dict["director"] = movie.director
-        context = {
-            'isSuccessful': 'true',
-            'data': movie_dict
-        }
-    except:
         context = {
             'isSuccessful': 'false'
         }
