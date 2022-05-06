@@ -1353,7 +1353,6 @@ def route_create_booking(request):
         showing = MovieShow.objects.get(id=data["showtimeID"])
         card = PaymentCard.objects.get(last_digits=data["card"])
         booking = Booking(reserved=1, paid=1, showTimeID_id=data["showtimeID"], userID_id=user.id, cardID=card)
-        booking.save()
         room = Room.objects.get(id=showing.roomID_id)
         print(data["seats"])
         if isinstance(data["seats"], list) == True:
@@ -1369,6 +1368,7 @@ def route_create_booking(request):
                             'error': "The seat you tried to select was already reserved"
                         }
                         return JsonResponse(context)
+                    booking.save()
                     reserve = ReservedSeat(BookingID_id=booking.id, seatID_id=seat_number.id,showTimeID_id=data["showtimeID"])
                     reserve.save()
                     print("ends")
@@ -1385,6 +1385,7 @@ def route_create_booking(request):
                     'error': "The seat you chose is already reserved"
                 }
                 return JsonResponse(context)
+            booking.save()
             reserve = ReservedSeat(BookingID_id=booking.id, seatID_id=seat_number.id,showTimeID_id=data["showtimeID"])
             reserve.save()
         
