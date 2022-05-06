@@ -28,7 +28,7 @@ export default function SelectSeat(movieName) {
             let responseCopy = response["data"]["data"];
             responseCopy["imageSource"] = require("../images/" + responseCopy["imageSource"]);
             setMovie(responseCopy);
-            //console.log(response["data"]["data"]);
+            console.log(response["data"]);
         });
 
         await axios.post("http://localhost:8000/api/v1/get-showtime-by-showtime-id", { "movieID": router.query.movieID, "showtimeID": router.query.showtimeID }).then((response) => {
@@ -89,19 +89,19 @@ export default function SelectSeat(movieName) {
             <h2>Tickets Available: {numSeats - numReservedSeats}</h2>
             <h2 className="book-movie-available-times">Select Tickets</h2>
             <div class="age-select">
-                <h2>Child ($4)</h2>
+                <h2>Child (${movie["childPrice"]})</h2>
                 <span class="minus-child unselectable" onClick={() => childTickets !== 0 && setChildTickets(childTickets - 1)}>-</span>
                 <input type="text" value={childTickets} class="age-select-field" />
                 <span class="plus-child unselectable" onClick={() => setChildTickets(childTickets + 1)}>+</span>
             </div>
             <div class="age-select">
-                <h2>Adult ($7)</h2>
+                <h2>Adult (${movie["adultPrice"]})</h2>
                 <span class="minus-child unselectable" onClick={() => adultTickets !== 0 && setAdultTickets(adultTickets - 1)}>-</span>
                 <input type="text" value={adultTickets} class="age-select-field" />
                 <span class="plus-child unselectable" onClick={() => setAdultTickets(adultTickets + 1)}>+</span>
             </div>
             <div class="age-select">
-                <h2>Senior ($4)</h2>
+                <h2>Senior (${movie["seniorPrice"]})</h2>
                 <span class="minus-child unselectable" onClick={() => seniorTickets !== 0 && setSeniorTickets(seniorTickets - 1)}>-</span>
                 <input readonly type="text" value={seniorTickets} class="age-select-field" />
                 <span class="plus-child unselectable" onClick={() => setSeniorTickets(seniorTickets + 1)}>+</span>

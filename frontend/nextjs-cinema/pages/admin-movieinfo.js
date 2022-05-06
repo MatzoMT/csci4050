@@ -35,6 +35,11 @@ export default function AdminHome() {
   const [adultPrice, setAdultPrice] = useState();
   const [seniorPrice, setSeniorPrice] = useState();
 
+  const removeMovie = (movieId) => {
+    axios.post("http://localhost:8000/api/v1/delete-movie", { id: id}).then((response) => {
+      
+    })
+  }
 
   const addGenre = event => {
     if (event.key == "Enter") {
@@ -274,6 +279,7 @@ export default function AdminHome() {
               <input className="fields" onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} defaultValue={seniorPrice} type="text" onInput={onlyNumbers} name="seniorPrice" placeholder="Senior ticket price" onChange={(val) => setSeniorPrice(val.target.value)}></input><br></br>
               <h3 id="incorrect-credentials" style={{color: 'red'}}>{incorrectInfoMessage}</h3>
               <button type="submit">Update movie information</button>
+              <button style={{backgroundColor: 'red'}} onClick={() => removeMovie(router.query.movieId)}>Delete Movie</button>
             </form>
           </div>
         </main>

@@ -23,9 +23,9 @@ export default function SelectTime() {
     const [promotion, setPromotion] = useState("");
     const [incorrectMessage, setIncorrectMessage] = useState("");
     const [promoMessage, setPromoMessage] = useState("");
-    let total = (parseInt(router.query.children) * 4.00) + (parseInt(router.query.adults) * 7.00) + (parseInt(router.query.seniors) * 4.00);
+    let total = 0;
 
-    const [totall, setTotall] = useState(total);    
+    const [totall, setTotall] = useState(0);    
 
     useEffect(async () => {
         await axios.post("http://localhost:8000/api/v1/prepare-checkout", {"user":window.sessionStorage.getItem("email")}).then((response) => {
@@ -42,11 +42,18 @@ export default function SelectTime() {
             console.log(response);
             setShowTime(response["data"]["showtime"]);
         });
+
     }, []);
+
+    useEffect(() => {
+        total = (parseInt(router.query.children) * parseInt(movie["childPrice"])) + (parseInt(router.query.adults) * parseInt(movie["adultPrice"])) + (parseInt(router.query.seniors) * parseInt(movie["seniorPrice"]));
+        setTotall(total);
+    }, [movie])
 
     const applyPromotion = () => {
         axios.post("http://localhost:8000/api/v1/get-promotion-discount", {"promoCode":promotion}).then( (response) => {
             if(response["data"]["success"]){
+                total = (parseInt(router.query.children) * movie["childPrice"]) + (parseInt(router.query.adults) * movie["adultPrice"]) + (parseInt(router.query.seniors) * movie["seniorPrice"]);
                 setTotall(total*((100-response["data"]["discount"])/100))
                 setPromoMessage("Applied promotion to your purchase")
             }
