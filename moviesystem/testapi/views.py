@@ -1435,6 +1435,32 @@ def route_checkout_payment_info(request):
         print("error: ",e)
         return HttpResponse(400)
     return JsonResponse(context)
+
+@api_view(['POST'])
+def route_get_promotion_discount(request):
+    data = JSONParser().parse(request)
+    promo = Promotion.objects.all().filter(promotion_code=data["promoCode"])
+    print("promo: ", promo)
+    discount_amount = 0
+    context = {}
+    if(len(promo)==1):
+        discount_amount = promo[0].promotion_discount
+        context = {
+            "success": "true",
+            "discount": discount_amount, 
+        }
+    else:
+        context = {
+            "success": "false",
+            "discount": 0
+        }
+    return JsonResponse(context)
+
+# @api_view(['POST'])
+# def route_get_ticket_prices(request):
+#     data = JSONParser().parse(request)
+
+
 # @api_view(['POST'])
 # def route_pre_checkout(request):
 #     if(request.method == "POST"):
