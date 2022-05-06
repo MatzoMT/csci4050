@@ -110,7 +110,7 @@ export default function Home() {
           </div>
           <div id="footer">
             <h3 id="or">Or, if you already have an account</h3>
-             <a href="/registration" id="create-account-button"><p>Sign-in</p></a>
+             <a href="/login" id="create-account-button"><p>Sign-in</p></a>
             
           </div>
         </main>

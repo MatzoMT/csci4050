@@ -257,10 +257,20 @@ def route_login(request):
     is_admin = "false"
     is_inactive = "false"
     users = User.objects.all().filter(email=data['email'], user_type=1)
+    response = {
+        'loginSuccess': 'false'
+    }
     # check_password(original_password, make_password result)
     if len(users) > 0 and check_password(data['password'], users[0].password)==True:
         if users[0].status != 'Inactive':
             login_success = "true"
+            response = {
+                'loginSuccess': login_success,
+                'email': data['email'],
+                'isAdmin': is_admin,
+                'isInactive': is_inactive,
+                'status': users[0].status
+            }
         else:
             is_inactive = "true"
     # Below loop runs if login as normal user fails
@@ -271,13 +281,14 @@ def route_login(request):
         if len(admin_users) > 0 and check_password(data['password'], admin_users[0].password)==True:
             login_success = "true"
             is_admin = "true"
-    response = {
-        'loginSuccess': login_success,
-        'email': data['email'],
-        'isAdmin': is_admin,
-        'isInactive': is_inactive,
-        'status': users[0].status
-    }
+            response = {
+                'loginSuccess': login_success,
+                'email': data['email'],
+                'isAdmin': is_admin,
+                'isInactive': is_inactive,
+                'status': admin_users[0].status
+            }
+
     return JsonResponse(response)
 
 """
