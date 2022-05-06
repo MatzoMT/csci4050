@@ -33,6 +33,9 @@ export default function Home() {
     "promotion": 0 
 }
   */
+  const onlyNumbers = e => {
+    e.target.value = e.target.value.replace(/\D/g, '')
+  }
 
   let handleSubmit = async (e) => {
     e.preventDefault();
@@ -58,6 +61,7 @@ export default function Home() {
   };
 
   let handleCheckbox = async (e) => {
+
     if (promotion == 0) {
       setPromotion(1);
     } else {
@@ -80,28 +84,34 @@ export default function Home() {
           <div id="registration">
             <form onSubmit={handleSubmit}>
               <h1>Create an account</h1>
-              <p>* - indicates a required field</p>
-              <p>* First Name</p>
-              <a><input type="text" placeholder="Enter your first name" onChange={(val) => setFirstName(val.target.value)}></input></a>
-              <p>* Last Name</p>
-              <a><input type="text" placeholder="Enter your last name" onChange={(val) => setLastName(val.target.value)}></input></a>
-              <p>* Phone number</p>
-              <a><input type="text" placeholder="Enter your phone number" onChange={(val) => setPhone(val.target.value)}></input></a>
-              <p>* Email Address</p>
-              <a><input type="text" placeholder="Enter your email address" onChange={(val) => setEmail(val.target.value)}></input></a>
-              <p>* Password</p>
-              <a><input type="password" placeholder="Enter a password" onChange={(val) => setPassword(val.target.value)}></input></a>
-              <p>* Confirm Password</p>
-              <a><input type="password" placeholder="Re-enter the password" onChange={(val) => setConfirmPassword(val.target.value)}></input></a>
+              <h2>* - indicates a required field</h2>
+              <h2>* First Name</h2>
+              <input className="fields" type="text" placeholder="Enter your first name" onChange={(val) => setFirstName(val.target.value)}></input>
+              <h2>* Last Name</h2>
+              <input className="fields" type="text" placeholder="Enter your last name" onChange={(val) => setLastName(val.target.value)}></input>
+              <h2>* Phone number</h2>
+              <input onInput={onlyNumbers} className="fields" type="text" placeholder="Enter your phone number" onChange={(val) => setPhone(val.target.value)}></input>
+              <h2>* Email Address</h2>
+              <input className="fields" type="text" placeholder="Enter your email address" onChange={(val) => setEmail(val.target.value)}></input>
+              <h2>* Password</h2>
+              <input className="fields" type="password" placeholder="Enter a password" onChange={(val) => setPassword(val.target.value)}></input>
+              <h2>* Confirm Password</h2>
+              <input className="fields" type="password" placeholder="Re-enter the password" onChange={(val) => setConfirmPassword(val.target.value)}></input>
 
-              <p>Subscribe to Promotions</p>
-              <input type="checkbox" onChange={handleCheckbox} />
-              <button type="submit">Create your account</button>
+              <h2>Subscribe to Promotions</h2>
+              <label class="checkContainer">
+                <input type="checkbox" onChange={handleCheckbox} />
+                <span class="checkmark"></span>
+              </label>
+              <br/><br/><br/>
+              <button type="submit" id="sign-in-button">Create your account</button>
             </form>
             <h3 id="incorrect-credentials" style={{color: 'red', position: 'absolute'}}>{incorrectMessage}</h3>
           </div>
           <div id="footer">
-            <p id="inline">Already have an account?</p> <a href="/login">Sign in here.</a>
+            <h3 id="or">Or, if you already have an account</h3>
+             <a href="/registration" id="create-account-button"><p>Sign-in</p></a>
+            
           </div>
         </main>
 

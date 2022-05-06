@@ -66,7 +66,7 @@ export default function AdminHome() {
   };
 
   const onlyNumbers = e => {
-    e.target.value = e.target.value.replace(/\D/g, '')
+    e.target.value = "$" + e.target.value.replace(/\D/g, '')
   }
 
   const addCast = event => {
@@ -89,7 +89,14 @@ export default function AdminHome() {
     //alert("hello")
     e.preventDefault();
     
-    axios.post("http://localhost:8000/api/v1/update-movie", { id: id, title: title, imageSource: imageSource, rating: rating, videoLink: videoLink, description: description, director: director, genres: genres, cast: cast, childPrice:childPrice, adultPrice:adultPrice, seniorPrice:seniorPrice}).then((response) => {
+
+    if (childPrice == "$" || adultPrice == "$" || seniorPrice == "$") {
+      setIncorrectInfoMessage("You cannot leave ticket prices empty.");
+      return;
+    }
+
+
+    axios.post("http://localhost:8000/api/v1/update-movie", { id: id, title: title, imageSource: imageSource, rating: rating, videoLink: videoLink, description: description, director: director, genres: genres, cast: cast, childPrice:childPrice.substring(1), adultPrice:adultPrice.substring(1), seniorPrice:seniorPrice.substring(1)}).then((response) => {
       if (response.data.isSuccessful == "true") { 
         setIncorrectInfoMessage("Successfully updated movie info.");
       } else {
@@ -140,9 +147,9 @@ export default function AdminHome() {
           setDirector(movie.director)
           setVideoLink(movie.videoLink)
           setId(movie.movieID)
-          setChildPrice(movie.childPrice)
-          setAdultPrice(movie.adultPrice)
-          setSeniorPrice(movie.seniorPrice)
+          setChildPrice("$" + movie.childPrice)
+          setAdultPrice("$" + movie.adultPrice)
+          setSeniorPrice("$" + movie.seniorPrice)
 
 
           // setFirstName(response.data.firstName);
@@ -176,10 +183,10 @@ export default function AdminHome() {
             <br></br>
             <h1>Movie Information</h1>
             <form onSubmit={handleUpdateMovie}>
-              <p>Title:</p>
-              <a><input onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} defaultValue={title} type="text" name="title" placeholder="Enter a title" onChange={(val) => setTitle(val.target.value)}></input></a><br></br>
-              <p>Image:</p>
-              <input onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} title={imageSource} type="file" id="movieImage" onChange={ (val) => {
+              <h2>Title:</h2>
+              <a><input className="fields" onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} defaultValue={title} type="text" name="title" placeholder="Enter a title" onChange={(val) => setTitle(val.target.value)}></input></a><br></br>
+              <h2>Image:</h2>
+              <input className="fields" onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} title={imageSource} name={imageSource} type="file" id="movieImage" onChange={ (val) => {
                   console.log("SUBMITTED")
                   if (val.target.files.length == 1) {
                     console.log(val.target.files[0].type.replace('image/', ''));
@@ -202,8 +209,8 @@ export default function AdminHome() {
 
 
               }}></input>
-              <p>Rating:</p>
-              <select id="rating" name="rating" value={rating} onChange={(val) => {
+              <h2>Rating:</h2>
+              <select className="fields" id="rating" name="rating" value={rating} onChange={(val) => {
                 console.log(val.target.value)
                 setRating(val.target.value)
                 }}>
@@ -212,17 +219,17 @@ export default function AdminHome() {
                 <option value="PG-13">PG-13</option>
                 <option value="R">R</option>
               </select>
-              <p>Trailer Link:</p>
-              <a><input defaultValue={videoLink} onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} type="text" name="trailerLink" placeholder="Enter a trailer link" onChange={(val) => setVideoLink(val.target.value)}></input></a><br></br>
-              <p>Description:</p>
-              <a><textarea defaultValue={description} name="description" placeholder="Enter a description" onChange={(val) => setDescription(val.target.value)}></textarea></a><br></br>
-              <p>Director:</p>
-              <a><input defaultValue={director} onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} type="text" name="director" placeholder="Enter the director name" onChange={(val) => setDirector(val.target.value)}></input></a><br></br>
-              <p>Genres:</p>
+              <h2>Trailer Link:</h2>
+              <a><input className="fields" defaultValue={videoLink} onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} type="text" name="trailerLink" placeholder="Enter a trailer link" onChange={(val) => setVideoLink(val.target.value)}></input></a><br></br>
+              <h2>Description:</h2>
+              <a><textarea className="fields" defaultValue={description} name="description" placeholder="Enter a description" onChange={(val) => setDescription(val.target.value)}></textarea></a><br></br>
+              <h2>Director:</h2>
+              <a><input className="fields" defaultValue={director} onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} type="text" name="director" placeholder="Enter the director name" onChange={(val) => setDirector(val.target.value)}></input></a><br></br>
+              <h2>Genres:</h2>
               <div className="genres-input">
                 <ul>
                   {genres.map((genre, index) => (
-                    <li key={index}>
+                    <li className="fields2" key={index}>
                       <span>{genre}</span>
                       <i onClick={() => removeGenre(index)}>                       
                       ❌
@@ -230,7 +237,8 @@ export default function AdminHome() {
                     </li>
                   ))}
                 </ul>
-                <input        
+                <input    
+                  className="fields"    
                   onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }}              
                   type="text"
                   placeholder="Press enter to add genre"
@@ -238,11 +246,11 @@ export default function AdminHome() {
                   onInput={toInputUppercase}
                 />
               </div>  
-              <p>Cast:</p>
+              <h2>Cast:</h2>
               <div className="cast-input">
                 <ul>
                   {cast.map((castMember, index) => (
-                    <li key={index}>
+                    <li className="fields2" key={index}>
                       <span>{castMember}</span>
                       <i onClick={() => removeCast(index)}>                       
                       ❌
@@ -251,18 +259,19 @@ export default function AdminHome() {
                   ))}
                 </ul>
                 <input   
+                  className="fields"
                   onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }}                   
                   type="text"
                   placeholder="Press enter to add cast member"
                   onKeyUp={addCast}
                 />
               </div>  
-              <p>Child Ticket Price:</p>
-              $<input onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} defaultValue={childPrice} type="text" onInput={onlyNumbers} name="childPrice" placeholder="Child ticket price" onChange={(val) => setChildPrice(val.target.value)}></input><br></br>
-              <p>Adult Ticket Price:</p>
-              $<input onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} defaultValue={adultPrice} type="text" onInput={onlyNumbers} name="adultPrice" placeholder="Adult ticket price" onChange={(val) => setAdultPrice(val.target.value)}></input><br></br>
-              <p>Senior Ticket Price:</p>
-              $<input onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} defaultValue={seniorPrice} type="text" onInput={onlyNumbers} name="seniorPrice" placeholder="Senior ticket price" onChange={(val) => setSeniorPrice(val.target.value)}></input><br></br>
+              <h2>Child Ticket Price:</h2>
+              <input className="fields" onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} defaultValue={childPrice} type="text" onInput={onlyNumbers} name="childPrice" placeholder="Child ticket price" onChange={(val) => setChildPrice(val.target.value)}></input><br></br>
+              <h2>Adult Ticket Price:</h2>
+              <input className="fields" onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} defaultValue={adultPrice} type="text" onInput={onlyNumbers} name="adultPrice" placeholder="Adult ticket price" onChange={(val) => setAdultPrice(val.target.value)}></input><br></br>
+              <h2>Senior Ticket Price:</h2>
+              <input className="fields" onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} defaultValue={seniorPrice} type="text" onInput={onlyNumbers} name="seniorPrice" placeholder="Senior ticket price" onChange={(val) => setSeniorPrice(val.target.value)}></input><br></br>
               <h3 id="incorrect-credentials" style={{color: 'red'}}>{incorrectInfoMessage}</h3>
               <button type="submit">Update movie information</button>
             </form>
