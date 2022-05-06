@@ -60,7 +60,7 @@ export default function AdminHome() {
                 color = "#9e1610"
               }
               console.log(color)
-              userArray.push(<tr>
+              userArray.push(<tr className="fields">
                 <td><div></div><a style={{
                   borderColor: "black",
                   borderWidth: 3,
@@ -100,7 +100,7 @@ export default function AdminHome() {
             <h1>Users</h1>
             <table>
               <tr>
-                <th>Email</th>
+                <th><h2>Email</h2></th>
               </tr>
               {users}
             </table>

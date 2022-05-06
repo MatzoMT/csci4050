@@ -39,6 +39,9 @@ export default function Home() {
   let defaultCheckVal = "on"
 
 
+  const onlyNumbers = e => {
+    e.target.value = e.target.value.replace(/\D/g, '')
+  }
 
   useEffect(async () => {
     try {
@@ -198,7 +201,7 @@ export default function Home() {
               {/*<p>Age</p>
               <a><input type="text" placeholder="Enter your new age" defaultValue="37"></input></a>*/}
               <p>Phone Number</p>
-              <input className="fields" type="text" placeholder="Enter new phone number" defaultValue={phone} onChange={(val) => setPhone(val.target.value)}></input>
+              <input onInput={onlyNumbers} className="fields" type="text" placeholder="Enter new phone number" defaultValue={phone} onChange={(val) => setPhone(val.target.value)}></input>
               <p>Subscribe to Promotions</p>
               <input  type="checkbox"  checked={promotion} onChange={handleCheckbox} />
 
@@ -246,7 +249,7 @@ export default function Home() {
                 <option value="C">Credit</option>
               </select>
               
-              <input className="fields" type="text" name="card-number" placeholder="Card Number" onChange={(val) => setCardNumber(val.target.value)}></input><br></br>
+              <input onInput={onlyNumbers} className="fields" type="text" name="card-number" placeholder="Card Number" onChange={(val) => setCardNumber(val.target.value)}></input><br></br>
               <input className="fields" type="text" name="billing-address" placeholder="Billing Address" onChange={(val) => setBillingAddress(val.target.value)}></input><br></br>
               <DatePicker minDate={new Date()} className='fields' selected={expirationDate} onChange={(date) => setExpirationDate(date)} /><br></br>
               <h3 id="incorrect-credentials" style={{color: 'red'}}>{incorrectPaymentMessage}</h3>

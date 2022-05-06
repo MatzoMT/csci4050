@@ -66,6 +66,10 @@ export default function AdminHome() {
   };
 
 
+  const onlyNumbers = e => {
+    e.target.value = e.target.value.replace(/\D/g, '')
+  }
+
   let handleUpdateUser = async (e) => {
     //console.log("handling")
     //alert("hello")
@@ -95,6 +99,26 @@ export default function AdminHome() {
       setIncorrectInfoMessage("")
     }
 
+    if (firstName == "") {
+      setIncorrectInfoMessage("Users must have a first name.")
+      return;
+    } else {
+      setIncorrectInfoMessage("")
+    }
+
+    if (lastName == "") {
+      setIncorrectInfoMessage("Users must have a last name.")
+      return;
+    } else {
+      setIncorrectInfoMessage("")
+    }
+
+    if (phone == "") {
+      setIncorrectInfoMessage("Users must have a phone number.")
+      return;
+    } else {
+      setIncorrectInfoMessage("")
+    }
 
     console.log("OK!")
     let statusString = (status == 1) ? "Suspended" : "Active";
@@ -179,25 +203,37 @@ export default function AdminHome() {
               
               <h1>Update User Information</h1>
               <h3>Account information for {userEmail}</h3>
-              <p>User First Name</p>
-              <a><input type="text" placeholder="Enter new first name" defaultValue={firstName} onChange={(val) => setFirstName(val.target.value)}></input></a>
-              <p>User Last Name</p>
-              <a><input type="text" placeholder="Enter new last name" defaultValue={lastName} onChange={(val) => setLastName(val.target.value)}></input></a>
-              <p>User Password</p>
-              <a><input type="password" placeholder="Enter a new password" onChange={(val) => setPassword(val.target.value)}></input></a>
-              <p>User Phone Number</p>
-              <a><input type="text" placeholder="Enter new phone number" defaultValue={phone} onChange={(val) => setPhone(val.target.value)}></input></a>
-              <p>User Promotions Status</p>
-              <input type="checkbox"  checked={promotion} onChange={handlePromoCheckbox}/>
-              <p>User Admin Status</p>
-              <input type="checkbox"  checked={userType} onChange={handleAdminCheckbox}/>
+              <h2>User First Name</h2>
+              <input className="fields" type="text" placeholder="Enter new first name" defaultValue={firstName} onChange={(val) => setFirstName(val.target.value)}></input>
+              <h2>User Last Name</h2>
+              <input className="fields" type="text" placeholder="Enter new last name" defaultValue={lastName} onChange={(val) => setLastName(val.target.value)}></input>
+              <h2>User Password</h2>
+              <input className="fields" type="password" placeholder="Enter a new password" onChange={(val) => setPassword(val.target.value)}></input>
+              <h2>User Phone Number</h2>
+              <input onInput={onlyNumbers} className="fields" type="text" placeholder="Enter new phone number" defaultValue={phone} onChange={(val) => setPhone(val.target.value)}></input>
+              <h2>User Promotions Status</h2>
+              
+              <label class="checkContainer">
+                <input type="checkbox" checked={promotion} onChange={handlePromoCheckbox} />
+                <span class="checkmark"></span>
+              </label>
+              <br/>
+              <h2>User Admin Status</h2>
 
-              <p style={{color: 'red'}}>Suspend User?</p>
-              <input type="checkbox"  checked={status} onChange={handleStatusCheckbox}/>
-
-
+              <label class="checkContainer">
+                <input type="checkbox" checked={userType} onChange={handleAdminCheckbox} />
+                <span class="checkmark"></span>
+              </label>
+              <br/>
+              <h2 style={{color: 'red'}}>Suspend User?</h2>
+              <label class="checkContainer">
+                <input type="checkbox" checked={status} onChange={handleStatusCheckbox} />
+                <span class="checkmark"></span>
+              </label>
+              <br/>
+              <br></br>
               <h3 id="incorrect-credentials" style={{color: 'red'}}>{incorrectInfoMessage}</h3>
-              <button type="submit">Update account information</button>
+              <button type="submit"><h3>Update account information</h3></button>
             </form>         
           </div>
         </main>

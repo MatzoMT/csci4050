@@ -46,3 +46,11 @@
     margin-top: 3em;
     width: 50%;  
 }
+
+.fields2 {
+    width: 100%;
+    font-size: 150%;
+    padding-left: 0.5em;
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+}
