@@ -14,6 +14,7 @@ export default function SelectTime() {
     const [showTime, setShowTime] = useState({});
     const [cards, setCards] = useState([]);
     const [selectCard, setSelectCard] = useState();
+    const [incorrectMessage, setIncorrectMessage] = useState("");
 
     const router = useRouter();
     let total = (parseInt(router.query.children) * 4.00) + (parseInt(router.query.adults) * 7.00) + (parseInt(router.query.seniors) * 4.00);
@@ -38,18 +39,27 @@ export default function SelectTime() {
 
     const handleSubmit = () => {
         // Need to check if router.query.seats is object or string before continuing
-        axios.post("http://localhost:8000/api/v1/create-booking", {"showtimeID": router.query.showtimeID, "email": localStorage.getItem("email"), "seats": router.query.seats, "children": router.query.children, "adults": router.query.adults, "seniors": router.query.seniors});
-        router.push({
-            pathname: '/ticket-confirmation',
-            query: {
-                "movieID": router.query.movieID,
-                "showtimeID": router.query.showtimeID,
-                "children": router.query.children,
-                "adults": router.query.adults,
-                "seniors": router.query.seniors,
-                "seats": router.query.seats
-            },
-        })
+        axios.post("http://localhost:8000/api/v1/create-booking", {"showtimeID": router.query.showtimeID, "email": localStorage.getItem("email"), "seats": router.query.seats, "children": router.query.children, "adults": router.query.adults, "seniors": router.query.seniors, "card":selectCard}).then((response) => {;
+            console.log(response)
+            console.log("success: ",response["data"]["success"])
+            if (response["data"]["success"] == "true") {
+                router.push({
+                    pathname: '/ticket-confirmation',
+                    query: {
+                        "movieID": router.query.movieID,
+                        "showtimeID": router.query.showtimeID,
+                        "children": router.query.children,
+                        "adults": router.query.adults,
+                        "seniors": router.query.seniors,
+                        "seats": router.query.seats
+                    },
+                })
+            } else {
+                setIncorrectMessage(response.data.error);
+                router.push('/checkout');
+            } 
+        });
+        
 
     }
 
@@ -81,6 +91,7 @@ export default function SelectTime() {
         <NavBar />
         <div class="center">
             <h1>Checkout</h1>
+            <h3 id="incorrect-credentials" style={{ color: 'red' }}>{incorrectMessage}</h3>
             <div id="checkout-row">
                 <div id="checkout-left">
                     <h2>Pick a payment method</h2>
