@@ -6,7 +6,8 @@ import { useRouter } from 'next/router';
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import PaymentInfoCard from '../components/PaymentInfoCard.js'
-
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 
 // SKELETON CODE
@@ -23,10 +24,10 @@ export default function Home() {
   const router = useRouter();
   const [cards, setCards] = useState([]);
   const [apples, setApples] = useState("");
-  const [cardType, setCardType] = useState("");
+  const [cardType, setCardType] = useState("D");
   const [cardNumber, setCardNumber] = useState("");
   const [billingAddress, setBillingAddress] = useState("")
-  const [expirationDate, setExpirationDate] = useState("")
+  const [expirationDate, setExpirationDate] = useState(new Date());
   const [promotion, setPromotion] = useState(0);
 
   const [incorrectPasswordMessage, setIncorrectPasswordMessage] = useState("");
@@ -47,7 +48,6 @@ export default function Home() {
             setEmail(response.data.email);
             setFirstName(response.data.firstName);
             setLastName(response.data.lastName);
-            //console.log(response.data.phone);
             setPhone(response.data.phone);
             console.log("checking: " + response.data.promotion);
             
@@ -89,7 +89,22 @@ export default function Home() {
 
   let handleSubmit = async (e) => {
     e.preventDefault();
-    await axios.post("http://localhost:8000/api/v1/create-payment", { cardType: cardType, cardNumber: cardNumber, email: email, billingAddress: billingAddress, expirationDate: expirationDate }).then((response) => {
+    const formdate = expirationDate.toLocaleDateString('en-CA', {
+      day: 'numeric',
+      month: 'numeric',
+      year: 'numeric',
+    });
+
+    if (cardNumber.length != 16 || Number.isInteger(cardNumber)) {
+      setIncorrectPaymentMessage("The card number must contain 16 numerical characters.");
+      return;
+    }
+    if (billingAddress == "") {
+      setIncorrectPaymentMessage("The billing address cannot be empty.")
+      return;
+    }
+
+    await axios.post("http://localhost:8000/api/v1/create-payment", { cardType: cardType, cardNumber: cardNumber, email: email, billingAddress: billingAddress, expirationDate: formdate }).then((response) => {
       //alert("You have successfully added a payment type to your account.")
       if (response.data.success == "false") {
         setIncorrectPaymentMessage(response.data.errMsg);
@@ -170,39 +185,39 @@ export default function Home() {
       <body>
         <NavBar />
         <main>
-
+        
           <div id="editprofile">
             <form onSubmit={handleUpdateUser}>
               
               <h1>Update your Information</h1>
               <h3>Profile Info</h3>
               <p>First Name</p>
-              <a><input type="text" placeholder="Enter new first name" defaultValue={firstName} onChange={(val) => setFirstName(val.target.value)}></input></a>
+              <input className="fields" type="text" placeholder="Enter new first name" defaultValue={firstName} onChange={(val) => setFirstName(val.target.value)}></input>
               <p>Last Name</p>
-              <a><input type="text" placeholder="Enter new last name" defaultValue={lastName} onChange={(val) => setLastName(val.target.value)}></input></a>
+              <input className="fields" type="text" placeholder="Enter new last name" defaultValue={lastName} onChange={(val) => setLastName(val.target.value)}></input>
               {/*<p>Age</p>
               <a><input type="text" placeholder="Enter your new age" defaultValue="37"></input></a>*/}
               <p>Phone Number</p>
-              <a><input type="text" placeholder="Enter new phone number" defaultValue={phone} onChange={(val) => setPhone(val.target.value)}></input></a>
+              <input className="fields" type="text" placeholder="Enter new phone number" defaultValue={phone} onChange={(val) => setPhone(val.target.value)}></input>
               <p>Subscribe to Promotions</p>
-              <input type="checkbox"  checked={promotion} onChange={handleCheckbox} />
+              <input  type="checkbox"  checked={promotion} onChange={handleCheckbox} />
 
 
 
 
               <h3 id="incorrect-credentials" style={{color: 'red'}}>{incorrectInfoMessage}</h3>
-              <button type="submit">Update account information</button>
+              <button id="buttonstyle" type="submit">Update account information</button>
             </form>
             <form onSubmit={handleUpdatePassword}>
             <h3>Change your password</h3>
                 <p>Current Password</p>
-                <a><input type="password" placeholder="Current Password" onChange={(val) => setCurrentPassword(val.target.value)}></input></a>
+                <input className="fields" type="password" placeholder="Current Password" onChange={(val) => setCurrentPassword(val.target.value)}></input>
                 <p>New Password</p>
-                <a><input type="password" placeholder="Enter a new password" onChange={(val) => setNewPassword(val.target.value)}></input></a>
+                <input className="fields" type="password" placeholder="Enter a new password" onChange={(val) => setNewPassword(val.target.value)}></input>
                 <p>Confirm New Password</p>
-                <a><input type="password" placeholder="Re-enter the new password" onChange={(val) => setConfirmNewPassword(val.target.value)}></input></a>
+                <input className="fields" type="password" placeholder="Re-enter the new password" onChange={(val) => setConfirmNewPassword(val.target.value)}></input>
                 <h3 id="incorrect-credentials" style={{color: 'red'}}>{incorrectPasswordMessage}</h3>
-                <button type="submit">Change password</button>
+                <button id="buttonstyle" type="submit">Change password</button>
             </form>
 
             <h3>Payment Information</h3>
@@ -222,12 +237,20 @@ export default function Home() {
 
             <p>New Payment Method</p>
             <form onSubmit={handleSubmit}>
-              <a><input type="text" name="card-type" placeholder="D or C" onChange={(val) => setCardType(val.target.value)}></input></a><br></br>
-              <a><input type="text" name="card-number" placeholder="Card Number" onChange={(val) => setCardNumber(val.target.value)}></input></a><br></br>
-              <a><input type="text" name="billing-address" placeholder="Billing Address" onChange={(val) => setBillingAddress(val.target.value)}></input></a><br></br>
-              <a><input type="text" name="expiration-date" placeholder="Expiration Date YYYY-MM-DD" onChange={(val) => setExpirationDate(val.target.value)}></input></a><br></br>
+
+              <select className="fields" id="rating" name="rating" value={cardType} onChange={(val) => {
+                console.log(val.target.value)
+                setCardType(val.target.value)
+                }}>
+                <option value="D">Debit</option>
+                <option value="C">Credit</option>
+              </select>
+              
+              <input className="fields" type="text" name="card-number" placeholder="Card Number" onChange={(val) => setCardNumber(val.target.value)}></input><br></br>
+              <input className="fields" type="text" name="billing-address" placeholder="Billing Address" onChange={(val) => setBillingAddress(val.target.value)}></input><br></br>
+              <DatePicker minDate={new Date()} className='fields' selected={expirationDate} onChange={(date) => setExpirationDate(date)} /><br></br>
               <h3 id="incorrect-credentials" style={{color: 'red'}}>{incorrectPaymentMessage}</h3>
-              <button type="submit">Add Payment Method</button>
+              <button id="buttonstyle" type="submit">Add Payment Method</button>
             </form>
           </div>
         </main>

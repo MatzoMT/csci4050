@@ -39,6 +39,9 @@ export default function AdminHome() {
   const [incorrectInfoMessage, setIncorrectInfoMessage] = useState("");
   const [genres, setGenres] = React.useState([]);
   const [cast, setCast] = React.useState([]);
+  const [childPrice, setChildPrice] = useState(4);
+  const [adultPrice, setAdultPrice] = useState(7);
+  const [seniorPrice, setSeniorPrice] = useState(4);
 
   
   const addGenre = event => {
@@ -69,6 +72,10 @@ export default function AdminHome() {
   const toInputUppercase = e => {
     e.target.value = ("" + e.target.value).toUpperCase();
   };
+
+  const onlyNumbers = e => {
+    e.target.value = e.target.value.replace(/\D/g, '')
+  }
 
   const addCast = event => {
     if (event.key == "Enter") {
@@ -111,7 +118,7 @@ export default function AdminHome() {
               for (let i = 0; i < element.genres.length; i++) {
                 movieGenres.push(element.genres[i][1])
               }
-              movieArray.push(<MovieInfo title={element.title} imageSource={element.imageSource} genres={movieGenres.join(", ")} rating={element.rating} director={element.director} description={element.description} videoLink={element.videoLink} cast={element.cast.join(", ")} />);
+              movieArray.push(<MovieInfo id={element.id} title={element.title} imageSource={element.imageSource} genres={movieGenres.join(", ")} rating={element.rating} director={element.director} description={element.description} videoLink={element.videoLink} cast={element.cast.join(", ")} />);
             }
 
             console.log(movieArray);
@@ -162,7 +169,7 @@ export default function AdminHome() {
     }
 
     
-    await axios.post("http://localhost:8000/api/v1/add-movie", { title: title, imageSource: imageSource, rating: rating, videoLink: videoLink, description: description, director: director, genres: genres, cast:cast }).then((response) => {
+    await axios.post("http://localhost:8000/api/v1/add-movie", { title: title, imageSource: imageSource, rating: rating, videoLink: videoLink, description: description, director: director, genres: genres, cast:cast, childPrice: childPrice, adultPrice:adultPrice, seniorPrice:seniorPrice }).then((response) => {
       //alert("You have successfully added a payment type to your account.")
       if (response.data.success == "false") {
         setIncorrectInfoMessage(response.data.errMsg);
@@ -209,7 +216,6 @@ export default function AdminHome() {
                 <th>Description</th>
                 <th>Trailer</th>
                 <th>Cast</th>
-                <th/>
               </tr>
               {movies}
             </table>           
@@ -220,22 +226,24 @@ export default function AdminHome() {
               <a><input onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} type="text" name="title" placeholder="Enter a title" onChange={(val) => setTitle(val.target.value)}></input></a><br></br>
               <p>Image:</p>
               <input onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} type="file" id="movieImage" onChange={ (val) => {
-                  console.log("SUBMITTED")
-                  console.log(val.target.files[0].type.replace('image/', ''));
-                  let fileType = val.target.files[0].type.replace('image/', '');
-
-                  const reader = new FileReader();
-                  reader.readAsDataURL(val.target.files[0]);
-                  reader.addEventListener("load", () => {
-                    //console.log(reader.result);
-                    console.log(val.target.files[0])
-                    setImageSource(val.target.files[0].name)
-                    setImageDataURL(reader.result)
-                    //need to save in ""../images"
-                    
-                    //this is a dataURL but i'm not sure what to do with it.
-                    //i've verified that it is indeed the image the 
-                  })
+                  if (val.target.files.length == 1) {
+                    console.log(val.target.files[0].type.replace('image/', ''));
+                    let fileType = val.target.files[0].type.replace('image/', '');
+  
+                    const reader = new FileReader();
+                    reader.readAsDataURL(val.target.files[0]);
+                    reader.addEventListener("load", () => {
+                      //console.log(reader.result);
+                      console.log(val.target.files[0])
+                      setImageSource(val.target.files[0].name)
+                      setImageDataURL(reader.result)
+  
+                      //need to save in ""../images"
+                      
+                      //this is a dataURL but i'm not sure what to do with it.
+                      //i've verified that it is indeed the image the 
+                    })
+                  }
 
               }}></input>
               <p>Rating:</p>
@@ -293,6 +301,13 @@ export default function AdminHome() {
                   onKeyUp={addCast}
                 />
               </div>  
+              <p>Child Ticket Price:</p>
+              $<input onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} defaultValue={childPrice} type="text" onInput={onlyNumbers} name="childPrice" placeholder="Child ticket price" onChange={(val) => setChildPrice(val.target.value)}></input><br></br>
+              <p>Adult Ticket Price:</p>
+              $<input onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} defaultValue={adultPrice} type="text" onInput={onlyNumbers} name="adultPrice" placeholder="Adult ticket price" onChange={(val) => setAdultPrice(val.target.value)}></input><br></br>
+              <p>Senior Ticket Price:</p>
+              $<input onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} defaultValue={seniorPrice} type="text" onInput={onlyNumbers} name="seniorPrice" placeholder="Senior ticket price" onChange={(val) => setSeniorPrice(val.target.value)}></input><br></br>
+
               <h3 id="incorrect-credentials" style={{color: 'red'}}>{incorrectInfoMessage}</h3>
               <button type="submit">Add new movie</button>
             </form>

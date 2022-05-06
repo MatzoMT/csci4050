@@ -38,6 +38,11 @@ urlpatterns = [
     path('v1/set-available-tickets', views.route_set_available_tickets),
     path('v1/set-available-seats', views.route_set_available_seats),
     path('v1/create-booking', views.route_create_booking),
-    path('v1/prepare-checkout', views.route_checkout_payment_info)
+    path('v1/prepare-checkout', views.route_checkout_payment_info),
 
+    path('v1/prepare-checkout', views.route_checkout_payment_info),
+    path('v1/get-users-and-ids', views.route_get_users_and_ids),
+    path('v1/get-user-by-id', views.route_get_user_by_id),
+    path('v1/update-user', views.route_update_user),
+    path('v1/update-movie', views.route_update_movie)
 ]

@@ -31,7 +31,7 @@ class User(models.Model):
 class Promotion(models.Model):
 	promotion_code = models.CharField(max_length=255)
 	promotion_discount = models.IntegerField()
-	promotion_expiry = models.CharField(max_length=255)
+	promotion_expiry = models.DateField()
 	def __str__(self):
 		return self.promotion_code
 
@@ -48,7 +48,7 @@ class PaymentCard(models.Model):
 	card_type = models.CharField(max_length=1, choices=TYPE_CHOICES)
 	billing_address = models.CharField(max_length=255)
 	last_digits = models.CharField(default='0000', max_length=4)
-
+	cvv = models.CharField( default= '000', max_length=3)
 	expiration_date = models.DateField()
 	def __str__(self):
 		return self.card_number
@@ -65,6 +65,12 @@ class Movie(models.Model):
 	video_link = models.CharField(max_length=255) #trailer video
 	description = models.CharField(max_length=255) #synopsis
 	director = models.CharField(max_length=255) #director
+
+	child_price = models.IntegerField(default = 4)
+	adult_price = models.IntegerField(default = 7)
+	senior_price = models.IntegerField(default = 4)
+
+
 	#producer = models.CharField(max_length=255) #producer
 	def __str__(self):
 		return self.title

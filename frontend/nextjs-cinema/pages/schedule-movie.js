@@ -100,7 +100,7 @@ export default function Home() {
               <label for="room" className="field-label"><h3>Room</h3></label>
               <a><Dropdown  name="room" options={roomList} onChange={(val) => setRoomSelected(val.value)} value={roomSelected} placeholder="Select an option..." /></a><br />
               <label for="date" className="field-label"><h3>Date</h3></label>
-              <a><DatePicker selected={dateSelected} onChange={(date) => setDateSelected(date)} /></a><br />
+              <a><DatePicker minDate={new Date()} selected={dateSelected} onChange={(date) => setDateSelected(date)} /></a><br />
               <label for="time" className="field-label"><h3>Time</h3></label>
               <a><Dropdown  name="time" options={timelist} onChange={(val) => setTimeSelected(val.value)} value={timeSelected} placeholder="Select an option..." /></a><br />
 

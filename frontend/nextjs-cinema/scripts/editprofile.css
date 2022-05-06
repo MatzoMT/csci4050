@@ -7,7 +7,7 @@
     font-size: 100%;
 }
 
-#editprofile div{
+#editprofile #cardtable div{
     border-style: solid;
     border-color: black;
     margin-left: 4em;
@@ -18,12 +18,12 @@
     margin-bottom: 0.2em;;
 }
 
-#editprofile button {
+#buttonstyle {
     padding: 0.4em;
     border-radius: 12px;
     background-color: black;
     color: white;
-    width: 30%;
+    width: 20%;
     
     margin-top: 1em;
     display:block;

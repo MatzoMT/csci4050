@@ -44,11 +44,20 @@ const [incorrectInfo, setIncorrectInfo] = useState('');
         }
       });
 
-      console.log('test')
+      //console.log('test')
       await axios.post("http://localhost:8000/api/v1/get-promotions",
         { email: window.sessionStorage.getItem("email") }).then((response) => {
-          console.log(response.data.list)
+          let todayDate = new Date().toLocaleDateString('en-CA', {
+            day: 'numeric',
+            month: 'numeric',
+            year: 'numeric',
+          })
+
+          //console.log()
+          //console.log(response.data.list)
           for (const element of response.data.list) {
+            //console.log();
+            if (element.promotionExpiration.replace(/-/g, "") >= todayDate.replace(/-/g, ""))
             promotionArray.push(<Promotion promotionCode={element.promotionCode} promotionDiscount={element.promotionDiscount} promotionExpiration={element.promotionExpiration} />);
           }
         });
@@ -73,7 +82,7 @@ const [incorrectInfo, setIncorrectInfo] = useState('');
       return;
     }
     setIncorrectInfo('Successfully added a promotion!')
-    const formdate = promotionExpiration.toLocaleDateString('en-US', {
+    const formdate = promotionExpiration.toLocaleDateString('en-CA', {
       day: 'numeric',
       month: 'numeric',
       year: 'numeric',
@@ -116,8 +125,8 @@ const [incorrectInfo, setIncorrectInfo] = useState('');
               <label for="promotion_discount" className="field-label"><h3>Promotion Discount</h3></label>
               <a><input type="text" className="fields" name="promotion_discount" placeholder="Enter discount percentage in percentage form" onChange={(val) => setPromotionDiscount(val.target.value)} defaultValue={promotionDiscount}></input></a><br />
               <label for="promotion_expiry" className="field-label"><h3>Promotion Expiration Date</h3></label>
-              <a><DatePicker className='fields' selected={promotionExpiration} onChange={(date) => setPromotionExpiration(date)} /></a><br></br>
-              <button type="submit">Add new promotion</button> 
+              <a><DatePicker minDate={new Date()} className='fields' selected={promotionExpiration} onChange={(date) => setPromotionExpiration(date)} /></a><br></br>
+              <button id="buttonstyle" type="submit">Add new promotion</button> 
             </form>
 
          </div>
