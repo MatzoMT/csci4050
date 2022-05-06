@@ -5,7 +5,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework import status
 
 import jwt
-from datetime import datetime
+import datetime
 from django.utils import timezone
 import time
  
@@ -1443,17 +1443,28 @@ def route_get_promotion_discount(request):
     promo = Promotion.objects.all().filter(promotion_code=data["promoCode"])
     print("promo: ", promo)
     discount_amount = 0
+    today = datetime.date.today()
     context = {}
     if(len(promo)==1):
-        discount_amount = promo[0].promotion_discount
-        context = {
+        if(promo[0].promotion_expiry<=today):
+            context = {
+                "success": "false",
+                "discount": 0,
+                "error": "Promotion no longer available"
+            }
+        else:
+            discount_amount = promo[0].promotion_discount
+            print("discount: ",discount_amount)
+            context = {
             "success": "true",
             "discount": discount_amount, 
+            "error": ""
         }
     else:
         context = {
             "success": "false",
-            "discount": 0
+            "discount": 0,
+            "error": "Promotion code does not exist"
         }
     return JsonResponse(context)
 
