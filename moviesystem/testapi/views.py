@@ -88,7 +88,7 @@ def route_get_movies(request):
     }
     return JsonResponse(context)
 
-
+"""
 @api_view(['POST'])
 def route_delete_movie(request):
 
@@ -97,6 +97,7 @@ def route_delete_movie(request):
         'requestSuccess': request_success
     }
     return JsonResponse(response)
+"""
 
 @api_view(['POST'])
 def route_add_movie(request):
@@ -1133,8 +1134,8 @@ def route_update_movie(request):
     movie.save()
     genres = data['genres']
     cast = data['cast']
-    Genre.objects.filter(movieID_id=data["id"]).delete();
-    Cast.objects.filter(movieID_id=data["id"]).delete();
+    Genre.objects.filter(movieID_id=data["id"]).delete()
+    Cast.objects.filter(movieID_id=data["id"]).delete()
     for genre in genres:
         genreId = 0
         if genre == "COMEDY":
@@ -1484,3 +1485,23 @@ def route_get_promotion_discount(request):
 #         booking = Booking(userID=user, ShowTimeID = movieshow, PaymentCardID = card, promoID = promo, reserved=True, paid=False)
 #         booking.save()
 
+@api_view(['POST'])
+def route_delete_movie(request):
+    try:
+        data = JSONParser().parse(request)
+
+        Genre.objects.filter(movieID_id=data["id"]).delete()
+        Cast.objects.filter(movieID_id=data["id"]).delete()
+        MovieShow.objects.filter(movieID_id=data["id"]).delete()
+        Genre.objects.filter(movieID_id=data["id"]).delete()
+        Cast.objects.filter(movieID_id=data["id"]).delete()
+        MovieShow.objects.filter(movieID_id=data["id"]).delete()
+        movie = Movie.objects.get(id=data["id"])
+        print('DELETE this MOVIE')
+
+        movie.delete()
+        return HttpResponse(200)
+    except Exception as e:
+        print("Delete movie error:")
+        print(e)
+        return HttpResponse(400)
