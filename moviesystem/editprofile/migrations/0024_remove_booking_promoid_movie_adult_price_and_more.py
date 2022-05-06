@@ -10,10 +10,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='booking',
-            name='promoID',
-        ),
         migrations.AddField(
             model_name='movie',
             name='adult_price',
