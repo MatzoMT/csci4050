@@ -7,11 +7,11 @@ function MovieInfo(props) {
     const router = useRouter();
 
     const editMovie = (movieId) => {
-        router.push({
-          pathname: '/admin-movieinfo',
-          query: { "movieId": movieId },
-        })
-      }
+      router.push({
+        pathname: '/admin-movieinfo',
+        query: { "movieId": movieId },
+      })
+    }
 
 
 

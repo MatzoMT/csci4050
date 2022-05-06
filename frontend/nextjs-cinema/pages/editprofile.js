@@ -29,6 +29,7 @@ export default function Home() {
   const [billingAddress, setBillingAddress] = useState("")
   const [expirationDate, setExpirationDate] = useState(new Date());
   const [promotion, setPromotion] = useState(0);
+  const [cvv, setCvv] = useState(0);
 
   const [incorrectPasswordMessage, setIncorrectPasswordMessage] = useState("");
   
@@ -106,8 +107,16 @@ export default function Home() {
       setIncorrectPaymentMessage("The billing address cannot be empty.")
       return;
     }
+    if (cvv == "") {
+      setIncorrectPaymentMessage("The billing address cannot be empty.")
+      return;
+    }
+    if (cvv.length != 3) {
+      setIncorrectPaymentMessage("The CVV must be 3 digits only.")
+      return;
+    }
 
-    await axios.post("http://localhost:8000/api/v1/create-payment", { cardType: cardType, cardNumber: cardNumber, email: email, billingAddress: billingAddress, expirationDate: formdate }).then((response) => {
+    await axios.post("http://localhost:8000/api/v1/create-payment", { cardType: cardType, cardNumber: cardNumber, email: email, billingAddress: billingAddress, expirationDate: formdate, cvv: cvv }).then((response) => {
       //alert("You have successfully added a payment type to your account.")
       if (response.data.success == "false") {
         setIncorrectPaymentMessage(response.data.errMsg);
@@ -252,6 +261,7 @@ export default function Home() {
               <input onInput={onlyNumbers} className="fields" type="text" name="card-number" placeholder="Card Number" onChange={(val) => setCardNumber(val.target.value)}></input><br></br>
               <input className="fields" type="text" name="billing-address" placeholder="Billing Address" onChange={(val) => setBillingAddress(val.target.value)}></input><br></br>
               <DatePicker minDate={new Date()} className='fields' selected={expirationDate} onChange={(date) => setExpirationDate(date)} /><br></br>
+              <input onInput={onlyNumbers} className="fields" type="text" name="cvv" placeholder="CVV" onChange={(val) => setCvv(val.target.value)}></input><br></br>
               <h3 id="incorrect-credentials" style={{color: 'red'}}>{incorrectPaymentMessage}</h3>
               <button id="buttonstyle" type="submit">Add Payment Method</button>
             </form>

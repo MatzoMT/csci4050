@@ -623,8 +623,8 @@ def route_create_payment(request):
         data = JSONParser().parse(request)
         successful = "true"
         user = User.objects.all().get(email=data["email"])
-        card = PaymentCard(card_type=data['cardType'], last_digits=str(data['cardNumber'][-4:]), card_number=make_password(data['cardNumber']), user=user, billing_address=data["billingAddress"], expiration_date=data["expirationDate"])
-        if data['cardType'] == "" or data['cardNumber'] == "" or data['billingAddress'] == "" or data['expirationDate'] == "":
+        card = PaymentCard(card_type=data['cardType'], last_digits=str(data['cardNumber'][-4:]), card_number=make_password(data['cardNumber']), user=user, billing_address=data["billingAddress"], expiration_date=data["expirationDate"], cvv=data["cvv"])
+        if data['cardType'] == "" or data['cardNumber'] == "" or data['billingAddress'] == "" or data['expirationDate'] == "" or data['cvv'] == "":
             successful = "false"
             err_msg = "You cannot leave any of these fields blank."
         print(successful)
@@ -643,6 +643,50 @@ def route_create_payment(request):
             'errMsg': err_msg
         }
     return JsonResponse(response)
+
+@api_view(['POST'])
+def route_update_payment(request):
+    data = JSONParser().parse(request)
+    print(data)
+    user = User.objects.all().get(email=data["email"])
+    card = PaymentCard.objects.get(user=user, last_digits=data["lastDigits"])
+    card.expiration_date = data["expirationDate"]
+    if data["cvv"] != "":
+        card.cvv = data["cvv"]
+    if data["cardNumber"] != "":
+        make_password(data['cardNumber'])
+        card.last_digits = str(data['cardNumber'][-4:])
+    card.billing_address = data["billingAddress"]
+    card.card_type = data["cardType"]
+    card.save()
+    response = {
+        'isSuccessful': 'true'
+    }
+    return JsonResponse(response)
+
+
+@api_view(['POST'])
+def route_get_card_info_by_last4(request):
+    data = JSONParser().parse(request)
+    print("email", data["email"])
+    
+    user = User.objects.all().get(email=data["email"])
+    card = PaymentCard.objects.get(user=user, last_digits=data["last_digits"])
+    print(card)
+    card_dict = {}
+    card_dict["cardType"] = card.card_type
+    card_dict["billingAddress"] = card.billing_address
+    card_dict["expirationDate"] = card.expiration_date
+    card_dict["lastDigits"] = data["last_digits"]
+    
+    response = {
+        "card": card_dict,
+        "isSuccessful": "true"
+    }
+
+    print(card_dict)
+    return JsonResponse(response)
+
 
 @api_view(['POST'])
 def route_get_cards(request):
