@@ -17,6 +17,3 @@ The frontend of FilmMax uses a Django REST API and MySQL database.
 - [Use Case Document](https://drive.google.com/file/d/10VNhjRdMAJEw87sk8kqhlnsaNY9btK-K/view?usp=sharing)
 - [Object Relational Mapping Document](https://drive.google.com/file/d/1WtAcNt3uk3PSsWwcRCCVcs4IPj7-HM7g/view?usp=sharing)
 
-# Build Instructions
-1. Ensure Python3, npm, MySQL are installed.
-
